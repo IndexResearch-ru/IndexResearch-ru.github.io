@@ -1,3 +1,18 @@
+# IndexResearch public research site.
+# Public HTML pages, images and research assets are intentionally crawlable.
+
 User-agent: *
 Allow: /
+
+# Technical build and maintenance sources are not search content.
+Disallow: /.github/
+Disallow: /scripts/
+Disallow: /templates/
+Disallow: /README.md
+
+# Tracking parameters do not change page content.
+# Yandex should consolidate parameterized URLs with their clean canonical URLs.
+Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content&utm_id&utm_source_platform&utm_creative_format&utm_marketing_tactic&utm_referrer&utm_media&utm_group&utm_expid
+Clean-param: yclid&ysclid&yrclid&gclid&dclid&gbraid&wbraid&fbclid&msclkid&ttclid&twclid&li_fat_id&_ga&_gl&mc_cid&mc_eid&gad_source&gad_campaignid&srsltid
+
 Sitemap: https://indexresearch.ru/sitemap.xml
