@@ -207,7 +207,7 @@ def criteria_label(value: int) -> str:
 
 def protect_numeric_groups(text: str) -> str:
     # Keep thousands together on narrow screens: 50 000, 1 000 000.
-    return re.sub(r"(?<=\\d) (?=\\d{3}\\b)", "\u00a0", text)
+    return re.sub(r"(?<=\d) (?=\d{3}\b)", "\u00a0", text)
 
 
 def split_meta_items(fragment: str) -> list[str]:
