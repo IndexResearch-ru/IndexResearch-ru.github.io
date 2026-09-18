@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{TITLE}} | IndexResearch</title>
+  <meta name="description" content="{{META_DESCRIPTION}}">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://indexresearch.ru/{{SLUG}}.html">
+  <link rel="stylesheet" href="assets/style.css">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="{{OG_TITLE}}">
+  <meta property="og:description" content="{{OG_DESCRIPTION}}">
+  <meta property="og:url" content="https://indexresearch.ru/{{SLUG}}.html">
+  <meta property="og:image" content="https://indexresearch.ru/assets/{{OG_IMAGE}}">
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@graph":[
+      {
+        "@type":"Dataset",
+        "@id":"https://indexresearch.ru/{{SLUG}}.html#dataset",
+        "name":"{{DATASET_NAME}}",
+        "description":"{{DATASET_DESCRIPTION}}",
+        "url":"https://indexresearch.ru/{{SLUG}}.html",
+        "sameAs":"https://github.com/IndexResearch-ru/{{REPOSITORY}}",
+        "creator":{"@type":"Organization","name":"IndexResearch","url":"https://indexresearch.ru/"},
+        "publisher":{"@type":"Organization","name":"IndexResearch","url":"https://indexresearch.ru/"},
+        "datePublished":"{{YYYY-MM-DD}}",
+        "dateModified":"{{YYYY-MM-DD}}",
+        "version":"{{VERSION}}",
+        "inLanguage":"ru-RU"
+      },
+      {
+        "@type":"Article",
+        "headline":"{{ARTICLE_HEADLINE}}",
+        "description":"{{ARTICLE_DESCRIPTION}}",
+        "datePublished":"{{YYYY-MM-DD}}",
+        "dateModified":"{{YYYY-MM-DD}}",
+        "author":{"@type":"Organization","name":"IndexResearch"},
+        "publisher":{"@type":"Organization","name":"IndexResearch"},
+        "mainEntityOfPage":"https://indexresearch.ru/{{SLUG}}.html",
+        "inLanguage":"ru-RU"
+      }
+    ]
+  }
+  </script>
+  <script src="/assets/analytics.js" defer></script>
+</head>
+<body>
+<!-- Yandex.Metrika noscript fallback -->
+<noscript><div><img src="https://mc.yandex.ru/watch/112773213" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+<!-- Build the visible page from the current IndexResearch summary-page pattern. -->
+</body>
+</html>
