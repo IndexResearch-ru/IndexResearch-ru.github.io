@@ -19,6 +19,9 @@ KEY_LOCATION = f"{BASE}/{KEY_FILE}"
 SETUP_FILES = {
     ".github/workflows/site-maintenance.yml",
     "scripts/indexnow_submit.py",
+    "scripts/ensure_analytics.py",
+    "scripts/build_sitemap.py",
+    "scripts/site_qa.py",
     KEY_FILE,
 }
 
