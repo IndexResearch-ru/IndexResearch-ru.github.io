@@ -37,7 +37,7 @@ ANY_METRIKA_NOSCRIPT_RE = re.compile(
     re.MULTILINE,
 )
 FAVICON_BLOCK_RE = re.compile(
-    r'<!-- IndexResearch favicons -->[\s\S]*?<!-- /IndexResearch favicons -->\s*',
+    r'[ \t]*<!-- IndexResearch favicons -->[\s\S]*?<!-- /IndexResearch favicons -->\s*',
     re.MULTILINE,
 )
 
