@@ -22,6 +22,10 @@ NORMALIZED_NOSCRIPT_RE = re.compile(
     r'<noscript><div><img src="https://mc\.yandex\.ru/watch/112773213"[\s\S]*?</div></noscript>\s*',
     re.MULTILINE,
 )
+ANY_METRIKA_NOSCRIPT_RE = re.compile(
+    r'<noscript><div><img src="https://mc\.yandex\.ru/watch/112773213"[\s\S]*?</div></noscript>\s*',
+    re.MULTILINE,
+)
 
 changed = []
 for path in sorted(ROOT.glob("*.html")):
@@ -31,6 +35,8 @@ for path in sorted(ROOT.glob("*.html")):
     text = OLD_SCRIPT_RE.sub("", text)
     text = OLD_NOSCRIPT_RE.sub("", text)
     text = NORMALIZED_NOSCRIPT_RE.sub("", text)
+    # Remove any orphaned/duplicated fallback left by parallel page generators.
+    text = ANY_METRIKA_NOSCRIPT_RE.sub("", text)
     text = re.sub(r'\s*<script src="/assets/analytics\.js" defer></script>\s*', "\n", text)
 
     if "</head>" not in text or "<body>" not in text:
