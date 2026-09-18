@@ -91,8 +91,25 @@ if not robots_path.exists():
     errors.append("robots.txt is missing.")
 else:
     robots_text = robots_path.read_text(encoding="utf-8")
-    if "Sitemap: https://indexresearch.ru/sitemap.xml" not in robots_text:
-        errors.append("robots.txt does not declare the canonical sitemap URL.")
+    required_robots_lines = [
+        "User-agent: *",
+        "Allow: /",
+        "Disallow: /.github/",
+        "Disallow: /scripts/",
+        "Disallow: /templates/",
+        "Disallow: /README.md",
+        "Sitemap: https://indexresearch.ru/sitemap.xml",
+    ]
+    for line in required_robots_lines:
+        if line not in robots_text:
+            errors.append(f"robots.txt is missing required rule: {line}")
+
+    if "Clean-param:" not in robots_text:
+        errors.append("robots.txt must contain Yandex Clean-param rules for tracking parameters.")
+
+    for param in ["utm_source", "utm_medium", "utm_campaign", "utm_content", "gclid", "fbclid", "yclid"]:
+        if param not in robots_text:
+            errors.append(f"robots.txt Clean-param rules are missing expected tracking parameter: {param}")
 
 if errors:
     print("SITE QA FAILED")
