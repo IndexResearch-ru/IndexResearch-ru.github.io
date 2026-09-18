@@ -273,9 +273,13 @@ def render_home_card(catalog_card: str) -> str:
         f"<li>{html.escape(item)}</li>"
         for item in top_items
     )
-    meta_html = "\n".join(
-        f"<li>{html.escape(protect_numeric_groups(item))}</li>"
+    meta_items = [
+        html.escape(protect_numeric_groups(item))
         for item in split_meta_items(paragraphs[meta_index])
+    ]
+    meta_html = "&nbsp;·&nbsp;".join(
+        f"<span>{item}</span>"
+        for item in meta_items
     )
 
     return f'''<article class="research-teaser" data-research-card="true" data-published="{attrs["data-published"]}" data-beneficiary="{attrs["data-beneficiary"]}" data-research-id="{attrs["data-research-id"]}">
@@ -285,9 +289,7 @@ def render_home_card(catalog_card: str) -> str:
 <ol class="research-teaser__top-list">
 {top_html}
 </ol>
-<ul class="research-teaser__meta-list">
-{meta_html}
-</ul>
+<p class="research-teaser__meta-line">{meta_html}</p>
 </article>'''
 
 
