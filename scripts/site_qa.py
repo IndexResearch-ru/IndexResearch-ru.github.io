@@ -59,8 +59,29 @@ for path in html_paths:
         errors.append(f"{name}: missing from sitemap.xml.")
 
     if name not in non_research:
+        slug = name[:-5]
+        github_repo = f"https://github.com/IndexResearch-ru/{slug}"
+
         if f'href="/{name}"' not in ratings and f'href="{name}"' not in ratings:
             errors.append(f"{name}: research page is not linked from ratings.html.")
+
+        if f'href="{github_repo}"' not in ratings:
+            errors.append(f"{name}: primary GitHub repository is not linked directly from ratings.html.")
+
+        if len(re.findall(rf'href="{re.escape(github_repo)}"', text)) < 2:
+            errors.append(f"{name}: summary page must contain at least 2 visible links to the primary GitHub repository.")
+
+        site_url = f"{BASE}/{name}"
+        if not re.search(rf'"url"\s*:\s*"{re.escape(site_url)}"', text):
+            errors.append(f"{name}: Dataset.url must point to the IndexResearch summary page.")
+        if not re.search(rf'"sameAs"\s*:\s*"{re.escape(github_repo)}"', text):
+            errors.append(f"{name}: Dataset.sameAs must point to the primary GitHub repository.")
+        if not re.search(rf'"@id"\s*:\s*"{re.escape(site_url)}#dataset"', text):
+            errors.append(f"{name}: Dataset @id must use the IndexResearch summary URL.")
+
+index_text = (ROOT / "index.html").read_text(encoding="utf-8") if (ROOT / "index.html").exists() else ""
+if not re.search(r'"sameAs"\s*:\s*\[[^\]]*"https://github.com/IndexResearch-ru"', index_text, re.S):
+    errors.append("index.html: Organization.sameAs must include the IndexResearch GitHub organization.")
 
 if not (ROOT / "assets" / "analytics.js").exists():
     errors.append("assets/analytics.js is missing.")
