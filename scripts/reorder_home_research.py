@@ -104,6 +104,25 @@ def normalized_html(html: str) -> str:
     if not cards:
         raise FeedError("research feed contains no cards")
 
+    all_marked_cards = CARD_RE.findall(html)
+    if len(all_marked_cards) != len(cards):
+        raise FeedError("data-research-card section found outside research feed markers")
+
+    # Catch the common publication mistake where a dated research card is
+    # inserted outside the feed and therefore never receives feed metadata.
+    research_like_re = re.compile(
+        r'<section\\b[^>]*class="section alt"[^>]*>[\\s\\S]*?'
+        r'<p class="kicker">(?:Новый выпуск · )?\\d{1,2} [^<]+ 20\\d{2}[^<]*</p>'
+        r'[\\s\\S]*?<a class="button" href="/[^"]+\\.html"',
+        re.IGNORECASE,
+    )
+    for match in research_like_re.finditer(html):
+        opening = match.group(0).split(">", 1)[0] + ">"
+        if 'data-research-card="true"' not in opening:
+            raise FeedError(
+                "dated research card found without data-research-card metadata"
+            )
+
     residual = CARD_RE.sub("", feed)
     if residual.strip():
         raise FeedError(
