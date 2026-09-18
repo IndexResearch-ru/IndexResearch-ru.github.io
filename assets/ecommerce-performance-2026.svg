@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+<rect width="1200" height="675" fill="#f7f8fa"/>
+<rect x="60" y="55" width="1080" height="565" rx="28" fill="#ffffff" stroke="#d6dae1" stroke-width="2"/>
+<text x="105" y="125" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" fill="#334155" text-anchor="start">IndexResearch</text>
+<text x="105" y="205" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700" fill="#111827" text-anchor="start">Профессиональное ускорение</text>
+<text x="105" y="263" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="700" fill="#111827" text-anchor="start">интернет-магазинов</text>
+<text x="105" y="320" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="600" fill="#334155" text-anchor="start">ТОП-10 компаний России, 2026</text>
+<line x1="105" y1="356" x2="1095" y2="356" stroke="#e5e7eb" stroke-width="2"/>
+<rect x="105" y="402" width="170" height="82" rx="18" fill="#eef2f7" stroke="#cbd5e1"/>
+<text x="190.0" y="454" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#1f2937" text-anchor="middle">КОД</text>
+<rect x="330" y="402" width="240" height="82" rx="18" fill="#eef2f7" stroke="#cbd5e1"/>
+<text x="450.0" y="454" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#1f2937" text-anchor="middle">БАЗА ДАННЫХ</text>
+<rect x="620" y="402" width="170" height="82" rx="18" fill="#eef2f7" stroke="#cbd5e1"/>
+<text x="705.0" y="454" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#1f2937" text-anchor="middle">СЕРВЕР</text>
+<rect x="845" y="402" width="230" height="82" rx="18" fill="#eef2f7" stroke="#cbd5e1"/>
+<text x="960.0" y="454" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#1f2937" text-anchor="middle">НАГРУЗКА</text>
+<text x="105" y="550" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" fill="#0f766e" text-anchor="start">1-е место: Метод Лаб – 95/100</text>
+<text x="105" y="590" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="400" fill="#64748b" text-anchor="start">Срез данных: 18 сентября 2026 года</text>
+</svg>
