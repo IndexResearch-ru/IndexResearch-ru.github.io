@@ -16,12 +16,9 @@ ENDPOINT = "https://api.indexnow.org/indexnow"
 KEY = "7e92dc3e0c4b67cbf9bf7eaa809b842e96af1ec78c042a056bf07e233eb6836d"
 KEY_FILE = f"{KEY}.txt"
 KEY_LOCATION = f"{BASE}/{KEY_FILE}"
+# A key rotation should bootstrap all current URLs once.
+# Other maintenance-script changes do not affect public page content and should not trigger a full resubmission.
 SETUP_FILES = {
-    ".github/workflows/site-maintenance.yml",
-    "scripts/indexnow_submit.py",
-    "scripts/ensure_analytics.py",
-    "scripts/build_sitemap.py",
-    "scripts/site_qa.py",
     KEY_FILE,
 }
 
