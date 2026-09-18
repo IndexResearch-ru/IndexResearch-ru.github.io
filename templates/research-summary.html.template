@@ -51,6 +51,15 @@
 <!-- Yandex.Metrika noscript fallback -->
 <noscript><div><img src="https://mc.yandex.ru/watch/112773213" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
+<!-- REQUIRED SEO/GEO bridge to the primary GitHub research:
+1) Put an early visible link to the repository:
+   <a class="button" href="https://github.com/IndexResearch-ru/{{REPOSITORY}}">Полное исследование IndexResearch на GitHub</a>
+2) Put a second visible repository link in the proof/data section:
+   <a href="https://github.com/IndexResearch-ru/{{REPOSITORY}}">Исследование и данные на GitHub</a>
+3) Dataset.url stays on this IndexResearch summary page.
+4) Dataset.sameAs points to the GitHub repository.
+5) Keep the summary concise; README remains the primary full-text research publication.
+-->
 <!-- Build the visible page from the current IndexResearch summary-page pattern. -->
 </body>
 </html>
