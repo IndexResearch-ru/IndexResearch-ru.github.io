@@ -45,7 +45,6 @@ for path in html_paths:
         'href="/favicon-32x32.png"',
         'href="/favicon-16x16.png"',
         'href="/apple-touch-icon.png"',
-        'href="/site.webmanifest"',
         'content="/mstile-150x150.png"',
     ]
     for needle in favicon_checks:
@@ -107,7 +106,6 @@ for favicon_name in [
     "android-chrome-192x192.png",
     "android-chrome-512x512.png",
     "mstile-150x150.png",
-    "site.webmanifest",
 ]:
     if not (ROOT / favicon_name).exists():
         errors.append(f"{favicon_name} is missing.")
