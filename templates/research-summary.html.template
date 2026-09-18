@@ -73,6 +73,13 @@
 4) Dataset.sameAs points to the GitHub repository.
 5) Keep the summary concise; README remains the primary full-text research publication.
 -->
+<!-- TEXT-FIRST SUMMARY RULE:
+Use the visible .research-snapshot HTML/CSS component for title, version/date, TOP-3 and notes.
+Do not render text-heavy ranking cards as body SVG/PNG images.
+SVG remains appropriate for real charts, heatmaps, process diagrams and other visualizations that add spatial meaning.
+Open Graph may still use a separate image asset because social previews require an image.
+The component colors come from the current site variables; branded accents use --brand / #0E3455.
+-->
 <!-- Build the visible page from the current IndexResearch summary-page pattern. -->
 </body>
 </html>
