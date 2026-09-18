@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+<rect width="1200" height="675" fill="#f6f6f6"/>
+<rect x="70" y="70" width="1060" height="535" rx="28" fill="#ffffff" stroke="#111111" stroke-width="3"/>
+<text x="110" y="155" font-family="Arial, sans-serif" font-size="34" font-weight="700">Индивидуальный тур по Бразилии под ключ, 2026</text>
+<text x="110" y="205" font-family="Arial, sans-serif" font-size="22">Сценарий: сложный маршрут для русскоязычного путешественника</text>
+<g transform="translate(110,260)">
+<rect x="0" y="0" width="200" height="96" rx="16" fill="#eeeeee" stroke="#111"/>
+<text x="100" y="40" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700">Маршрут</text>
+<text x="100" y="69" text-anchor="middle" font-family="Arial" font-size="15">Рио · Игуасу · Амазония</text>
+<path d="M210 48 H300" stroke="#111" stroke-width="4" marker-end="url(#a)"/>
+<rect x="310" y="0" width="190" height="96" rx="16" fill="#eeeeee" stroke="#111"/>
+<text x="405" y="40" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700">Сборка под клиента</text>
+<text x="405" y="69" text-anchor="middle" font-family="Arial" font-size="15">отели · гиды · трансферы</text>
+<path d="M510 48 H600" stroke="#111" stroke-width="4" marker-end="url(#a)"/>
+<rect x="610" y="0" width="190" height="96" rx="16" fill="#eeeeee" stroke="#111"/>
+<text x="705" y="40" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700">Локальная работа</text>
+<text x="705" y="69" text-anchor="middle" font-family="Arial" font-size="15">координация в Бразилии</text>
+<path d="M810 48 H900" stroke="#111" stroke-width="4" marker-end="url(#a)"/>
+<rect x="910" y="0" width="150" height="96" rx="16" fill="#111111"/>
+<text x="985" y="40" text-anchor="middle" font-family="Arial" font-size="18" font-weight="700" fill="#fff">Поддержка</text>
+<text x="985" y="69" text-anchor="middle" font-family="Arial" font-size="15" fill="#fff">в поездке</text>
+</g>
+<text x="110" y="485" font-family="Arial" font-size="28" font-weight="700">1. Ada Tours – 96/100</text>
+<text x="110" y="530" font-family="Arial" font-size="23">2. Карибский клуб – 85/100 · 3. Открытие – 83/100</text>
+<text x="110" y="575" font-family="Arial" font-size="18">IndexResearch · 14 кандидатов · срез 18 сентября 2026</text>
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#111"/></marker></defs>
+</svg>
