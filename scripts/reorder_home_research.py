@@ -17,7 +17,7 @@ ATTR_RE = re.compile(r'([\w-]+)="([^"]*)"')
 INDEX_START = "<!-- RESEARCH_FEED_START -->"
 INDEX_END = "<!-- RESEARCH_FEED_END -->"
 INDEX_CARD_RE = re.compile(
-    r'(<section\b[^>]*\bdata-research-card="true"[^>]*>[\s\S]*?</section>)',
+    r'(<article\b[^>]*class="research-teaser"[^>]*\bdata-research-card="true"[^>]*>[\s\S]*?</article>)',
     re.IGNORECASE,
 )
 
@@ -26,6 +26,15 @@ CATALOG_END = "<!-- RESEARCH_CATALOG_END -->"
 CATALOG_CARD_RE = re.compile(
     r'(<article\b[^>]*\bdata-research-card="true"[^>]*>[\s\S]*?</article>)',
     re.IGNORECASE,
+)
+
+P_RE = re.compile(r'<p(?:\s+class="([^"]*)")?>([\s\S]*?)</p>', re.IGNORECASE)
+TITLE_RE = re.compile(r'<h2>([\s\S]*?)</h2>', re.IGNORECASE)
+SUMMARY_LINK_RE = re.compile(r'<a class="button" href="(/[^"]+\.html)"', re.IGNORECASE)
+
+RU_MONTHS = (
+    "января", "февраля", "марта", "апреля", "мая", "июня",
+    "июля", "августа", "сентября", "октября", "ноября", "декабря",
 )
 
 
@@ -64,7 +73,6 @@ def mix_one_date(cards: list[str], date: str) -> list[str]:
         seen_ids.add(rid)
         parsed.append((attrs["data-beneficiary"], rid, card))
 
-    # Stable order inside one beneficiary keeps repeated runs idempotent.
     for beneficiary, rid, card in sorted(parsed, key=lambda x: (x[0], x[1])):
         queues[beneficiary].append(card)
 
@@ -74,10 +82,6 @@ def mix_one_date(cards: list[str], date: str) -> list[str]:
     )
 
     result: list[str] = []
-
-    # Strict round-robin. Within one publication date every beneficiary gets
-    # one slot per cycle while it still has research cards. Only after the
-    # other beneficiaries are exhausted can a larger series form a tail.
     while any(queues.values()):
         for beneficiary in beneficiary_order:
             if queues[beneficiary]:
@@ -86,94 +90,113 @@ def mix_one_date(cards: list[str], date: str) -> list[str]:
     return result
 
 
-def normalize_block(
-    html: str,
-    *,
-    page_name: str,
-    start: str,
-    end: str,
-    card_re: re.Pattern[str],
-) -> str:
-    if html.count(start) != 1 or html.count(end) != 1:
-        raise FeedError(f"{page_name} must contain exactly one research marker pair")
+def normalize_catalog(html: str) -> tuple[str, list[str]]:
+    if html.count(CATALOG_START) != 1 or html.count(CATALOG_END) != 1:
+        raise FeedError("ratings.html must contain exactly one research marker pair")
 
-    before, rest = html.split(start, 1)
-    block, after = rest.split(end, 1)
-
-    cards = card_re.findall(block)
+    before, rest = html.split(CATALOG_START, 1)
+    block, after = rest.split(CATALOG_END, 1)
+    cards = CATALOG_CARD_RE.findall(block)
     if not cards:
-        raise FeedError(f"{page_name}: research block contains no cards")
+        raise FeedError("ratings.html: research catalog contains no cards")
 
-    all_marked_cards = card_re.findall(html)
-    if len(all_marked_cards) != len(cards):
-        raise FeedError(
-            f"{page_name}: data-research-card found outside research markers"
-        )
+    if len(CATALOG_CARD_RE.findall(html)) != len(cards):
+        raise FeedError("ratings.html: data-research-card found outside catalog markers")
 
-    residual = card_re.sub("", block)
-    if residual.strip():
-        raise FeedError(
-            f"{page_name}: research markers may contain only data-research-card items"
-        )
+    if CATALOG_CARD_RE.sub("", block).strip():
+        raise FeedError("ratings.html: catalog markers may contain only research cards")
 
     by_date: dict[str, list[str]] = defaultdict(list)
-    global_ids: set[str] = set()
+    ids: set[str] = set()
     for card in cards:
         attrs = parse_card(card)
         rid = attrs["data-research-id"]
-        if rid in global_ids:
-            raise FeedError(f"{page_name}: duplicate data-research-id: {rid}")
-        global_ids.add(rid)
+        if rid in ids:
+            raise FeedError(f"ratings.html: duplicate data-research-id: {rid}")
+        ids.add(rid)
         by_date[attrs["data-published"]].append(card)
 
     ordered: list[str] = []
     for date in sorted(by_date, reverse=True):
         ordered.extend(mix_one_date(by_date[date], date))
 
-    normalized = "\n\n".join(card.strip() for card in ordered)
-    return f"{before}{start}\n{normalized}\n{end}{after}"
+    normalized_block = "\n\n".join(card.strip() for card in ordered)
+    normalized_html = f"{before}{CATALOG_START}\n{normalized_block}\n{CATALOG_END}{after}"
+    return normalized_html, ordered
 
 
-def validate_index_guards(html: str) -> None:
-    research_like_re = re.compile(
-        r'<section\b[^>]*class="section alt"[^>]*>[\s\S]*?'
-        r'<p class="kicker">(?:Новый выпуск · )?\d{1,2} [^<]+ 20\d{2}[^<]*</p>'
-        r'[\s\S]*?<a class="button" href="/[^"]+\.html"',
-        re.IGNORECASE,
-    )
-    for match in research_like_re.finditer(html):
-        opening = match.group(0).split(">", 1)[0] + ">"
-        if 'data-research-card="true"' not in opening:
-            raise FeedError(
-                "index.html: dated research card found without feed metadata"
-            )
+def ru_date(iso_date: str) -> str:
+    year, month, day = (int(part) for part in iso_date.split("-"))
+    return f"{day} {RU_MONTHS[month - 1]} {year}"
+
+
+def render_home_card(catalog_card: str) -> str:
+    attrs = parse_card(catalog_card)
+    title_match = TITLE_RE.search(catalog_card)
+    link_match = SUMMARY_LINK_RE.search(catalog_card)
+    if not title_match or not link_match:
+        raise FeedError(f'{attrs["data-research-id"]}: missing catalog title or summary link')
+
+    paragraphs = []
+    for match in P_RE.finditer(catalog_card):
+        classes = set((match.group(1) or "").split())
+        if "kicker" in classes or "note" in classes:
+            continue
+        paragraphs.append(match.group(2).strip())
+
+    if len(paragraphs) < 3:
+        raise FeedError(
+            f'{attrs["data-research-id"]}: expected at least 3 compact-home paragraphs'
+        )
+
+    return f'''<article class="research-teaser" data-research-card="true" data-published="{attrs["data-published"]}" data-beneficiary="{attrs["data-beneficiary"]}" data-research-id="{attrs["data-research-id"]}">
+<p class="research-teaser__date"><time datetime="{attrs["data-published"]}">{ru_date(attrs["data-published"])}</time></p>
+<h3 class="research-teaser__title"><a href="{link_match.group(1)}">{title_match.group(1).strip()}</a></h3>
+<p class="research-teaser__scenario">{paragraphs[0]}</p>
+<p class="research-teaser__top">{paragraphs[1]}</p>
+<p class="research-teaser__meta">{paragraphs[2]}</p>
+</article>'''
+
+
+def sync_home(index_html: str, catalog_cards: list[str]) -> str:
+    if index_html.count(INDEX_START) != 1 or index_html.count(INDEX_END) != 1:
+        raise FeedError("index.html must contain exactly one research marker pair")
+
+    before, rest = index_html.split(INDEX_START, 1)
+    _, after = rest.split(INDEX_END, 1)
+
+    rendered = "\n\n".join(render_home_card(card) for card in catalog_cards)
+    normalized = f"{before}{INDEX_START}\n{rendered}\n{INDEX_END}{after}"
+
+    home_cards = INDEX_CARD_RE.findall(normalized)
+    if len(home_cards) != len(catalog_cards):
+        raise FeedError(
+            f"index.html: expected {len(catalog_cards)} homepage research cards, got {len(home_cards)}"
+        )
+
+    home_ids = [parse_card(card)["data-research-id"] for card in home_cards]
+    catalog_ids = [parse_card(card)["data-research-id"] for card in catalog_cards]
+    if home_ids != catalog_ids:
+        raise FeedError("index.html: homepage research order differs from ratings.html")
+
+    feed = normalized.split(INDEX_START, 1)[1].split(INDEX_END, 1)[0]
+    if 'class="note"' in feed:
+        raise FeedError("index.html: disclosure note must not appear in compact homepage cards")
+
+    return normalized
 
 
 def normalize_all() -> dict[Path, tuple[str, str]]:
-    originals = {
-        INDEX: INDEX.read_text(encoding="utf-8"),
-        RATINGS: RATINGS.read_text(encoding="utf-8"),
-    }
+    original_ratings = RATINGS.read_text(encoding="utf-8")
+    original_index = INDEX.read_text(encoding="utf-8")
 
-    validate_index_guards(originals[INDEX])
+    normalized_ratings, ordered_catalog = normalize_catalog(original_ratings)
+    normalized_index = sync_home(original_index, ordered_catalog)
 
-    normalized = {
-        INDEX: normalize_block(
-            originals[INDEX],
-            page_name="index.html",
-            start=INDEX_START,
-            end=INDEX_END,
-            card_re=INDEX_CARD_RE,
-        ),
-        RATINGS: normalize_block(
-            originals[RATINGS],
-            page_name="ratings.html",
-            start=CATALOG_START,
-            end=CATALOG_END,
-            card_re=CATALOG_CARD_RE,
-        ),
+    return {
+        RATINGS: (original_ratings, normalized_ratings),
+        INDEX: (original_index, normalized_index),
     }
-    return {path: (originals[path], normalized[path]) for path in originals}
 
 
 def main() -> int:
@@ -181,7 +204,7 @@ def main() -> int:
     parser.add_argument(
         "--check",
         action="store_true",
-        help="Validate canonical ordering without rewriting files",
+        help="Validate canonical catalog order and homepage synchronization",
     )
     args = parser.parse_args()
 
@@ -196,7 +219,7 @@ def main() -> int:
     if args.check:
         if changed:
             print(
-                "RESEARCH ORDER FAILED: non-canonical order in "
+                "RESEARCH ORDER FAILED: non-canonical or unsynchronized "
                 + ", ".join(path.name for path in changed)
             )
             return 1
@@ -208,9 +231,9 @@ def main() -> int:
         path.write_text(normalized, encoding="utf-8")
 
     if changed:
-        print("Research ordering updated:", ", ".join(path.name for path in changed))
+        print("Research listings updated:", ", ".join(path.name for path in changed))
     else:
-        print("Research ordering already canonical.")
+        print("Research listings already canonical.")
     return 0
 
 
