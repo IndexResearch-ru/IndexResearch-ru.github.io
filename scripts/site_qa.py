@@ -22,7 +22,8 @@ if feed_check.returncode != 0:
         or "Homepage research feed check failed."
     )
 
-html_paths = sorted(ROOT.glob("*.html"))\nif not html_paths:
+html_paths = sorted(ROOT.glob("*.html"))
+if not html_paths:
     errors.append("No root HTML pages found.")
 
 sitemap_path = ROOT / "sitemap.xml"
