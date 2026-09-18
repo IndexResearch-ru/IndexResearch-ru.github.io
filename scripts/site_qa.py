@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import re
+import subprocess
 import sys
 import xml.etree.ElementTree as ET
 
@@ -8,8 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE = "https://indexresearch.ru"
 errors = []
 
-html_paths = sorted(ROOT.glob("*.html"))
-if not html_paths:
+feed_check = subprocess.run(\n    [sys.executable, str(ROOT / "scripts" / "reorder_home_research.py"), "--check"],\n    cwd=ROOT,\n    capture_output=True,\n    text=True,\n)\nif feed_check.returncode != 0:\n    errors.append(feed_check.stdout.strip() or feed_check.stderr.strip() or "Homepage research feed check failed.")\n\nhtml_paths = sorted(ROOT.glob("*.html"))\nif not html_paths:
     errors.append("No root HTML pages found.")
 
 sitemap_path = ROOT / "sitemap.xml"
