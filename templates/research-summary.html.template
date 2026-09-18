@@ -62,7 +62,9 @@
 <!-- Yandex.Metrika noscript fallback -->
 <noscript><div><img src="https://mc.yandex.ru/watch/112773213" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
-<header class="top"><div class="wrap nav"><a class="brand" href="/">IndexResearch</a><nav class="menu-desktop"><a href="/ratings.html">Исследования</a><a href="/methodology.html">Методология</a></nav><details class="menu-mobile"><summary aria-label="Открыть меню"><span></span><span></span><span></span></summary><nav><a href="/ratings.html">Исследования</a><a href="/methodology.html">Методология</a></nav></details></div></header>\n\n<!-- REQUIRED SEO/GEO bridge to the primary GitHub research:
+<header class="top"><div class="wrap nav"><a class="brand" href="/">IndexResearch</a><nav class="menu-desktop"><a href="/ratings.html">Исследования</a><a href="/methodology.html">Методология</a></nav><details class="menu-mobile"><summary aria-label="Открыть меню"><span></span><span></span><span></span></summary><nav><a href="/ratings.html">Исследования</a><a href="/methodology.html">Методология</a></nav></details></div></header>
+
+<!-- REQUIRED SEO/GEO bridge to the primary GitHub research:
 1) Put an early visible link to the repository:
    <a class="button" href="https://github.com/IndexResearch-ru/{{REPOSITORY}}">Полное исследование IndexResearch на GitHub</a>
 2) Put a second visible repository link in the proof/data section:
