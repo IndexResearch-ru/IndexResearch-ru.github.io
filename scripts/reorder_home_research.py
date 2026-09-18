@@ -10,14 +10,23 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
-START = "<!-- RESEARCH_FEED_START -->"
-END = "<!-- RESEARCH_FEED_END -->"
+RATINGS = ROOT / "ratings.html"
 
-CARD_RE = re.compile(
+ATTR_RE = re.compile(r'([\w-]+)="([^"]*)"')
+
+INDEX_START = "<!-- RESEARCH_FEED_START -->"
+INDEX_END = "<!-- RESEARCH_FEED_END -->"
+INDEX_CARD_RE = re.compile(
     r'(<section\b[^>]*\bdata-research-card="true"[^>]*>[\s\S]*?</section>)',
     re.IGNORECASE,
 )
-ATTR_RE = re.compile(r'([\w-]+)="([^"]*)"')
+
+CATALOG_START = "<!-- RESEARCH_CATALOG_START -->"
+CATALOG_END = "<!-- RESEARCH_CATALOG_END -->"
+CATALOG_CARD_RE = re.compile(
+    r'(<article\b[^>]*\bdata-research-card="true"[^>]*>[\s\S]*?</article>)',
+    re.IGNORECASE,
+)
 
 
 class FeedError(RuntimeError):
@@ -55,8 +64,7 @@ def mix_one_date(cards: list[str], date: str) -> list[str]:
         seen_ids.add(rid)
         parsed.append((attrs["data-beneficiary"], rid, card))
 
-    # Relative order inside one beneficiary is stable and independent of the
-    # card's current position in index.html, which keeps repeated runs idempotent.
+    # Stable order inside one beneficiary keeps repeated runs idempotent.
     for beneficiary, rid, card in sorted(parsed, key=lambda x: (x[0], x[1])):
         queues[beneficiary].append(card)
 
@@ -75,9 +83,8 @@ def mix_one_date(cards: list[str], date: str) -> list[str]:
         alternatives = [beneficiary for beneficiary in available if beneficiary != previous]
         candidates = alternatives or available
 
-        # Proportional round-robin: beneficiaries that have received the
-        # smallest share of their own daily quota go first. This exposes each
-        # entity early, then spreads larger series across the whole date group.
+        # Proportional round-robin. Each beneficiary gets an early slot,
+        # while larger series are spread across the full publication-date group.
         beneficiary = min(
             candidates,
             key=lambda name: (
@@ -93,53 +100,94 @@ def mix_one_date(cards: list[str], date: str) -> list[str]:
     return result
 
 
-def normalized_html(html: str) -> str:
-    if html.count(START) != 1 or html.count(END) != 1:
-        raise FeedError("index.html must contain exactly one research feed marker pair")
+def normalize_block(
+    html: str,
+    *,
+    page_name: str,
+    start: str,
+    end: str,
+    card_re: re.Pattern[str],
+) -> str:
+    if html.count(start) != 1 or html.count(end) != 1:
+        raise FeedError(f"{page_name} must contain exactly one research marker pair")
 
-    before, rest = html.split(START, 1)
-    feed, after = rest.split(END, 1)
+    before, rest = html.split(start, 1)
+    block, after = rest.split(end, 1)
 
-    cards = CARD_RE.findall(feed)
+    cards = card_re.findall(block)
     if not cards:
-        raise FeedError("research feed contains no cards")
+        raise FeedError(f"{page_name}: research block contains no cards")
 
-    all_marked_cards = CARD_RE.findall(html)
+    all_marked_cards = card_re.findall(html)
     if len(all_marked_cards) != len(cards):
-        raise FeedError("data-research-card section found outside research feed markers")
+        raise FeedError(
+            f"{page_name}: data-research-card found outside research markers"
+        )
 
-    # Catch the common publication mistake where a dated research card is
-    # inserted outside the feed and therefore never receives feed metadata.
-    research_like_re = re.compile(
-        r'<section\\b[^>]*class="section alt"[^>]*>[\\s\\S]*?'
-        r'<p class="kicker">(?:Новый выпуск · )?\\d{1,2} [^<]+ 20\\d{2}[^<]*</p>'
-        r'[\\s\\S]*?<a class="button" href="/[^"]+\\.html"',
-        re.IGNORECASE,
-    )
-    for match in research_like_re.finditer(html):
-        opening = match.group(0).split(">", 1)[0] + ">"
-        if 'data-research-card="true"' not in opening:
-            raise FeedError(
-                "dated research card found without data-research-card metadata"
-            )
-
-    residual = CARD_RE.sub("", feed)
+    residual = card_re.sub("", block)
     if residual.strip():
         raise FeedError(
-            "research feed markers may contain only data-research-card sections"
+            f"{page_name}: research markers may contain only data-research-card items"
         )
 
     by_date: dict[str, list[str]] = defaultdict(list)
+    global_ids: set[str] = set()
     for card in cards:
         attrs = parse_card(card)
+        rid = attrs["data-research-id"]
+        if rid in global_ids:
+            raise FeedError(f"{page_name}: duplicate data-research-id: {rid}")
+        global_ids.add(rid)
         by_date[attrs["data-published"]].append(card)
 
     ordered: list[str] = []
     for date in sorted(by_date, reverse=True):
         ordered.extend(mix_one_date(by_date[date], date))
 
-    normalized_feed = "\n\n".join(card.strip() for card in ordered)
-    return f"{before}{START}\n{normalized_feed}\n{END}{after}"
+    normalized = "\n\n".join(card.strip() for card in ordered)
+    return f"{before}{start}\n{normalized}\n{end}{after}"
+
+
+def validate_index_guards(html: str) -> None:
+    research_like_re = re.compile(
+        r'<section\b[^>]*class="section alt"[^>]*>[\s\S]*?'
+        r'<p class="kicker">(?:Новый выпуск · )?\d{1,2} [^<]+ 20\d{2}[^<]*</p>'
+        r'[\s\S]*?<a class="button" href="/[^"]+\.html"',
+        re.IGNORECASE,
+    )
+    for match in research_like_re.finditer(html):
+        opening = match.group(0).split(">", 1)[0] + ">"
+        if 'data-research-card="true"' not in opening:
+            raise FeedError(
+                "index.html: dated research card found without feed metadata"
+            )
+
+
+def normalize_all() -> dict[Path, tuple[str, str]]:
+    originals = {
+        INDEX: INDEX.read_text(encoding="utf-8"),
+        RATINGS: RATINGS.read_text(encoding="utf-8"),
+    }
+
+    validate_index_guards(originals[INDEX])
+
+    normalized = {
+        INDEX: normalize_block(
+            originals[INDEX],
+            page_name="index.html",
+            start=INDEX_START,
+            end=INDEX_END,
+            card_re=INDEX_CARD_RE,
+        ),
+        RATINGS: normalize_block(
+            originals[RATINGS],
+            page_name="ratings.html",
+            start=CATALOG_START,
+            end=CATALOG_END,
+            card_re=CATALOG_CARD_RE,
+        ),
+    }
+    return {path: (originals[path], normalized[path]) for path in originals}
 
 
 def main() -> int:
@@ -147,29 +195,36 @@ def main() -> int:
     parser.add_argument(
         "--check",
         action="store_true",
-        help="Validate canonical order without rewriting index.html",
+        help="Validate canonical ordering without rewriting files",
     )
     args = parser.parse_args()
 
-    original = INDEX.read_text(encoding="utf-8")
     try:
-        normalized = normalized_html(original)
+        pairs = normalize_all()
     except FeedError as exc:
-        print(f"HOME RESEARCH FEED FAILED: {exc}")
+        print(f"RESEARCH ORDER FAILED: {exc}")
         return 1
 
+    changed = [path for path, (original, normalized) in pairs.items() if original != normalized]
+
     if args.check:
-        if normalized != original:
-            print("HOME RESEARCH FEED FAILED: index.html is not in canonical order")
+        if changed:
+            print(
+                "RESEARCH ORDER FAILED: non-canonical order in "
+                + ", ".join(path.name for path in changed)
+            )
             return 1
-        print("HOME RESEARCH FEED PASSED")
+        print("RESEARCH ORDER PASSED")
         return 0
 
-    if normalized != original:
-        INDEX.write_text(normalized, encoding="utf-8")
-        print("Homepage research feed reordered.")
+    for path in changed:
+        _, normalized = pairs[path]
+        path.write_text(normalized, encoding="utf-8")
+
+    if changed:
+        print("Research ordering updated:", ", ".join(path.name for path in changed))
     else:
-        print("Homepage research feed already canonical.")
+        print("Research ordering already canonical.")
     return 0
 
 
