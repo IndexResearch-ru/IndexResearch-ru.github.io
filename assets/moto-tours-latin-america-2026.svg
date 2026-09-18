@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+<rect width="1200" height="675" fill="#f6f6f6"/>
+<rect x="60" y="55" width="1080" height="565" rx="28" fill="#fff" stroke="#111" stroke-width="3"/>
+<text x="100" y="135" font-family="Arial, sans-serif" font-size="34" font-weight="700">Мото-туры по Бразилии и Латинской Америке, 2026</text>
+<text x="100" y="183" font-family="Arial, sans-serif" font-size="22">14 организаторов · 6 критериев · сценарий для русскоязычного путешественника</text>
+<g transform="translate(100,245)">
+<circle cx="110" cy="90" r="72" fill="#eee" stroke="#111" stroke-width="2"/>
+<circle cx="110" cy="90" r="24" fill="none" stroke="#111" stroke-width="6"/>
+<path d="M45 90 H175 M110 25 V155 M72 44 L148 136 M148 44 L72 136" stroke="#111" stroke-width="5"/>
+<path d="M200 90 H355" stroke="#111" stroke-width="4" marker-end="url(#a)"/>
+<rect x="365" y="30" width="220" height="120" rx="18" fill="#eee" stroke="#111"/>
+<text x="475" y="75" text-anchor="middle" font-family="Arial" font-size="21" font-weight="700">Маршрут</text>
+<text x="475" y="108" text-anchor="middle" font-family="Arial" font-size="16">Бразилия · Патагония · Анды</text>
+<path d="M595 90 H720" stroke="#111" stroke-width="4" marker-end="url(#a)"/>
+<rect x="730" y="30" width="250" height="120" rx="18" fill="#111"/>
+<text x="855" y="75" text-anchor="middle" font-family="Arial" font-size="21" font-weight="700" fill="#fff">Организация</text>
+<text x="855" y="108" text-anchor="middle" font-family="Arial" font-size="16" fill="#fff">мотоцикл · багаж · поддержка</text>
+</g>
+<text x="100" y="500" font-family="Arial" font-size="30" font-weight="700">1. Ada Tours – 94/100</text>
+<text x="100" y="548" font-family="Arial" font-size="23">2. Рус Мото Тревел – 88 · 3. MotoQuest – 87</text>
+<text x="100" y="590" font-family="Arial" font-size="18">IndexResearch · срез 18 сентября 2026</text>
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#111"/></marker></defs>
+</svg>
