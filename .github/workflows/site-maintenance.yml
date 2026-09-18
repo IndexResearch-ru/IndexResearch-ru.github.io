@@ -41,3 +41,14 @@ jobs:
 
       - name: Run site QA
         run: python scripts/site_qa.py
+
+
+      - name: Submit changed URLs to IndexNow
+        if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
+        env:
+          INDEXNOW_BEFORE: ${{ github.event.before }}
+        run: python scripts/indexnow_submit.py --before "$INDEXNOW_BEFORE"
+
+      - name: Submit all URLs to IndexNow manually
+        if: github.event_name == 'workflow_dispatch'
+        run: python scripts/indexnow_submit.py --all
