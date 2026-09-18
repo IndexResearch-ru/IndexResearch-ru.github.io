@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import html
 import re
 import sys
 from collections import defaultdict, deque
@@ -130,6 +131,86 @@ def ru_date(iso_date: str) -> str:
     return f"{day} {RU_MONTHS[month - 1]} {year}"
 
 
+TAG_RE = re.compile(r"<[^>]+>")
+
+
+def text_only(fragment: str) -> str:
+    return re.sub(r"\\s+", " ", html.unescape(TAG_RE.sub("", fragment))).strip()
+
+
+def ranking_paragraph(text: str) -> bool:
+    return bool(
+        re.search(r"\\b[123] место:", text, re.IGNORECASE)
+        or re.search(r"(?:TOP|ТОП)-3:", text, re.IGNORECASE)
+        or text.startswith("Максимальное соответствие сценарию:")
+    )
+
+
+def extract_top_items(paragraphs: list[str], research_id: str) -> tuple[list[str], int]:
+    ranking_parts: list[str] = []
+    consumed = 0
+
+    for paragraph in paragraphs[1:]:
+        plain = text_only(paragraph)
+        if ranking_paragraph(plain):
+            ranking_parts.append(plain)
+            consumed += 1
+            continue
+        break
+
+    if not ranking_parts:
+        raise FeedError(f"{research_id}: compact homepage card has no TOP-3 block")
+
+    ranking_text = " ".join(ranking_parts)
+    items: dict[int, str] = {}
+
+    for match in re.finditer(
+        r"([123])\\s+место:\\s*(.*?)(?=(?:\\.\\s*[123]\\s+место:)|$)",
+        ranking_text,
+        re.IGNORECASE,
+    ):
+        items[int(match.group(1))] = match.group(2).strip().rstrip(".")
+
+    snapshot = re.search(
+        r"(?:TOP|ТОП)-3:\\s*(.+)$",
+        ranking_text,
+        re.IGNORECASE,
+    )
+    if snapshot and len(items) < 3:
+        names = [part.strip().rstrip(".") for part in snapshot.group(1).split(",")]
+        if len(names) >= 3:
+            items = {1: names[0], 2: names[1], 3: names[2]}
+
+    if 1 not in items and ranking_text.startswith("Максимальное соответствие сценарию:"):
+        first = ranking_text.split("2 место:", 1)[0]
+        first = first.replace("Максимальное соответствие сценарию:", "", 1).strip().rstrip(".")
+        if first:
+            items[1] = first
+
+    if set(items) != {1, 2, 3}:
+        raise FeedError(
+            f"{research_id}: TOP-3 must resolve to exactly 3 ordered items, got {sorted(items)}"
+        )
+
+    return [items[1], items[2], items[3]], consumed
+
+
+def split_meta_items(fragment: str) -> list[str]:
+    text = text_only(fragment).rstrip(".")
+
+    text = re.sub(
+        r"^(\\d+\\s+[^,.]+?)\\s+оценены по\\s+(\\d+\\s+критериям?)\\.\\s*",
+        r"\\1, \\2, ",
+        text,
+        flags=re.IGNORECASE,
+    )
+    text = re.sub(r"\\.\\s*Опубликованы\\s+", ", ", text, flags=re.IGNORECASE)
+    text = re.sub(r"\\s+и\\s+(?=\\d)", ", ", text)
+
+    items = [part.strip().rstrip(".") for part in text.split(",") if part.strip()]
+    return items or [text]
+
+
 def render_home_card(catalog_card: str) -> str:
     attrs = parse_card(catalog_card)
     title_match = TITLE_RE.search(catalog_card)
@@ -149,12 +230,36 @@ def render_home_card(catalog_card: str) -> str:
             f'{attrs["data-research-id"]}: expected at least 3 compact-home paragraphs'
         )
 
+    top_items, ranking_count = extract_top_items(
+        paragraphs,
+        attrs["data-research-id"],
+    )
+
+    meta_index = 1 + ranking_count
+    if meta_index >= len(paragraphs):
+        raise FeedError(f'{attrs["data-research-id"]}: compact homepage card has no corpus line')
+
+    scenario = html.escape(text_only(paragraphs[0]))
+    title = html.escape(text_only(title_match.group(1)))
+    top_html = "\\n".join(
+        f"<li>{html.escape(item)}</li>"
+        for item in top_items
+    )
+    meta_html = "\\n".join(
+        f"<li>{html.escape(item)}</li>"
+        for item in split_meta_items(paragraphs[meta_index])
+    )
+
     return f'''<article class="research-teaser" data-research-card="true" data-published="{attrs["data-published"]}" data-beneficiary="{attrs["data-beneficiary"]}" data-research-id="{attrs["data-research-id"]}">
 <p class="research-teaser__date"><time datetime="{attrs["data-published"]}">{ru_date(attrs["data-published"])}</time></p>
-<h3 class="research-teaser__title"><a href="{link_match.group(1)}">{title_match.group(1).strip()}</a></h3>
-<p class="research-teaser__scenario">{paragraphs[0]}</p>
-<p class="research-teaser__top">{paragraphs[1]}</p>
-<p class="research-teaser__meta">{paragraphs[2]}</p>
+<h3 class="research-teaser__title"><a href="{link_match.group(1)}">{title}</a></h3>
+<p class="research-teaser__scenario">{scenario}</p>
+<ol class="research-teaser__top-list">
+{top_html}
+</ol>
+<ul class="research-teaser__meta-list">
+{meta_html}
+</ul>
 </article>'''
 
 
