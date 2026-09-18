@@ -135,12 +135,12 @@ TAG_RE = re.compile(r"<[^>]+>")
 
 
 def text_only(fragment: str) -> str:
-    return re.sub(r"\\s+", " ", html.unescape(TAG_RE.sub("", fragment))).strip()
+    return re.sub(r"\s+", " ", html.unescape(TAG_RE.sub("", fragment))).strip()
 
 
 def ranking_paragraph(text: str) -> bool:
     return bool(
-        re.search(r"\\b[123] место:", text, re.IGNORECASE)
+        re.search(r"\b[123] место:", text, re.IGNORECASE)
         or re.search(r"(?:TOP|ТОП)-3:", text, re.IGNORECASE)
         or text.startswith("Максимальное соответствие сценарию:")
     )
@@ -165,14 +165,14 @@ def extract_top_items(paragraphs: list[str], research_id: str) -> tuple[list[str
     items: dict[int, str] = {}
 
     for match in re.finditer(
-        r"([123])\\s+место:\\s*(.*?)(?=(?:\\.\\s*[123]\\s+место:)|$)",
+        r"([123])\s+место:\s*(.*?)(?=(?:\.\s*[123]\s+место:)|$)",
         ranking_text,
         re.IGNORECASE,
     ):
         items[int(match.group(1))] = match.group(2).strip().rstrip(".")
 
     snapshot = re.search(
-        r"(?:TOP|ТОП)-3:\\s*(.+)$",
+        r"(?:TOP|ТОП)-3:\s*(.+)$",
         ranking_text,
         re.IGNORECASE,
     )
@@ -199,13 +199,13 @@ def split_meta_items(fragment: str) -> list[str]:
     text = text_only(fragment).rstrip(".")
 
     text = re.sub(
-        r"^(\\d+\\s+[^,.]+?)\\s+оценены по\\s+(\\d+\\s+критериям?)\\.\\s*",
+        r"^(\d+\s+[^,.]+?)\s+оценены по\s+(\d+\s+критериям?)\.\s*",
         r"\\1, \\2, ",
         text,
         flags=re.IGNORECASE,
     )
-    text = re.sub(r"\\.\\s*Опубликованы\\s+", ", ", text, flags=re.IGNORECASE)
-    text = re.sub(r"\\s+и\\s+(?=\\d)", ", ", text)
+    text = re.sub(r"\.\s*Опубликованы\s+", ", ", text, flags=re.IGNORECASE)
+    text = re.sub(r"\s+и\s+(?=\d)", ", ", text)
 
     items = [part.strip().rstrip(".") for part in text.split(",") if part.strip()]
     return items or [text]
@@ -241,11 +241,11 @@ def render_home_card(catalog_card: str) -> str:
 
     scenario = html.escape(text_only(paragraphs[0]))
     title = html.escape(text_only(title_match.group(1)))
-    top_html = "\\n".join(
+    top_html = "\n".join(
         f"<li>{html.escape(item)}</li>"
         for item in top_items
     )
-    meta_html = "\\n".join(
+    meta_html = "\n".join(
         f"<li>{html.escape(item)}</li>"
         for item in split_meta_items(paragraphs[meta_index])
     )
