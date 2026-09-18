@@ -200,7 +200,7 @@ def split_meta_items(fragment: str) -> list[str]:
 
     text = re.sub(
         r"^(\d+\s+[^,.]+?)\s+оценены по\s+(\d+\s+критериям?)\.\s*",
-        r"\\1, \\2, ",
+        r"\1, \2, ",
         text,
         flags=re.IGNORECASE,
     )
