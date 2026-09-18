@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 import time
@@ -19,6 +20,7 @@ KEY_LOCATION = f"{BASE}/{KEY_FILE}"
 # A key rotation should bootstrap all current URLs once.
 # Other maintenance-script changes do not affect public page content and should not trigger a full resubmission.
 SETUP_FILES = {
+    "scripts/indexnow_submit.py",
     KEY_FILE,
 }
 
@@ -82,6 +84,41 @@ def all_current_urls() -> list[str]:
     ]
 
 
+def newly_linked_html(before: str | None) -> set[str]:
+    """Find newly added root HTML links in index.html/ratings.html.
+
+    This covers multi-commit publishing where the summary page is created first,
+    its initial workflow fails QA, and a later catalog/homepage commit makes the
+    release complete. The later successful push will submit both the linking page
+    and the newly linked research URL.
+    """
+    if not before or set(before) == {"0"}:
+        return set()
+
+    try:
+        diff = subprocess.check_output(
+            ["git", "diff", "--unified=0", before, "HEAD", "--", "index.html", "ratings.html"],
+            cwd=ROOT,
+            text=True,
+            stderr=subprocess.STDOUT,
+        )
+    except subprocess.CalledProcessError:
+        return set()
+
+    linked: set[str] = set()
+    pattern = re.compile(r'href=["\\\']/?([^"\\\']+\\.html)["\\\']')
+
+    for line in diff.splitlines():
+        if not line.startswith("+") or line.startswith("+++"):
+            continue
+        for match in pattern.finditer(line):
+            path = match.group(1)
+            if _is_root_html(path) and (ROOT / path).exists():
+                linked.add(path)
+
+    return linked
+
+
 def changed_urls(before: str | None, force_all: bool) -> list[str]:
     changed, removed_html = git_changed(before)
 
@@ -93,6 +130,11 @@ def changed_urls(before: str | None, force_all: bool) -> list[str]:
     for path in changed:
         if _is_root_html(path):
             urls.add(url_for_html(path))
+
+    # A research page may have been created in an earlier commit whose QA failed.
+    # If the current commit adds that page to the catalog/homepage, submit it now.
+    for path in newly_linked_html(before):
+        urls.add(url_for_html(path))
 
     # Submit deleted / renamed-away pages too. IndexNow can report removed URLs;
     # the public URL should then return 404/410 or redirect as appropriate.
