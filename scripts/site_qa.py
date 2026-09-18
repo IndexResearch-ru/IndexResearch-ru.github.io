@@ -86,6 +86,15 @@ if not re.search(r'"sameAs"\s*:\s*\[[^\]]*"https://github.com/IndexResearch-ru"'
 if not (ROOT / "assets" / "analytics.js").exists():
     errors.append("assets/analytics.js is missing.")
 
+indexnow_key = "7e92dc3e0c4b67cbf9bf7eaa809b842e96af1ec78c042a056bf07e233eb6836d"
+indexnow_key_path = ROOT / f"{indexnow_key}.txt"
+if not indexnow_key_path.exists():
+    errors.append("IndexNow key file is missing from the site root.")
+elif indexnow_key_path.read_text(encoding="utf-8").strip() != indexnow_key:
+    errors.append("IndexNow key file content does not match the configured key.")
+if not (ROOT / "scripts" / "indexnow_submit.py").exists():
+    errors.append("scripts/indexnow_submit.py is missing.")
+
 robots_path = ROOT / "robots.txt"
 if not robots_path.exists():
     errors.append("robots.txt is missing.")
