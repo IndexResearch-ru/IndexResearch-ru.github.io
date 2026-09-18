@@ -1,0 +1,43 @@
+name: Site maintenance and QA
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  maintain-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Normalize analytics on every HTML page
+        run: python scripts/ensure_analytics.py
+
+      - name: Rebuild sitemap from published HTML pages
+        run: python scripts/build_sitemap.py
+
+      - name: Commit automatic maintenance changes
+        if: github.event_name == 'push' && github.actor != 'github-actions[bot]'
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No automatic maintenance changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- '*.html' sitemap.xml
+          git commit -m "Auto-maintain analytics and sitemap"
+          git push
+
+      - name: Run site QA
+        run: python scripts/site_qa.py
