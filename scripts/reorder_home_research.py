@@ -68,34 +68,20 @@ def mix_one_date(cards: list[str], date: str) -> list[str]:
     for beneficiary, rid, card in sorted(parsed, key=lambda x: (x[0], x[1])):
         queues[beneficiary].append(card)
 
-    totals = {beneficiary: len(queue) for beneficiary, queue in queues.items()}
-    used = {beneficiary: 0 for beneficiary in queues}
-    priorities = {
-        beneficiary: stable_priority(date, beneficiary)
-        for beneficiary in queues
-    }
+    beneficiary_order = sorted(
+        queues,
+        key=lambda beneficiary: stable_priority(date, beneficiary),
+    )
 
     result: list[str] = []
-    previous: str | None = None
 
+    # Strict round-robin. Within one publication date every beneficiary gets
+    # one slot per cycle while it still has research cards. Only after the
+    # other beneficiaries are exhausted can a larger series form a tail.
     while any(queues.values()):
-        available = [beneficiary for beneficiary, queue in queues.items() if queue]
-        alternatives = [beneficiary for beneficiary in available if beneficiary != previous]
-        candidates = alternatives or available
-
-        # Proportional round-robin. Each beneficiary gets an early slot,
-        # while larger series are spread across the full publication-date group.
-        beneficiary = min(
-            candidates,
-            key=lambda name: (
-                used[name] / totals[name],
-                priorities[name],
-            ),
-        )
-
-        result.append(queues[beneficiary].popleft())
-        used[beneficiary] += 1
-        previous = beneficiary
+        for beneficiary in beneficiary_order:
+            if queues[beneficiary]:
+                result.append(queues[beneficiary].popleft())
 
     return result
 
