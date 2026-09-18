@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+<rect width="1200" height="675" fill="#f7f8fa"/>
+<rect x="60" y="55" width="1080" height="565" rx="28" fill="#fff" stroke="#d6dae1" stroke-width="2"/>
+<text x="105" y="125" font-family="Arial" font-size="26" font-weight="700" fill="#334155">IndexResearch</text>
+<text x="105" y="205" font-family="Arial" font-size="46" font-weight="700" fill="#111827">Лучшие виды спорта</text>
+<text x="105" y="262" font-family="Arial" font-size="46" font-weight="700" fill="#111827">для всей семьи</text>
+<text x="105" y="320" font-family="Arial" font-size="28" font-weight="600" fill="#334155">ТОП-10 России, 2026</text>
+<line x1="105" y1="356" x2="1095" y2="356" stroke="#e5e7eb" stroke-width="2"/>
+<text x="105" y="420" font-family="Arial" font-size="23" font-weight="700" fill="#475569">ОДНО СОБЫТИЕ · РАЗНЫЙ УРОВЕНЬ · СВОЙ РЕЗУЛЬТАТ</text>
+<text x="105" y="515" font-family="Arial" font-size="32" font-weight="700" fill="#0f766e">1-е место: спортивное ориентирование — 94/100</text>
+<text x="105" y="570" font-family="Arial" font-size="20" fill="#64748b">Срез данных: 18 сентября 2026 года</text>
+</svg>
