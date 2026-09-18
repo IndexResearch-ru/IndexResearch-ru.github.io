@@ -195,16 +195,39 @@ def extract_top_items(paragraphs: list[str], research_id: str) -> tuple[list[str
     return [items[1], items[2], items[3]], consumed
 
 
+def criteria_label(value: int) -> str:
+    value_mod_100 = value % 100
+    value_mod_10 = value % 10
+    if value_mod_10 == 1 and value_mod_100 != 11:
+        return "критерий"
+    if value_mod_10 in (2, 3, 4) and value_mod_100 not in (12, 13, 14):
+        return "критерия"
+    return "критериев"
+
+
 def split_meta_items(fragment: str) -> list[str]:
     text = text_only(fragment).rstrip(".")
 
-    text = re.sub(
-        r"^(\d+\s+[^,.]+?)\s+оценены по\s+(\d+\s+критериям?)\.\s*",
-        r"\1, \2, ",
+    # Narrative comments stay whole. Dot-separated compact metadata is only
+    # useful when the source is actually a parameter list.
+    if not re.match(r"^\d", text):
+        return [text]
+
+    match = re.match(
+        r"^(\d+\s+[^,.]+?)\s+оценены по\s+(\d+)\s+критериям?\.\s*(.*)$",
         text,
         flags=re.IGNORECASE,
     )
-    text = re.sub(r"\.\s*Опубликованы\s+", ", ", text, flags=re.IGNORECASE)
+    if match:
+        count = int(match.group(2))
+        tail = match.group(3)
+        text = (
+            f"{match.group(1)}, {count} {criteria_label(count)}"
+            + (f", {tail}" if tail else "")
+        )
+
+    text = re.sub(r"^Опубликованы\s+", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"(?<=,\s)Опубликованы\s+", "", text, flags=re.IGNORECASE)
     text = re.sub(r"\s+и\s+(?=\d)", ", ", text)
 
     items = [part.strip().rstrip(".") for part in text.split(",") if part.strip()]
