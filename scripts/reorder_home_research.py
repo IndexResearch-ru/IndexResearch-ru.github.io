@@ -277,7 +277,7 @@ def render_home_card(catalog_card: str) -> str:
         html.escape(protect_numeric_groups(item))
         for item in split_meta_items(paragraphs[meta_index])
     ]
-    meta_html = "&nbsp;·&nbsp;".join(
+    meta_html = " ".join(
         f"<span>{item}</span>"
         for item in meta_items
     )
