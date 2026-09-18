@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import heapq
 import re
 import sys
 from collections import defaultdict, deque
@@ -61,38 +60,35 @@ def mix_one_date(cards: list[str], date: str) -> list[str]:
     for beneficiary, rid, card in sorted(parsed, key=lambda x: (x[0], x[1])):
         queues[beneficiary].append(card)
 
-    heap = [
-        (-len(queue), stable_priority(date, beneficiary), beneficiary)
-        for beneficiary, queue in queues.items()
-    ]
-    heapq.heapify(heap)
+    totals = {beneficiary: len(queue) for beneficiary, queue in queues.items()}
+    used = {beneficiary: 0 for beneficiary in queues}
+    priorities = {
+        beneficiary: stable_priority(date, beneficiary)
+        for beneficiary in queues
+    }
 
     result: list[str] = []
     previous: str | None = None
 
-    while heap:
-        first = heapq.heappop(heap)
+    while any(queues.values()):
+        available = [beneficiary for beneficiary, queue in queues.items() if queue]
+        alternatives = [beneficiary for beneficiary in available if beneficiary != previous]
+        candidates = alternatives or available
 
-        if first[2] == previous and heap:
-            second = heapq.heappop(heap)
-            chosen = second
-            heapq.heappush(heap, first)
-        else:
-            chosen = first
+        # Proportional round-robin: beneficiaries that have received the
+        # smallest share of their own daily quota go first. This exposes each
+        # entity early, then spreads larger series across the whole date group.
+        beneficiary = min(
+            candidates,
+            key=lambda name: (
+                used[name] / totals[name],
+                priorities[name],
+            ),
+        )
 
-        _, _, beneficiary = chosen
         result.append(queues[beneficiary].popleft())
+        used[beneficiary] += 1
         previous = beneficiary
-
-        if queues[beneficiary]:
-            heapq.heappush(
-                heap,
-                (
-                    -len(queues[beneficiary]),
-                    stable_priority(date, beneficiary),
-                    beneficiary,
-                ),
-            )
 
     return result
 
