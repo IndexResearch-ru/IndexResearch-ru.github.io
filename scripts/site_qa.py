@@ -9,7 +9,20 @@ ROOT = Path(__file__).resolve().parents[1]
 BASE = "https://indexresearch.ru"
 errors = []
 
-feed_check = subprocess.run(\n    [sys.executable, str(ROOT / "scripts" / "reorder_home_research.py"), "--check"],\n    cwd=ROOT,\n    capture_output=True,\n    text=True,\n)\nif feed_check.returncode != 0:\n    errors.append(feed_check.stdout.strip() or feed_check.stderr.strip() or "Homepage research feed check failed.")\n\nhtml_paths = sorted(ROOT.glob("*.html"))\nif not html_paths:
+feed_check = subprocess.run(
+    [sys.executable, str(ROOT / "scripts" / "reorder_home_research.py"), "--check"],
+    cwd=ROOT,
+    capture_output=True,
+    text=True,
+)
+if feed_check.returncode != 0:
+    errors.append(
+        feed_check.stdout.strip()
+        or feed_check.stderr.strip()
+        or "Homepage research feed check failed."
+    )
+
+html_paths = sorted(ROOT.glob("*.html"))\nif not html_paths:
     errors.append("No root HTML pages found.")
 
 sitemap_path = ROOT / "sitemap.xml"
