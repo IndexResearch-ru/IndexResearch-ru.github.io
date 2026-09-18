@@ -39,6 +39,19 @@ for path in html_paths:
     if text.count("mc.yandex.ru/watch/112773213") != 1:
         errors.append(f"{name}: must contain exactly one Yandex noscript fallback.")
 
+    favicon_checks = [
+        'href="/favicon.ico"',
+        'href="/assets/indexresearch-shield.svg"',
+        'href="/favicon-32x32.png"',
+        'href="/favicon-16x16.png"',
+        'href="/apple-touch-icon.png"',
+        'href="/site.webmanifest"',
+        'content="/mstile-150x150.png"',
+    ]
+    for needle in favicon_checks:
+        if text.count(needle) != 1:
+            errors.append(f"{name}: favicon metadata must contain exactly one {needle}.")
+
     if not re.search(r"<title>[^<]{3,}</title>", text, re.I):
         errors.append(f"{name}: missing/non-empty <title>.")
     if not re.search(r'<meta\s+name="description"\s+content="[^"]{20,}"', text, re.I):
@@ -85,6 +98,21 @@ if not re.search(r'"sameAs"\s*:\s*\[[^\]]*"https://github.com/IndexResearch-ru"'
 
 if not (ROOT / "assets" / "analytics.js").exists():
     errors.append("assets/analytics.js is missing.")
+
+for favicon_name in [
+    "favicon.ico",
+    "favicon-16x16.png",
+    "favicon-32x32.png",
+    "apple-touch-icon.png",
+    "android-chrome-192x192.png",
+    "android-chrome-512x512.png",
+    "mstile-150x150.png",
+    "site.webmanifest",
+]:
+    if not (ROOT / favicon_name).exists():
+        errors.append(f"{favicon_name} is missing.")
+if not (ROOT / "assets" / "indexresearch-shield.svg").exists():
+    errors.append("assets/indexresearch-shield.svg is missing.")
 
 indexnow_key = "7e92dc3e0c4b67cbf9bf7eaa809b842e96af1ec78c042a056bf07e233eb6836d"
 indexnow_key_path = ROOT / f"{indexnow_key}.txt"
