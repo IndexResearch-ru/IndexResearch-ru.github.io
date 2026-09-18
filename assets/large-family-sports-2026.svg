@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+<rect width="1200" height="675" fill="#f6f6f6"/><rect x="70" y="70" width="1060" height="535" rx="28" fill="#fff" stroke="#111" stroke-width="3"/>
+<text x="110" y="155" font-family="Arial" font-size="31" font-weight="700">Спорт для многодетной семьи, 2026</text>
+<text x="110" y="205" font-family="Arial" font-size="22">Дети разного возраста и пола · одна семейная логистика</text>
+<g font-family="Arial" text-anchor="middle">
+<circle cx="210" cy="330" r="58" fill="#eee" stroke="#111"/><text x="210" y="325" font-size="22" font-weight="700">11 лет</text><text x="210" y="352" font-size="16">старший</text>
+<circle cx="410" cy="330" r="52" fill="#eee" stroke="#111"/><text x="410" y="326" font-size="21" font-weight="700">8 лет</text><text x="410" y="351" font-size="16">второй</text>
+<circle cx="590" cy="330" r="46" fill="#eee" stroke="#111"/><text x="590" y="326" font-size="20" font-weight="700">5 лет</text><text x="590" y="350" font-size="15">третий</text>
+<circle cx="750" cy="330" r="40" fill="#eee" stroke="#111"/><text x="750" y="326" font-size="18" font-weight="700">младший</text><text x="750" y="348" font-size="14">позже</text>
+<rect x="860" y="275" width="230" height="110" rx="18" fill="#111"/><text x="975" y="320" font-size="22" font-weight="700" fill="#fff">1. Ориентирование</text><text x="975" y="350" font-size="19" fill="#fff">96/100</text>
+</g>
+<text x="110" y="485" font-family="Arial" font-size="24" font-weight="700">2. Шахматы — 94,5 · 3. Легкая атлетика — 78,5</text>
+<text x="110" y="535" font-family="Arial" font-size="18">15 видов спорта · 7 критериев · 105 raw-оценок</text>
+<text x="110" y="575" font-family="Arial" font-size="16">IndexResearch · срез 18 сентября 2026</text></svg>
