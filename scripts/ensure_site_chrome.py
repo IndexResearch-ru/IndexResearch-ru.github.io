@@ -14,7 +14,7 @@ FOOTER_START = "<!-- SITE_FOOTER_START -->"
 FOOTER_END = "<!-- SITE_FOOTER_END -->"
 
 HEADER_BLOCK_RE = re.compile(
-    rf"{re.escape(HEADER_START)}[\\s\\S]*?{re.escape(HEADER_END)}"
+    rf"{re.escape(HEADER_START)}[\s\S]*?{re.escape(HEADER_END)}"
 )
 FOOTER_BLOCK_RE = re.compile(
     rf"{re.escape(FOOTER_START)}[\\s\\S]*?{re.escape(FOOTER_END)}"
@@ -27,8 +27,8 @@ header = HEADER_PATH.read_text(encoding="utf-8").strip()
 footer = FOOTER_PATH.read_text(encoding="utf-8").strip()
 style_version = hashlib.sha256(STYLE_PATH.read_bytes()).hexdigest()[:12]
 
-header_block = f"{HEADER_START}\\n{header}\\n{HEADER_END}"
-footer_block = f"{FOOTER_START}\\n{footer}\\n{FOOTER_END}"
+header_block = f"{HEADER_START}\n{header}\n{HEADER_END}"
+footer_block = f"{FOOTER_START}\n{footer}\n{FOOTER_END}"
 
 changed = []
 
