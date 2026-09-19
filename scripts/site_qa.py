@@ -42,7 +42,7 @@ else:
     errors.append("sitemap.xml is missing.")
 
 ratings = (ROOT / "ratings.html").read_text(encoding="utf-8") if (ROOT / "ratings.html").exists() else ""
-non_research = {"index.html", "ratings.html", "methodology.html"}
+non_research = {"index.html", "ratings.html", "methodology.html", "404.html"}
 
 # Shared site chrome: header and footer have one canonical source.
 header_partial_path = ROOT / "templates" / "partials" / "site-header.html"
