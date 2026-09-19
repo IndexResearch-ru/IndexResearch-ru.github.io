@@ -52,14 +52,14 @@ if not header_partial_path.exists():
     expected_header_block = None
 else:
     shared_header = header_partial_path.read_text(encoding="utf-8").strip()
-    expected_header_block = f"<!-- SITE_HEADER_START -->\\n{shared_header}\\n<!-- SITE_HEADER_END -->"
+    expected_header_block = f"<!-- SITE_HEADER_START -->\n{shared_header}\n<!-- SITE_HEADER_END -->"
 
 if not footer_partial_path.exists():
     errors.append("templates/partials/site-footer.html is missing.")
     expected_footer_block = None
 else:
     shared_footer = footer_partial_path.read_text(encoding="utf-8").strip()
-    expected_footer_block = f"<!-- SITE_FOOTER_START -->\\n{shared_footer}\\n<!-- SITE_FOOTER_END -->"
+    expected_footer_block = f"<!-- SITE_FOOTER_START -->\n{shared_footer}\n<!-- SITE_FOOTER_END -->"
 
 style_file_for_hash = ROOT / "assets" / "style.css"
 expected_style_version = (
@@ -107,7 +107,7 @@ for path in html_paths:
     if text.count("<!-- SITE_FOOTER_START -->") != 1 or text.count("<!-- SITE_FOOTER_END -->") != 1:
         errors.append(f"{name}: shared footer markers must appear exactly once.")
     if expected_style_version:
-        style_href = re.search(r'href=["\\\']assets/style\\.css\\?v=([^"\\\']+)["\\\']', text, re.I)
+        style_href = re.search(r'href=["\']assets/style\.css\?v=([^"\']+)["\']', text, re.I)
         if not style_href:
             errors.append(f"{name}: stylesheet must use the generated cache-busting version.")
         elif style_href.group(1) != expected_style_version:
