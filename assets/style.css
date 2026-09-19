@@ -115,3 +115,14 @@
 .footer-location{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
 .footer-location::before{content:"";width:17px;height:17px;flex:0 0 17px;background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%230E3455%27 stroke-width=%271.8%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M12 21s6-5.33 6-11a6 6 0 1 0-12 0c0 5.67 6 11 6 11Z%27/%3E%3Ccircle cx=%2712%27 cy=%2710%27 r=%272%27/%3E%3C/svg%3E")}
 @media(max-width:720px){.foot{row-gap:12px;column-gap:16px}.footer-location{font-size:15px}}
+
+
+/* breadcrumbs, FAQ and related research */
+.breadcrumbs{display:flex;flex-wrap:wrap;gap:6px 9px;align-items:center;margin:0 0 18px;color:var(--muted);font-size:14px;line-height:1.4}
+.breadcrumbs a{color:var(--accent);text-decoration:none}
+.breadcrumbs a:hover{text-decoration:underline}
+.breadcrumbs [aria-current="page"]{min-width:0;overflow-wrap:anywhere}
+.faq-home{max-width:900px}
+.faq-home details p{margin:10px 0 0;color:var(--muted);font-size:17px}
+.related-research{margin:20px 0 0;font-size:17px}
+@media(max-width:720px){.breadcrumbs{font-size:13px;margin-bottom:16px}.faq-home details p,.related-research{font-size:16px}}
