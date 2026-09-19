@@ -22,6 +22,9 @@ jobs:
       - name: Normalize analytics on every HTML page
         run: python scripts/ensure_analytics.py
 
+      - name: Normalize footer location and CSS cache version
+        run: python scripts/ensure_footer.py
+
       - name: Balance research ordering
         run: python scripts/reorder_home_research.py
 
