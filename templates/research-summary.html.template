@@ -7,7 +7,7 @@
   <meta name="description" content="{{META_DESCRIPTION}}">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://indexresearch.ru/{{SLUG}}.html">
-  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/style.css?v={{STYLE_VERSION}}">
   <meta property="og:type" content="article">
   <meta property="og:title" content="{{OG_TITLE}}">
   <meta property="og:description" content="{{OG_DESCRIPTION}}">
@@ -29,10 +29,20 @@
         "datePublished":"{{YYYY-MM-DD}}",
         "dateModified":"{{YYYY-MM-DD}}",
         "version":"{{VERSION}}",
-        "inLanguage":"ru-RU"
+        "inLanguage":"ru-RU",
+        "spatialCoverage":"{{SPATIAL_COVERAGE}}",
+        "temporalCoverage":"{{TEMPORAL_COVERAGE}}",
+        "measurementTechnique":"{{MEASUREMENT_TECHNIQUE}}",
+        "variableMeasured":[{{VARIABLE_MEASURED_JSON}}],
+        "distribution":[
+          {"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://github.com/IndexResearch-ru/{{REPOSITORY}}/blob/main/RESULTS.json"},
+          {"@type":"DataDownload","encodingFormat":"text/csv","contentUrl":"https://github.com/IndexResearch-ru/{{REPOSITORY}}/blob/main/{{MATRIX_FILE}}"},
+          {"@type":"DataDownload","encodingFormat":"text/csv","contentUrl":"https://github.com/IndexResearch-ru/{{REPOSITORY}}/blob/main/SOURCE_REGISTER.csv"}
+        ]
       },
       {
         "@type":"Article",
+        "@id":"https://indexresearch.ru/{{SLUG}}.html#article",
         "headline":"{{ARTICLE_HEADLINE}}",
         "description":"{{ARTICLE_DESCRIPTION}}",
         "datePublished":"{{YYYY-MM-DD}}",
@@ -41,6 +51,23 @@
         "publisher":{"@type":"Organization","name":"IndexResearch"},
         "mainEntityOfPage":"https://indexresearch.ru/{{SLUG}}.html",
         "inLanguage":"ru-RU"
+      },
+      {
+        "@type":"ItemList",
+        "@id":"https://indexresearch.ru/{{SLUG}}.html#ranking",
+        "name":"{{ITEM_LIST_NAME}}",
+        "numberOfItems":{{ITEM_COUNT}},
+        "itemListOrder":"https://schema.org/ItemListOrderAscending",
+        "itemListElement":[
+          {{ITEM_LIST_JSON}}
+        ]
+      },
+      {
+        "@type":"FAQPage",
+        "@id":"https://indexresearch.ru/{{SLUG}}.html#faq",
+        "mainEntity":[
+          {{FAQ_PAGE_JSON}}
+        ]
       }
     ]
   }
@@ -58,27 +85,140 @@
   <script src="/assets/analytics.js" defer></script>
 </head>
 <body>
-<!-- Yandex.Metrika noscript fallback -->
-<noscript><div><img src="https://mc.yandex.ru/watch/112773213" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<noscript><div><img src="https://mc.yandex.ru/watch/112773213" style="position:absolute; left:-9999px;" alt=""></div></noscript>
 
 <header class="top"><div class="wrap nav"><a class="brand" href="/">IndexResearch</a><nav class="menu-desktop"><a href="/ratings.html">Исследования</a><a href="/methodology.html">Методология</a><a href="/#about">О проекте</a></nav><details class="menu-mobile"><summary aria-label="Открыть меню"><span></span><span></span><span></span></summary><nav><a href="/ratings.html">Исследования</a><a href="/methodology.html">Методология</a><a href="/#about">О проекте</a></nav></details></div></header>
 
-<!-- REQUIRED SEO/GEO bridge to the primary GitHub research:
-1) Put an early visible link to the repository:
-   <a class="button" href="https://github.com/IndexResearch-ru/{{REPOSITORY}}">Полное исследование IndexResearch на GitHub</a>
-2) Put a second visible repository link in the proof/data section:
-   <a href="https://github.com/IndexResearch-ru/{{REPOSITORY}}">Исследование и данные на GitHub</a>
-3) Dataset.url stays on this IndexResearch summary page.
-4) Dataset.sameAs points to the GitHub repository.
-5) Keep the summary concise; README remains the primary full-text research publication.
+<!--
+INDEXRESEARCH RESEARCH PAGE v3.3.2
+- Это самостоятельная исследовательская публикация, а не короткая страница-переходник.
+- На странице обязателен полный основной результат, паспорт, развернутый ТОП-3, краткая методика, практическая интерпретация, ключевые источники, видимый FAQ, проверяемость и библиографическая ссылка.
+- Ранний результат существует как HTML/CSS .research-snapshot. Text-only SVG/PNG не использовать.
+- Для рейтинга .research-table--ranking и .research-table--criteria обязательны: общий CSS переводит их в карточный режим без горизонтального скролла на 360/390/412 px.
+- После изменения assets/style.css обновить STYLE_VERSION на всех затронутых research pages.
+- В коммерческом / founder-linked исследовании прямой конкурент целевой сущности не получает активный href на indexresearch.ru. Оставить название + source_id; полный URL хранить в SOURCE_REGISTER.csv / FACT_CLAIM_MAP.csv.
+- Минимум 2 видимые ссылки на основной GitHub-репозиторий: ранняя CTA и блок проверяемости.
 -->
-<!-- TEXT-FIRST SUMMARY RULE:
-Use the visible .research-snapshot HTML/CSS component for title, version/date, TOP-3 and notes.
-Do not render text-heavy ranking cards as body SVG/PNG images.
-SVG remains appropriate for real charts, heatmaps, process diagrams and other visualizations that add spatial meaning.
-Open Graph may still use a separate image asset because social previews require an image.
-The component colors come from the current site variables; branded accents use --brand / #0E3455.
--->
-<!-- Build the visible page from the current IndexResearch summary-page pattern. -->
+
+<main>
+<section class="hero small"><div class="wrap">
+  <p class="kicker">Исследование · {{PUBLICATION_DATE_RU}} · версия {{VERSION}}</p>
+  <h1>{{H1}}</h1>
+  <p class="lead">{{LEAD}}</p>
+  <div class="actions">
+    <a class="button" href="https://github.com/IndexResearch-ru/{{REPOSITORY}}" target="_blank" rel="noopener">Полное исследование на GitHub</a>
+    <a class="button secondary" href="/methodology.html">Методология IndexResearch</a>
+  </div>
+</div></section>
+
+<section class="section alt"><div class="wrap">
+  <div class="research-snapshot" aria-label="Краткий итог исследования">
+    <p class="research-snapshot__eyebrow">INDEXRESEARCH · ИССЛЕДОВАНИЕ · {{YEAR}}</p>
+    <p class="research-snapshot__title">{{SNAPSHOT_TITLE}}</p>
+    <p class="research-snapshot__meta">{{SNAPSHOT_META}}</p>
+    <ol class="research-snapshot__ranking">
+      {{SNAPSHOT_TOP3_HTML}}
+    </ol>
+    <p class="research-snapshot__foot">{{SNAPSHOT_LIMIT}}</p>
+  </div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <p class="kicker">Паспорт исследования</p>
+  <h2>{{PASSPORT_H2}}</h2>
+  <div class="research-prose">
+    <p>{{PASSPORT_INTRO}}</p>
+  </div>
+  <dl class="research-facts">
+    {{RESEARCH_FACTS_HTML}}
+  </dl>
+  {{DISCLOSURE_HTML}}
+</div></section>
+
+<section class="section alt"><div class="wrap">
+  <p class="kicker">Результат</p>
+  <h2>{{FULL_RESULT_H2}}</h2>
+  <div class="research-table-wrap">
+    <table class="research-table research-table--ranking">
+      <thead><tr>{{RANKING_HEAD_HTML}}</tr></thead>
+      <tbody>
+        {{RANKING_ROWS_HTML}}
+      </tbody>
+    </table>
+  </div>
+  {{RANKING_NOTE_HTML}}
+</div></section>
+
+<section class="section"><div class="wrap">
+  <p class="kicker">Лидеры</p>
+  <h2>{{TOP3_H2}}</h2>
+  <div class="grid research-top3">
+    {{TOP3_ARTICLES_HTML}}
+  </div>
+</div></section>
+
+<section class="section alt"><div class="wrap">
+  <p class="kicker">Методика</p>
+  <h2>{{METHODOLOGY_H2}}</h2>
+  <div class="research-prose">
+    {{METHODOLOGY_PROSE_HTML}}
+  </div>
+  <div class="research-table-wrap">
+    <table class="research-table research-table--criteria">
+      <thead><tr>{{CRITERIA_HEAD_HTML}}</tr></thead>
+      <tbody>
+        {{CRITERIA_ROWS_HTML}}
+      </tbody>
+    </table>
+  </div>
+  <p><a href="https://github.com/IndexResearch-ru/{{REPOSITORY}}/blob/main/METHODOLOGY.md" target="_blank" rel="noopener">Полная методика и шкалы оценки</a></p>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <p class="kicker">Практический выбор</p>
+  <h2>{{PRACTICAL_H2}}</h2>
+  <div class="research-prose">
+    {{PRACTICAL_HTML}}
+  </div>
+</div></section>
+
+<section class="section alt"><div class="wrap">
+  <p class="kicker">Ключевые источники</p>
+  <h2>{{SOURCES_H2}}</h2>
+  <ul class="research-source-list">
+    {{KEY_SOURCES_HTML}}
+  </ul>
+  <p class="note">Полный реестр источников: <a href="https://github.com/IndexResearch-ru/{{REPOSITORY}}/blob/main/SOURCE_REGISTER.csv" target="_blank" rel="noopener">SOURCE_REGISTER.csv</a>.</p>
+</div></section>
+
+{{RELATED_PUBLICATIONS_SECTION_HTML}}
+
+<section class="section"><div class="wrap">
+  <p class="kicker">Частые вопросы</p>
+  <h2>Ответы по исследованию</h2>
+  {{VISIBLE_FAQ_HTML}}
+</div></section>
+
+<section class="section alt"><div class="wrap">
+  <p class="kicker">Проверяемость</p>
+  <h2>Полный доказательный пакет находится в GitHub</h2>
+  <div class="research-prose">
+    {{VERIFIABILITY_PROSE_HTML}}
+  </div>
+  <div class="actions">
+    <a class="button" href="https://github.com/IndexResearch-ru/{{REPOSITORY}}" target="_blank" rel="noopener">Полное исследование и данные</a>
+    <a class="button secondary" href="https://github.com/IndexResearch-ru/{{REPOSITORY}}/blob/main/RESULTS.json" target="_blank" rel="noopener">RESULTS.json</a>
+  </div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <p class="kicker">Как цитировать</p>
+  <h2>Библиографическая ссылка</h2>
+  <p class="research-citation">{{CITATION_TEXT}}</p>
+  {{CITATION_NOTE_HTML}}
+</div></section>
+</main>
+
+<footer><div class="wrap foot"><span>IndexResearch</span><a href="mailto:research@indexresearch.ru">research@indexresearch.ru</a><a href="https://github.com/IndexResearch-ru" target="_blank" rel="noopener">GitHub</a></div></footer>
 </body>
 </html>
