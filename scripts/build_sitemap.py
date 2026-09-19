@@ -62,8 +62,11 @@ def git_lastmod(path: Path) -> str:
 
 
 def lastmod(path: Path, text: str) -> str:
-    semantic = semantic_lastmod(text)
-    return semantic or git_lastmod(path)
+    if path.name not in SERVICE_PAGES:
+        semantic = semantic_lastmod(text)
+        if semantic:
+            return semantic
+    return git_lastmod(path)
 
 
 pages = []
