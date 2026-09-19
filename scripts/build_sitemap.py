@@ -12,7 +12,8 @@ JSONLD_RE = re.compile(
     r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>([\s\S]*?)</script>',
     re.I,
 )
-DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")\nSERVICE_PAGES = {"index.html", "ratings.html", "methodology.html", "404.html"}
+DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
+SERVICE_PAGES = {"index.html", "ratings.html", "methodology.html", "404.html"}
 
 
 def _types(node):
