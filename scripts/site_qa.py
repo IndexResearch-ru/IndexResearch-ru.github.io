@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import hashlib
 import html as html_module
 import json
 import re
@@ -43,6 +44,30 @@ else:
 ratings = (ROOT / "ratings.html").read_text(encoding="utf-8") if (ROOT / "ratings.html").exists() else ""
 non_research = {"index.html", "ratings.html", "methodology.html"}
 
+# Shared site chrome: header and footer have one canonical source.
+header_partial_path = ROOT / "templates" / "partials" / "site-header.html"
+footer_partial_path = ROOT / "templates" / "partials" / "site-footer.html"
+if not header_partial_path.exists():
+    errors.append("templates/partials/site-header.html is missing.")
+    expected_header_block = None
+else:
+    shared_header = header_partial_path.read_text(encoding="utf-8").strip()
+    expected_header_block = f"<!-- SITE_HEADER_START -->\\n{shared_header}\\n<!-- SITE_HEADER_END -->"
+
+if not footer_partial_path.exists():
+    errors.append("templates/partials/site-footer.html is missing.")
+    expected_footer_block = None
+else:
+    shared_footer = footer_partial_path.read_text(encoding="utf-8").strip()
+    expected_footer_block = f"<!-- SITE_FOOTER_START -->\\n{shared_footer}\\n<!-- SITE_FOOTER_END -->"
+
+style_file_for_hash = ROOT / "assets" / "style.css"
+expected_style_version = (
+    hashlib.sha256(style_file_for_hash.read_bytes()).hexdigest()[:12]
+    if style_file_for_hash.exists()
+    else None
+)
+
 def visible_text(fragment):
     fragment = re.sub(r"<[^>]+>", " ", fragment or "")
     return re.sub(r"\s+", " ", html_module.unescape(fragment)).strip()
@@ -72,6 +97,23 @@ for path in html_paths:
     text = path.read_text(encoding="utf-8")
     name = path.name
     expected_url = f"{BASE}/" if name == "index.html" else f"{BASE}/{name}"
+
+    if expected_header_block and expected_header_block not in text:
+        errors.append(f"{name}: shared header differs from templates/partials/site-header.html.")
+    if expected_footer_block and expected_footer_block not in text:
+        errors.append(f"{name}: shared footer differs from templates/partials/site-footer.html.")
+    if text.count("<!-- SITE_HEADER_START -->") != 1 or text.count("<!-- SITE_HEADER_END -->") != 1:
+        errors.append(f"{name}: shared header markers must appear exactly once.")
+    if text.count("<!-- SITE_FOOTER_START -->") != 1 or text.count("<!-- SITE_FOOTER_END -->") != 1:
+        errors.append(f"{name}: shared footer markers must appear exactly once.")
+    if expected_style_version:
+        style_href = re.search(r'href=["\\\']assets/style\\.css\\?v=([^"\\\']+)["\\\']', text, re.I)
+        if not style_href:
+            errors.append(f"{name}: stylesheet must use the generated cache-busting version.")
+        elif style_href.group(1) != expected_style_version:
+            errors.append(
+                f"{name}: stylesheet cache version {style_href.group(1)!r} does not match {expected_style_version!r}."
+            )
 
     if len(re.findall(r'<script src="/assets/analytics\.js" defer></script>', text)) != 1:
         errors.append(f"{name}: must contain exactly one shared analytics.js include.")
