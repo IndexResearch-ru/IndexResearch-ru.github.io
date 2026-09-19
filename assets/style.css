@@ -35,3 +35,25 @@
 .home-research-more{margin:26px 0 0}
 .home-research-more a{font-weight:700}
 @media(max-width:720px){.research-teaser__actions{flex-wrap:nowrap}.home-research-grid{grid-template-columns:1fr}.research-teaser{padding:20px}.research-teaser__title{font-size:21px}.research-teaser__top-list{display:block;padding-left:24px}.research-teaser__top-list li+li{margin-top:4px}.home-research-head>p:last-child{font-size:17px}}
+
+
+/* research-detail components */
+.research-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:26px 0 0}
+.research-facts>div{border:1px solid var(--line);border-radius:12px;padding:18px;background:#fff;min-width:0}
+.research-facts dt{margin:0 0 5px;color:var(--muted);font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.research-facts dd{margin:0;font-size:18px;font-weight:700;line-height:1.35}
+.research-table-wrap{width:100%;overflow-x:auto;margin:24px 0}
+.research-table{width:100%;border-collapse:collapse;background:#fff;font-size:16px}
+.research-table th,.research-table td{padding:13px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.research-table th{background:var(--soft);font-weight:800}
+.research-table td:first-child,.research-table th:first-child{white-space:nowrap}
+.research-table .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.research-prose{max-width:900px;font-size:18px}
+.research-prose p{margin:0 0 18px}
+.research-prose ul,.research-prose ol{padding-left:24px}
+.research-prose li+li{margin-top:8px}
+.research-top3 article p{margin-bottom:0}
+.research-source-list li+li{margin-top:10px}
+.research-citation{padding:20px 22px;border-left:4px solid var(--brand);background:var(--soft);font-size:17px}
+@media(max-width:900px){.research-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.research-facts{grid-template-columns:1fr}.research-table{font-size:15px}.research-table th,.research-table td{padding:11px 10px}.research-prose{font-size:17px}}
