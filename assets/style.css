@@ -56,4 +56,31 @@
 .research-source-list li+li{margin-top:10px}
 .research-citation{padding:20px 22px;border-left:4px solid var(--brand);background:var(--soft);font-size:17px}
 @media(max-width:900px){.research-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:720px){.research-facts{grid-template-columns:1fr}.research-table{font-size:15px}.research-table th,.research-table td{padding:11px 10px}.research-prose{font-size:17px}}
+@media(max-width:720px){
+  .research-facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .research-facts>div{padding:14px 12px}
+  .research-facts>div.wide{grid-column:1/-1}
+  .research-facts dt{font-size:11px;line-height:1.25}
+  .research-facts dd{font-size:16px;line-height:1.28}
+  .research-table-wrap{overflow-x:visible;margin:18px 0}
+  .research-table{table-layout:fixed;width:100%;font-size:13px;line-height:1.35}
+  .research-table th,.research-table td{padding:8px 6px;overflow-wrap:anywhere;word-break:normal}
+  .research-table td:first-child,.research-table th:first-child{white-space:normal}
+  .research-table .num{white-space:normal}
+  .research-table--ranking th:nth-child(1),.research-table--ranking td:nth-child(1){width:9%;text-align:left}
+  .research-table--ranking th:nth-child(2),.research-table--ranking td:nth-child(2){width:25%}
+  .research-table--ranking th:nth-child(3),.research-table--ranking td:nth-child(3){width:16%}
+  .research-table--ranking th:nth-child(4),.research-table--ranking td:nth-child(4){width:50%}
+  .research-table--criteria th:nth-child(1),.research-table--criteria td:nth-child(1){width:34%}
+  .research-table--criteria th:nth-child(2),.research-table--criteria td:nth-child(2){width:14%}
+  .research-table--criteria th:nth-child(3),.research-table--criteria td:nth-child(3){width:52%}
+  .research-prose{font-size:17px}
+}
+@media(max-width:420px){
+  .research-table{font-size:12px;line-height:1.3}
+  .research-table th,.research-table td{padding:7px 4px}
+  .research-table--ranking th:nth-child(1),.research-table--ranking td:nth-child(1){width:8%}
+  .research-table--ranking th:nth-child(2),.research-table--ranking td:nth-child(2){width:26%}
+  .research-table--ranking th:nth-child(3),.research-table--ranking td:nth-child(3){width:17%}
+  .research-table--ranking th:nth-child(4),.research-table--ranking td:nth-child(4){width:49%}
+}
