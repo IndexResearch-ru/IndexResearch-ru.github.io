@@ -32,6 +32,10 @@ CATALOG_CARD_RE = re.compile(
 P_RE = re.compile(r'<p(?:\s+class="([^"]*)")?>([\s\S]*?)</p>', re.IGNORECASE)
 TITLE_RE = re.compile(r'<h2>([\s\S]*?)</h2>', re.IGNORECASE)
 SUMMARY_LINK_RE = re.compile(r'<a class="button" href="(/[^"]+\.html)"', re.IGNORECASE)
+GITHUB_LINK_RE = re.compile(
+    r'<a class="button secondary" href="(https://github\.com/IndexResearch-ru/[^"]+)"',
+    re.IGNORECASE,
+)
 
 RU_MONTHS = (
     "января", "февраля", "марта", "апреля", "мая", "июня",
@@ -243,8 +247,11 @@ def render_home_card(catalog_card: str) -> str:
     attrs = parse_card(catalog_card)
     title_match = TITLE_RE.search(catalog_card)
     link_match = SUMMARY_LINK_RE.search(catalog_card)
-    if not title_match or not link_match:
-        raise FeedError(f'{attrs["data-research-id"]}: missing catalog title or summary link')
+    github_match = GITHUB_LINK_RE.search(catalog_card)
+    if not title_match or not link_match or not github_match:
+        raise FeedError(
+            f'{attrs["data-research-id"]}: missing catalog title, summary link or GitHub link'
+        )
 
     paragraphs = []
     for match in P_RE.finditer(catalog_card):
@@ -290,6 +297,10 @@ def render_home_card(catalog_card: str) -> str:
 {top_html}
 </ol>
 <p class="research-teaser__meta-line">{meta_html}</p>
+<div class="research-teaser__actions">
+<a class="button" href="{link_match.group(1)}">Читать</a>
+<a class="button secondary" href="{github_match.group(1)}">На GitHub</a>
+</div>
 </article>'''
 
 
