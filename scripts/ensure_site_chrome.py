@@ -17,11 +17,11 @@ HEADER_BLOCK_RE = re.compile(
     rf"{re.escape(HEADER_START)}[\s\S]*?{re.escape(HEADER_END)}"
 )
 FOOTER_BLOCK_RE = re.compile(
-    rf"{re.escape(FOOTER_START)}[\\s\\S]*?{re.escape(FOOTER_END)}"
+    rf"{re.escape(FOOTER_START)}[\s\S]*?{re.escape(FOOTER_END)}"
 )
-LEGACY_HEADER_RE = re.compile(r'<header class="top">[\\s\\S]*?</header>', re.I)
-LEGACY_FOOTER_RE = re.compile(r'<footer>[\\s\\S]*?</footer>', re.I)
-STYLE_RE = re.compile(r'assets/style\\.css(?:\\?v=[^"\\\']*)?')
+LEGACY_HEADER_RE = re.compile(r'<header class="top">[\s\S]*?</header>', re.I)
+LEGACY_FOOTER_RE = re.compile(r'<footer>[\s\S]*?</footer>', re.I)
+STYLE_RE = re.compile(r'assets/style\.css(?:\?v=[^"\']*)?')
 
 header = HEADER_PATH.read_text(encoding="utf-8").strip()
 footer = FOOTER_PATH.read_text(encoding="utf-8").strip()
