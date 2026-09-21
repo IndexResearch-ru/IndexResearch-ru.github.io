@@ -13,7 +13,13 @@ JSONLD_RE = re.compile(
     re.I,
 )
 DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
-SERVICE_PAGES = {"index.html", "ratings.html", "methodology.html", "404.html"}
+SERVICE_PAGES = {
+    "index.html",
+    "ratings.html",
+    "methodology.html",
+    "404.html",
+    "en/methodology.html",
+}
 
 
 def _types(node):
@@ -48,10 +54,14 @@ def semantic_lastmod(text: str) -> str | None:
     return None
 
 
+def rel_path(path: Path) -> str:
+    return path.relative_to(ROOT).as_posix()
+
+
 def git_lastmod(path: Path) -> str:
     try:
         value = subprocess.check_output(
-            ["git", "log", "-1", "--format=%cs", "--", path.name],
+            ["git", "log", "-1", "--format=%cs", "--", rel_path(path)],
             cwd=ROOT,
             text=True,
         ).strip()
@@ -63,7 +73,7 @@ def git_lastmod(path: Path) -> str:
 
 
 def lastmod(path: Path, text: str) -> str:
-    if path.name not in SERVICE_PAGES:
+    if rel_path(path) not in SERVICE_PAGES:
         semantic = semantic_lastmod(text)
         if semantic:
             return semantic
@@ -71,22 +81,39 @@ def lastmod(path: Path, text: str) -> str:
 
 
 pages = []
-for path in sorted(ROOT.glob("*.html")):
+for path in sorted(ROOT.rglob("*.html")):
+    if any(part in {"templates", ".git", ".github"} for part in path.parts):
+        continue
     text = path.read_text(encoding="utf-8")
     robots = re.search(r'<meta\s+name="robots"\s+content="([^"]+)"', text, re.I)
     if robots and "noindex" in robots.group(1).lower():
         continue
-    loc = f"{BASE}/" if path.name == "index.html" else f"{BASE}/{path.name}"
-    pages.append((path.name, loc, lastmod(path, text)))
 
-priority = {"index.html": 0, "ratings.html": 1, "methodology.html": 2}
-pages.sort(key=lambda x: (priority.get(x[0], 10), x[0]))
+    rel = rel_path(path)
+    if rel == "index.html":
+        loc = f"{BASE}/"
+    elif rel.endswith("/index.html"):
+        loc = f"{BASE}/" + rel[:-10]
+    else:
+        loc = f"{BASE}/{rel}"
+    pages.append((rel, loc, lastmod(path, text)))
 
-lines = ['<?xml version="1.0" encoding="UTF-8"?>',
-         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+priority = {
+    "index.html": 0,
+    "en/index.html": 1,
+    "ratings.html": 2,
+    "methodology.html": 3,
+    "en/methodology.html": 4,
+}
+pages.sort(key=lambda item: (priority.get(item[0], 10), item[0]))
+
+lines = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+]
 for _, loc, modified in pages:
     lines.append(f'  <url><loc>{xmlutils.escape(loc)}</loc><lastmod>{modified}</lastmod></url>')
-lines.append('</urlset>')
+lines.append("</urlset>")
 content = "\n".join(lines) + "\n"
 
 target = ROOT / "sitemap.xml"

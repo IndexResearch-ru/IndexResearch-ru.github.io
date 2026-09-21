@@ -126,3 +126,19 @@
 .faq-home details p{margin:10px 0 0;color:var(--muted);font-size:17px}
 .related-research{margin:20px 0 0;font-size:17px}
 @media(max-width:720px){.breadcrumbs{font-size:13px;margin-bottom:16px}.faq-home details p,.related-research{font-size:16px}}
+
+
+/* RU / EN language switch */
+.menu-desktop .langs{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;color:var(--muted)}
+.menu-desktop .langs .lang-link{color:rgba(91,100,116,.48);font-weight:500;text-decoration:none;transition:color .18s ease}
+.menu-desktop .langs .lang-link:hover{text-decoration:underline}
+.lang-sep{color:rgba(91,100,116,.38)}
+html[lang="ru"] .menu-desktop .langs .lang-ru,html[lang="en"] .menu-desktop .langs .lang-en{color:var(--brand);font-weight:800}
+.mobile-langs{display:flex;align-items:center;gap:5px;padding:9px 12px 8px;border-top:1px solid var(--line);margin-top:4px}
+.menu-mobile nav .mobile-langs .lang-link{display:inline-block;padding:0;color:rgba(91,100,116,.48);font-size:15px;font-weight:500;text-decoration:none}
+html[lang="ru"] .mobile-langs .lang-ru,html[lang="en"] .mobile-langs .lang-en{color:var(--brand);font-weight:800}
+.footer-lang{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.footer-lang .lang-link{color:rgba(91,100,116,.52);font-weight:500;text-decoration:none}
+.footer-lang .lang-link:hover{text-decoration:underline}
+html[lang="ru"] .footer-lang .lang-ru,html[lang="en"] .footer-lang .lang-en{color:var(--brand);font-weight:800}
+@media(max-width:720px){.footer-lang{flex:0 0 auto}}
