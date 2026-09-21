@@ -61,6 +61,41 @@ def parse_card(card: str) -> dict[str, str]:
     return attrs
 
 
+def normalize_catalog_card(card: str) -> str:
+    attrs = parse_card(card)
+    title_match = TITLE_RE.search(card)
+    link_match = SUMMARY_LINK_RE.search(card)
+    github_match = GITHUB_LINK_RE.search(card)
+    if not title_match or not link_match or not github_match:
+        raise FeedError(
+            f'{attrs["data-research-id"]}: missing catalog title, summary link or GitHub link'
+        )
+
+    title = html.escape(text_only(title_match.group(1)))
+    summary_url = link_match.group(1)
+
+    card = TITLE_RE.sub(
+        f'<h2><a href="{summary_url}">{title}</a></h2>',
+        card,
+        count=1,
+    )
+    card = re.sub(
+        r'(<a class="button" href="/[^"]+\.html">)[\s\S]*?(</a>)',
+        r'\1Читать\2',
+        card,
+        count=1,
+        flags=re.IGNORECASE,
+    )
+    card = re.sub(
+        r'(<a class="button secondary" href="https://github\.com/IndexResearch-ru/[^"]+">)[\s\S]*?(</a>)',
+        r'\1На GitHub\2',
+        card,
+        count=1,
+        flags=re.IGNORECASE,
+    )
+    return card
+
+
 def stable_priority(date: str, beneficiary: str) -> str:
     return hashlib.sha256(f"{date}|{beneficiary}".encode("utf-8")).hexdigest()
 
@@ -70,7 +105,8 @@ def mix_one_date(cards: list[str], date: str) -> list[str]:
     seen_ids: set[str] = set()
 
     parsed = []
-    for card in cards:
+    for raw_card in cards:
+        card = normalize_catalog_card(raw_card)
         attrs = parse_card(card)
         rid = attrs["data-research-id"]
         if rid in seen_ids:
