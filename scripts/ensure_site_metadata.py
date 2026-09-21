@@ -263,24 +263,101 @@ def ensure_home_org(data):
     return data
 
 
-def ensure_catalog(data):
+CATALOG_CARD_RE = re.compile(
+    r'<article\b[^>]*\bdata-research-card=["\']true["\'][^>]*\bdata-research-id=["\']([^"\']+)["\'][^>]*>',
+    re.I,
+)
+
+DATASET_SUMMARY_FIELDS = (
+    "@type",
+    "@id",
+    "name",
+    "description",
+    "url",
+    "sameAs",
+    "creator",
+    "publisher",
+    "datePublished",
+    "dateModified",
+    "version",
+    "inLanguage",
+    "about",
+    "keywords",
+)
+
+
+def catalog_research_ids(ratings_text: str) -> list[str]:
+    if ratings_text.count("<!-- RESEARCH_CATALOG_START -->") != 1 or ratings_text.count("<!-- RESEARCH_CATALOG_END -->") != 1:
+        raise RuntimeError("ratings.html must contain exactly one research catalog marker pair.")
+    block = ratings_text.split("<!-- RESEARCH_CATALOG_START -->", 1)[1].split("<!-- RESEARCH_CATALOG_END -->", 1)[0]
+    ids = CATALOG_CARD_RE.findall(block)
+    if not ids:
+        raise RuntimeError("ratings.html research catalog contains no cards.")
+    if len(ids) != len(set(ids)):
+        raise RuntimeError("ratings.html research catalog contains duplicate data-research-id values.")
+    return ids
+
+
+def collect_catalog_datasets(ratings_text: str) -> list[dict]:
+    datasets = []
+    for research_id in catalog_research_ids(ratings_text):
+        path = ROOT / f"{research_id}.html"
+        if not path.exists():
+            raise RuntimeError(f"ratings.html references missing research page: {path.name}")
+        page_data = load_jsonld(path.read_text(encoding="utf-8"))
+        dataset = next(
+            (node for node in graph_of(page_data) if has_type(node, "Dataset")),
+            None,
+        )
+        if not dataset:
+            raise RuntimeError(f"{path.name}: missing Dataset in JSON-LD.")
+        summary = {
+            field: dataset[field]
+            for field in DATASET_SUMMARY_FIELDS
+            if field in dataset
+        }
+        summary["@type"] = "Dataset"
+        summary.setdefault("@id", f"{BASE}/{path.name}#dataset")
+        summary.setdefault("url", f"{BASE}/{path.name}")
+        summary["includedInDataCatalog"] = {"@id": CATALOG_ID}
+        datasets.append(summary)
+    return datasets
+
+
+def latest_catalog_date(datasets: list[dict]) -> str | None:
+    dates = [
+        str(item.get("dateModified") or item.get("datePublished") or "")
+        for item in datasets
+    ]
+    dates = [value for value in dates if re.fullmatch(r"\d{4}-\d{2}-\d{2}", value)]
+    return max(dates) if dates else None
+
+
+def sync_home_datasets(data, datasets: list[dict]):
+    data, graph = ensure_graph(data)
+    graph[:] = [node for node in graph if not has_type(node, "Dataset")]
+    graph.extend(datasets)
+    collection = next((n for n in graph if has_type(n, "CollectionPage")), None)
+    latest = latest_catalog_date(datasets)
+    if collection and latest:
+        collection["dateModified"] = latest
+    return data
+
+
+def ensure_catalog(data, datasets: list[dict]):
     data, graph = ensure_graph(data)
     collection = next((n for n in graph if has_type(n, "CollectionPage")), None)
     if not collection:
         return data
     collection["@id"] = f"{BASE}/ratings.html#page"
     collection["mainEntity"] = {"@id": CATALOG_ID}
-    refs = []
-    for item in collection.get("hasPart") or []:
-        if not has_type(item, "Dataset"):
-            continue
-        if item.get("url"):
-            item.setdefault("@id", item["url"] + "#dataset")
-        item["includedInDataCatalog"] = {"@id": CATALOG_ID}
-        if item.get("@id"):
-            refs.append({"@id": item["@id"]})
+    collection["hasPart"] = datasets
+    latest = latest_catalog_date(datasets)
+    if latest:
+        collection["dateModified"] = latest
+    refs = [{"@id": item["@id"]} for item in datasets]
     graph[:] = [n for n in graph if not has_type(n, "DataCatalog")]
-    graph.append({
+    catalog = {
         "@type": "DataCatalog",
         "@id": CATALOG_ID,
         "name": "Каталог исследований IndexResearch",
@@ -294,7 +371,10 @@ def ensure_catalog(data):
         },
         "dataset": refs,
         "inLanguage": "ru-RU",
-    })
+    }
+    if latest:
+        catalog["dateModified"] = latest
+    graph.append(catalog)
     return data
 
 
@@ -335,7 +415,7 @@ def ensure_related_links(text: str, name: str) -> str:
     return text
 
 
-def normalize(path: Path) -> bool:
+def normalize(path: Path, catalog_datasets: list[dict] | None = None) -> bool:
     text = path.read_text(encoding="utf-8")
     original = text
     name = path.name
@@ -367,11 +447,14 @@ def normalize(path: Path) -> bool:
 
         if name == "index.html":
             data = ensure_home_org(data)
+            if catalog_datasets is not None:
+                data = sync_home_datasets(data, catalog_datasets)
             data = add_catalog_membership(data)
             text, data = ensure_home_faq(text, data)
 
         elif name == "ratings.html":
-            data = ensure_catalog(data)
+            if catalog_datasets is not None:
+                data = ensure_catalog(data, catalog_datasets)
             label = get_h1(text) or "Исследования IndexResearch"
             text, data = add_breadcrumbs(text, data, name, label, research=False)
             text = text.replace(">Краткий вывод и данные<", ">Читать исследование<")
@@ -396,8 +479,16 @@ def normalize(path: Path) -> bool:
 
 
 def main() -> None:
-    changed = [p.name for p in sorted(ROOT.glob("*.html")) if normalize(p)]
-    print("Site metadata normalized.")
+    ratings_path = ROOT / "ratings.html"
+    if not ratings_path.exists():
+        raise SystemExit("ratings.html is missing.")
+    catalog_datasets = collect_catalog_datasets(ratings_path.read_text(encoding="utf-8"))
+    changed = [
+        p.name
+        for p in sorted(ROOT.glob("*.html"))
+        if normalize(p, catalog_datasets)
+    ]
+    print(f"Site metadata normalized for {len(catalog_datasets)} catalog research pages.")
     print("Updated:", ", ".join(changed) if changed else "none")
 
 
