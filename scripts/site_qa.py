@@ -27,9 +27,12 @@ if feed_check.returncode != 0:
         or "Homepage research feed check failed."
     )
 
-html_paths = sorted(ROOT.glob("*.html"))
+html_paths = sorted(
+    path for path in ROOT.rglob("*.html")
+    if not any(part in {"templates", ".git", ".github"} for part in path.relative_to(ROOT).parts)
+)
 if not html_paths:
-    errors.append("No root HTML pages found.")
+    errors.append("No public HTML pages found.")
 
 sitemap_path = ROOT / "sitemap.xml"
 sitemap_urls = set()
@@ -118,7 +121,10 @@ def catalog_card_ids(page_text):
 
 
 catalog_ids = catalog_card_ids(ratings)
-research_page_ids = sorted(path.stem for path in html_paths if path.name not in non_research)
+research_page_ids = sorted(
+    path.stem for path in html_paths
+    if path.parent == ROOT and path.name not in non_research
+)
 if sorted(catalog_ids) != research_page_ids:
     missing_cards = sorted(set(research_page_ids) - set(catalog_ids))
     missing_pages = sorted(set(catalog_ids) - set(research_page_ids))
@@ -216,35 +222,41 @@ elif latest_catalog_date and home_collections[0].get("dateModified") != latest_c
 
 for path in html_paths:
     text = path.read_text(encoding="utf-8")
+    rel = path.relative_to(ROOT).as_posix()
     name = path.name
-    expected_url = f"{BASE}/" if name == "index.html" else f"{BASE}/{name}"
+    expected_url = (
+        f"{BASE}/"
+        if rel == "index.html"
+        else (f"{BASE}/" + rel[:-10] if rel.endswith("/index.html") else f"{BASE}/{rel}")
+    )
+    is_root_research = path.parent == ROOT and name not in non_research
 
     expected_header, expected_footer = render_chrome(text)
     expected_header_block = f"<!-- SITE_HEADER_START -->\n{expected_header}\n<!-- SITE_HEADER_END -->"
     expected_footer_block = f"<!-- SITE_FOOTER_START -->\n{expected_footer}\n<!-- SITE_FOOTER_END -->"
     if expected_header_block not in text:
-        errors.append(f"{name}: shared header differs from the canonical language-aware partial.")
+        errors.append(f"{rel}: shared header differs from the canonical language-aware partial.")
     if expected_footer_block not in text:
-        errors.append(f"{name}: shared footer differs from the canonical language-aware partial.")
+        errors.append(f"{rel}: shared footer differs from the canonical language-aware partial.")
     if text.count("<!-- SITE_HEADER_START -->") != 1 or text.count("<!-- SITE_HEADER_END -->") != 1:
-        errors.append(f"{name}: shared header markers must appear exactly once.")
+        errors.append(f"{rel}: shared header markers must appear exactly once.")
     if text.count("<!-- SITE_FOOTER_START -->") != 1 or text.count("<!-- SITE_FOOTER_END -->") != 1:
-        errors.append(f"{name}: shared footer markers must appear exactly once.")
+        errors.append(f"{rel}: shared footer markers must appear exactly once.")
     if expected_style_version:
-        style_href = re.search(r'href=["\']assets/style\.css\?v=([^"\']+)["\']', text, re.I)
+        style_href = re.search(r'href=["\']/?assets/style\.css\?v=([^"\']+)["\']', text, re.I)
         if not style_href:
-            errors.append(f"{name}: stylesheet must use the generated cache-busting version.")
+            errors.append(f"{rel}: stylesheet must use the generated cache-busting version.")
         elif style_href.group(1) != expected_style_version:
             errors.append(
-                f"{name}: stylesheet cache version {style_href.group(1)!r} does not match {expected_style_version!r}."
+                f"{rel}: stylesheet cache version {style_href.group(1)!r} does not match {expected_style_version!r}."
             )
 
     if len(re.findall(r'<script src="/assets/analytics\.js" defer></script>', text)) != 1:
-        errors.append(f"{name}: must contain exactly one shared analytics.js include.")
+        errors.append(f"{rel}: must contain exactly one shared analytics.js include.")
     if "mc.yandex.ru/metrika/tag.js" in text:
-        errors.append(f"{name}: contains legacy inline Yandex Metrika loader.")
+        errors.append(f"{rel}: contains legacy inline Yandex Metrika loader.")
     if text.count("mc.yandex.ru/watch/112773213") != 1:
-        errors.append(f"{name}: must contain exactly one Yandex noscript fallback.")
+        errors.append(f"{rel}: must contain exactly one Yandex noscript fallback.")
 
     favicon_checks = [
         'href="/favicon.ico"',
@@ -256,25 +268,26 @@ for path in html_paths:
     ]
     for needle in favicon_checks:
         if text.count(needle) != 1:
-            errors.append(f"{name}: favicon metadata must contain exactly one {needle}.")
+            errors.append(f"{rel}: favicon metadata must contain exactly one {needle}.")
 
     if not re.search(r"<title>[^<]{3,}</title>", text, re.I):
-        errors.append(f"{name}: missing/non-empty <title>.")
+        errors.append(f"{rel}: missing/non-empty <title>.")
     if not re.search(r'<meta\s+name="description"\s+content="[^"]{20,}"', text, re.I):
-        errors.append(f"{name}: missing meta description.")
+        errors.append(f"{rel}: missing meta description.")
     canonical = re.search(r'<link\s+rel="canonical"\s+href="([^"]+)"', text, re.I)
     if not canonical:
-        errors.append(f"{name}: missing canonical.")
+        errors.append(f"{rel}: missing canonical.")
     elif canonical.group(1) != expected_url:
-        errors.append(f"{name}: canonical is {canonical.group(1)!r}, expected {expected_url!r}.")
+        errors.append(f"{rel}: canonical is {canonical.group(1)!r}, expected {expected_url!r}.")
     if len(re.findall(r"<h1(?:\s[^>]*)?>", text, re.I)) != 1:
-        errors.append(f"{name}: must contain exactly one H1.")
+        errors.append(f"{rel}: must contain exactly one H1.")
     if 'application/ld+json' not in text:
-        errors.append(f"{name}: missing Schema.org JSON-LD.")
+        errors.append(f"{rel}: missing Schema.org JSON-LD.")
 
     html_lang = re.search(r'<html\b[^>]*\blang=["\']([^"\']+)["\']', text, re.I)
-    if not html_lang or html_lang.group(1).lower() != "ru":
-        errors.append(f"{name}: <html lang> must be ru.")
+    expected_lang = "en" if rel.startswith("en/") else "ru"
+    if not html_lang or html_lang.group(1).lower() != expected_lang:
+        errors.append(f"{rel}: <html lang> must be {expected_lang}.")
 
     required_og = ["og:type", "og:site_name", "og:locale", "og:title", "og:description", "og:url", "og:image", "og:image:alt"]
     for prop in required_og:
@@ -284,14 +297,14 @@ for path in html_paths:
             re.I,
         ))
         if count != 1:
-            errors.append(f"{name}: Open Graph property {prop} must appear exactly once; found {count}.")
+            errors.append(f"{rel}: Open Graph property {prop} must appear exactly once; found {count}.")
 
     if "indexresearch-ru.github.io" in text:
-        errors.append(f"{name}: contains staging GitHub Pages hostname indexresearch-ru.github.io.")
+        errors.append(f"{rel}: contains staging GitHub Pages hostname indexresearch-ru.github.io.")
 
     for href in re.findall(r'href=["\']([^"\']*)["\']', text, re.I):
         if not href:
-            errors.append(f"{name}: contains empty href.")
+            errors.append(f"{rel}: contains empty href.")
             continue
         if href.startswith(("#", "mailto:", "tel:", "javascript:")):
             continue
@@ -305,36 +318,36 @@ for path in html_paths:
         if local and local.endswith(".html"):
             target = ROOT / local.lstrip("/")
             if not target.exists():
-                errors.append(f"{name}: internal link points to missing file: {href}.")
+                errors.append(f"{rel}: internal link points to missing file: {href}.")
 
     robots = re.search(r'<meta\s+name="robots"\s+content="([^"]+)"', text, re.I)
     indexed = not (robots and "noindex" in robots.group(1).lower())
     if indexed and expected_url not in sitemap_urls:
-        errors.append(f"{name}: missing from sitemap.xml.")
+        errors.append(f"{rel}: missing from sitemap.xml.")
 
-    if name not in non_research:
+    if is_root_research:
         slug = name[:-5]
         github_repo = f"https://github.com/IndexResearch-ru/{slug}"
 
         if f'href="/{name}"' not in ratings and f'href="{name}"' not in ratings:
-            errors.append(f"{name}: research page is not linked from ratings.html.")
+            errors.append(f"{rel}: research page is not linked from ratings.html.")
 
         if f'href="{github_repo}"' not in ratings:
-            errors.append(f"{name}: primary GitHub repository is not linked directly from ratings.html.")
+            errors.append(f"{rel}: primary GitHub repository is not linked directly from ratings.html.")
 
         if len(re.findall(rf'href="{re.escape(github_repo)}"', text)) < 2:
-            errors.append(f"{name}: summary page must contain at least 2 visible links to the primary GitHub repository.")
+            errors.append(f"{rel}: summary page must contain at least 2 visible links to the primary GitHub repository.")
 
         site_url = f"{BASE}/{name}"
         if not re.search(rf'"url"\s*:\s*"{re.escape(site_url)}"', text):
-            errors.append(f"{name}: Dataset.url must point to the IndexResearch summary page.")
+            errors.append(f"{rel}: Dataset.url must point to the IndexResearch summary page.")
         if not re.search(rf'"sameAs"\s*:\s*"{re.escape(github_repo)}"', text):
-            errors.append(f"{name}: Dataset.sameAs must point to the primary GitHub repository.")
+            errors.append(f"{rel}: Dataset.sameAs must point to the primary GitHub repository.")
         if not re.search(rf'"@id"\s*:\s*"{re.escape(site_url)}#dataset"', text):
-            errors.append(f"{name}: Dataset @id must use the IndexResearch summary URL.")
+            errors.append(f"{rel}: Dataset @id must use the IndexResearch summary URL.")
 
         if not re.search(r'<link[^>]+href=["\']assets/style\.css\?v=[^"\']+["\']', text, re.I):
-            errors.append(f"{name}: research page stylesheet must use cache-busting ?v=.")
+            errors.append(f"{rel}: research page stylesheet must use cache-busting ?v=.")
 
         required_components = [
             "research-snapshot",
@@ -348,7 +361,7 @@ for path in html_paths:
         ]
         for component in required_components:
             if component not in text:
-                errors.append(f"{name}: missing required v3.3.2 component .{component}.")
+                errors.append(f"{rel}: missing required v3.3.2 component .{component}.")
 
         snapshot = re.search(
             r'<div[^>]+class=["\'][^"\']*research-snapshot[^"\']*["\'][^>]*>([\s\S]*?)</div>',
@@ -356,7 +369,7 @@ for path in html_paths:
             re.I,
         )
         if snapshot and re.search(r"<(?:img|svg)\b", snapshot.group(1), re.I):
-            errors.append(f"{name}: research-snapshot must remain text-first; img/svg found inside it.")
+            errors.append(f"{rel}: research-snapshot must remain text-first; img/svg found inside it.")
 
         graph = jsonld_graph(text, name)
         by_type = {}
@@ -371,7 +384,7 @@ for path in html_paths:
 
         for schema_type in ["Dataset", "Article", "ItemList", "FAQPage"]:
             if schema_type not in by_type:
-                errors.append(f"{name}: missing Schema.org {schema_type}.")
+                errors.append(f"{rel}: missing Schema.org {schema_type}.")
 
         ranking_match = re.search(
             r'<table[^>]+class=["\'][^"\']*research-table--ranking[^"\']*["\'][^>]*>[\s\S]*?<tbody>([\s\S]*?)</tbody>',
@@ -384,14 +397,14 @@ for path in html_paths:
             else 0
         )
         if ranking_rows < 3:
-            errors.append(f"{name}: full ranking/result table has only {ranking_rows} rows.")
+            errors.append(f"{rel}: full ranking/result table has only {ranking_rows} rows.")
 
         item_lists = by_type.get("ItemList", [])
         if item_lists:
             item_count = len(item_lists[0].get("itemListElement") or [])
             if item_count != ranking_rows:
                 errors.append(
-                    f"{name}: ItemList count {item_count} does not match visible ranking rows {ranking_rows}."
+                    f"{rel}: ItemList count {item_count} does not match visible ranking rows {ranking_rows}."
                 )
 
         visible_faq = [
@@ -403,7 +416,7 @@ for path in html_paths:
             )
         ]
         if not 5 <= len(visible_faq) <= 10:
-            errors.append(f"{name}: visible FAQ must contain 5-10 questions; found {len(visible_faq)}.")
+            errors.append(f"{rel}: visible FAQ must contain 5-10 questions; found {len(visible_faq)}.")
 
         faq_pages = by_type.get("FAQPage", [])
         if faq_pages:
@@ -413,20 +426,20 @@ for path in html_paths:
                 if isinstance(entity, dict)
             ]
             if schema_faq != visible_faq:
-                errors.append(f"{name}: FAQPage questions/order must match visible FAQ exactly.")
+                errors.append(f"{rel}: FAQPage questions/order must match visible FAQ exactly.")
 
         datasets = by_type.get("Dataset", [])
         if datasets:
             dataset_dump = json.dumps(datasets[0], ensure_ascii=False)
             if "RESULTS.json" not in dataset_dump:
-                errors.append(f"{name}: Dataset.distribution must expose RESULTS.json.")
+                errors.append(f"{rel}: Dataset.distribution must expose RESULTS.json.")
             if "SOURCE_REGISTER.csv" not in dataset_dump:
-                errors.append(f"{name}: Dataset.distribution must expose SOURCE_REGISTER.csv.")
+                errors.append(f"{rel}: Dataset.distribution must expose SOURCE_REGISTER.csv.")
             if not any(
                 candidate in dataset_dump
                 for candidate in ["SCORE_MATRIX.csv", "OBSERVATION_MATRIX.csv", "CURRENT_RECHECK.csv"]
             ):
-                errors.append(f"{name}: Dataset.distribution must expose SCORE_MATRIX.csv or an equivalent matrix.")
+                errors.append(f"{rel}: Dataset.distribution must expose SCORE_MATRIX.csv or an equivalent matrix.")
 
 index_text = (ROOT / "index.html").read_text(encoding="utf-8") if (ROOT / "index.html").exists() else ""
 if not re.search(r'"sameAs"\s*:\s*\[[^\]]*"https://github.com/IndexResearch-ru"', index_text, re.S):

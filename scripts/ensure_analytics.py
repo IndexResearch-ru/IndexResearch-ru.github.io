@@ -42,7 +42,9 @@ FAVICON_BLOCK_RE = re.compile(
 )
 
 changed = []
-for path in sorted(ROOT.glob("*.html")):
+for path in sorted(ROOT.rglob("*.html")):
+    if any(part in {"templates", ".git", ".github"} for part in path.relative_to(ROOT).parts):
+        continue
     text = path.read_text(encoding="utf-8")
     original = text
 
@@ -55,14 +57,14 @@ for path in sorted(ROOT.glob("*.html")):
     text = FAVICON_BLOCK_RE.sub("", text)
 
     if "</head>" not in text or "<body>" not in text:
-        raise SystemExit(f"{path.name}: missing </head> or <body>")
+        raise SystemExit(f"{path.relative_to(ROOT).as_posix()}: missing </head> or <body>")
 
     text = text.replace("</head>", f"  {FAVICONS}\n  {SHARED}\n</head>", 1)
     text = text.replace("<body>", f"<body>\n{NOSCRIPT}", 1)
 
     if text != original:
         path.write_text(text, encoding="utf-8")
-        changed.append(path.name)
+        changed.append(path.relative_to(ROOT).as_posix())
 
 if changed:
     print("Analytics normalized:", ", ".join(changed))

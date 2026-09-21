@@ -26,7 +26,7 @@ SETUP_FILES = {
 
 
 def git_changed(before: str | None) -> tuple[set[str], set[str]]:
-    """Return (changed paths, deleted/renamed-away root HTML paths)."""
+    """Return (changed paths, deleted/renamed-away public HTML paths)."""
     if not before or set(before) == {"0"}:
         return set(), set()
 
@@ -52,7 +52,7 @@ def git_changed(before: str | None) -> tuple[set[str], set[str]]:
         if status.startswith("R") and len(parts) >= 3:
             old, new = parts[1], parts[2]
             changed.update({old, new})
-            if _is_root_html(old):
+            if _is_public_html(old):
                 removed_html.add(old)
             continue
 
@@ -61,31 +61,39 @@ def git_changed(before: str | None) -> tuple[set[str], set[str]]:
 
         path = parts[1]
         changed.add(path)
-        if status.startswith("D") and _is_root_html(path):
+        if status.startswith("D") and _is_public_html(path):
             removed_html.add(path)
 
     return changed, removed_html
 
 
-def _is_root_html(path: str) -> bool:
+def _is_public_html(path: str) -> bool:
     p = Path(path)
-    return p.parent == Path(".") and p.suffix.lower() == ".html"
+    if p.suffix.lower() != ".html":
+        return False
+    return not any(part in {"templates", ".git", ".github"} for part in p.parts)
 
 
 def url_for_html(path: str) -> str:
-    return f"{BASE}/" if path == "index.html" else f"{BASE}/{path}"
+    normalized = Path(path).as_posix()
+    if normalized == "index.html":
+        return f"{BASE}/"
+    if normalized.endswith("/index.html"):
+        return f"{BASE}/" + normalized[:-10]
+    return f"{BASE}/{normalized}"
 
 
 def all_current_urls() -> list[str]:
-    return [
-        url_for_html(p.name)
-        for p in sorted(ROOT.glob("*.html"))
-        if p.is_file()
-    ]
+    urls = []
+    for path in sorted(ROOT.rglob("*.html")):
+        rel = path.relative_to(ROOT).as_posix()
+        if _is_public_html(rel):
+            urls.append(url_for_html(rel))
+    return urls
 
 
 def newly_linked_html(before: str | None) -> set[str]:
-    """Find newly added root HTML links in index.html/ratings.html.
+    """Find newly added public HTML links in index.html/ratings.html.
 
     This covers multi-commit publishing where the summary page is created first,
     its initial workflow fails QA, and a later catalog/homepage commit makes the
@@ -113,7 +121,7 @@ def newly_linked_html(before: str | None) -> set[str]:
             continue
         for match in pattern.finditer(line):
             path = match.group(1)
-            if _is_root_html(path) and (ROOT / path).exists():
+            if _is_public_html(path) and (ROOT / path).exists():
                 linked.add(path)
 
     return linked
@@ -128,7 +136,7 @@ def changed_urls(before: str | None, force_all: bool) -> list[str]:
     urls: set[str] = set()
 
     for path in changed:
-        if _is_root_html(path):
+        if _is_public_html(path):
             urls.add(url_for_html(path))
 
     # A research page may have been created in an earlier commit whose QA failed.
@@ -211,12 +219,12 @@ def post_indexnow(urls: list[str]) -> int:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--before", default="", help="Previous Git SHA from the push event.")
-    parser.add_argument("--all", action="store_true", help="Submit all current root HTML pages.")
+    parser.add_argument("--all", action="store_true", help="Submit all current public HTML pages.")
     args = parser.parse_args()
 
     urls = changed_urls(args.before or None, args.all)
     if not urls:
-        print("IndexNow: no changed root HTML URLs to submit.")
+        print("IndexNow: no changed public HTML URLs to submit.")
         return
 
     if len(urls) > 10000:
