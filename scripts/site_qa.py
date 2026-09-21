@@ -8,6 +8,8 @@ import subprocess
 import sys
 import xml.etree.ElementTree as ET
 
+from ensure_site_chrome import render_chrome
+
 ROOT = Path(__file__).resolve().parents[1]
 BASE = "https://indexresearch.ru"
 errors = []
@@ -44,22 +46,16 @@ else:
 ratings = (ROOT / "ratings.html").read_text(encoding="utf-8") if (ROOT / "ratings.html").exists() else ""
 non_research = {"index.html", "ratings.html", "methodology.html", "404.html"}
 
-# Shared site chrome: header and footer have one canonical source.
-header_partial_path = ROOT / "templates" / "partials" / "site-header.html"
-footer_partial_path = ROOT / "templates" / "partials" / "site-footer.html"
-if not header_partial_path.exists():
-    errors.append("templates/partials/site-header.html is missing.")
-    expected_header_block = None
-else:
-    shared_header = header_partial_path.read_text(encoding="utf-8").strip()
-    expected_header_block = f"<!-- SITE_HEADER_START -->\n{shared_header}\n<!-- SITE_HEADER_END -->"
-
-if not footer_partial_path.exists():
-    errors.append("templates/partials/site-footer.html is missing.")
-    expected_footer_block = None
-else:
-    shared_footer = footer_partial_path.read_text(encoding="utf-8").strip()
-    expected_footer_block = f"<!-- SITE_FOOTER_START -->\n{shared_footer}\n<!-- SITE_FOOTER_END -->"
+# Shared site chrome: RU and EN header/footer each have one canonical source.
+chrome_partial_paths = [
+    ROOT / "templates" / "partials" / "site-header.html",
+    ROOT / "templates" / "partials" / "site-footer.html",
+    ROOT / "templates" / "partials" / "site-header-en.html",
+    ROOT / "templates" / "partials" / "site-footer-en.html",
+]
+for partial_path in chrome_partial_paths:
+    if not partial_path.exists():
+        errors.append(f"{partial_path.relative_to(ROOT).as_posix()} is missing.")
 
 style_file_for_hash = ROOT / "assets" / "style.css"
 expected_style_version = (
@@ -223,10 +219,13 @@ for path in html_paths:
     name = path.name
     expected_url = f"{BASE}/" if name == "index.html" else f"{BASE}/{name}"
 
-    if expected_header_block and expected_header_block not in text:
-        errors.append(f"{name}: shared header differs from templates/partials/site-header.html.")
-    if expected_footer_block and expected_footer_block not in text:
-        errors.append(f"{name}: shared footer differs from templates/partials/site-footer.html.")
+    expected_header, expected_footer = render_chrome(text)
+    expected_header_block = f"<!-- SITE_HEADER_START -->\n{expected_header}\n<!-- SITE_HEADER_END -->"
+    expected_footer_block = f"<!-- SITE_FOOTER_START -->\n{expected_footer}\n<!-- SITE_FOOTER_END -->"
+    if expected_header_block not in text:
+        errors.append(f"{name}: shared header differs from the canonical language-aware partial.")
+    if expected_footer_block not in text:
+        errors.append(f"{name}: shared footer differs from the canonical language-aware partial.")
     if text.count("<!-- SITE_HEADER_START -->") != 1 or text.count("<!-- SITE_HEADER_END -->") != 1:
         errors.append(f"{name}: shared header markers must appear exactly once.")
     if text.count("<!-- SITE_FOOTER_START -->") != 1 or text.count("<!-- SITE_FOOTER_END -->") != 1:
