@@ -25,11 +25,11 @@ jobs:
       - name: Materialize shared header/footer and CSS cache version
         run: python scripts/ensure_site_chrome.py
 
-      - name: Normalize structured data, Open Graph and research links
-        run: python scripts/ensure_site_metadata.py
-
       - name: Balance research ordering
         run: python scripts/reorder_home_research.py
+
+      - name: Normalize structured data, Open Graph and research links
+        run: python scripts/ensure_site_metadata.py
 
       - name: Rebuild sitemap from published HTML pages
         run: python scripts/build_sitemap.py
