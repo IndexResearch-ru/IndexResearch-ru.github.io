@@ -93,6 +93,131 @@ def jsonld_graph(page_text, page_name):
     return objects
 
 
+def schema_objects_by_type(page_text, page_name):
+    by_type = {}
+    for obj in jsonld_graph(page_text, page_name):
+        if not isinstance(obj, dict):
+            continue
+        obj_type = obj.get("@type")
+        types = obj_type if isinstance(obj_type, list) else [obj_type]
+        for item_type in types:
+            if item_type:
+                by_type.setdefault(item_type, []).append(obj)
+    return by_type
+
+
+def catalog_card_ids(page_text):
+    if page_text.count("<!-- RESEARCH_CATALOG_START -->") != 1 or page_text.count("<!-- RESEARCH_CATALOG_END -->") != 1:
+        errors.append("ratings.html: must contain exactly one research catalog marker pair.")
+        return []
+    block = page_text.split("<!-- RESEARCH_CATALOG_START -->", 1)[1].split("<!-- RESEARCH_CATALOG_END -->", 1)[0]
+    ids = re.findall(
+        r'<article\b[^>]*\bdata-research-card=["\']true["\'][^>]*\bdata-research-id=["\']([^"\']+)["\']',
+        block,
+        re.I,
+    )
+    if len(ids) != len(set(ids)):
+        errors.append("ratings.html: duplicate data-research-id in catalog.")
+    return ids
+
+
+catalog_ids = catalog_card_ids(ratings)
+research_page_ids = sorted(path.stem for path in html_paths if path.name not in non_research)
+if sorted(catalog_ids) != research_page_ids:
+    missing_cards = sorted(set(research_page_ids) - set(catalog_ids))
+    missing_pages = sorted(set(catalog_ids) - set(research_page_ids))
+    if missing_cards:
+        errors.append("ratings.html: research pages missing from visible catalog: " + ", ".join(missing_cards))
+    if missing_pages:
+        errors.append("ratings.html: catalog cards without matching research pages: " + ", ".join(missing_pages))
+
+catalog_dates = re.findall(
+    r'<article\b[^>]*\bdata-research-card=["\']true["\'][^>]*\bdata-published=["\'](\d{4}-\d{2}-\d{2})["\']',
+    ratings,
+    re.I,
+)
+latest_catalog_date = max(catalog_dates) if catalog_dates else None
+
+ratings_types = schema_objects_by_type(ratings, "ratings.html")
+ratings_collections = ratings_types.get("CollectionPage", [])
+ratings_catalogs = ratings_types.get("DataCatalog", [])
+if len(ratings_collections) != 1:
+    errors.append(f"ratings.html: expected exactly 1 CollectionPage, found {len(ratings_collections)}.")
+if len(ratings_catalogs) != 1:
+    errors.append(f"ratings.html: expected exactly 1 DataCatalog, found {len(ratings_catalogs)}.")
+
+required_dataset_fields = [
+    "@id", "name", "description", "url", "sameAs", "creator",
+    "datePublished", "version", "inLanguage", "includedInDataCatalog",
+]
+
+if ratings_collections:
+    collection = ratings_collections[0]
+    has_part = [item for item in (collection.get("hasPart") or []) if isinstance(item, dict)]
+    has_part_ids = [
+        str(item.get("url", "")).removeprefix(BASE + "/").removesuffix(".html")
+        for item in has_part
+        if item.get("url")
+    ]
+    if has_part_ids != catalog_ids:
+        errors.append(
+            f"ratings.html: CollectionPage.hasPart must match visible catalog order/count ({len(catalog_ids)}); found {len(has_part_ids)}."
+        )
+    for item in has_part:
+        missing = [field for field in required_dataset_fields if not item.get(field)]
+        if missing:
+            errors.append(
+                f"ratings.html: Dataset summary {item.get('url') or item.get('name') or '[unknown]'} missing: {', '.join(missing)}."
+            )
+    if latest_catalog_date and collection.get("dateModified") != latest_catalog_date:
+        errors.append(
+            f"ratings.html: CollectionPage.dateModified is {collection.get('dateModified')!r}, expected {latest_catalog_date!r}."
+        )
+
+if ratings_catalogs:
+    catalog = ratings_catalogs[0]
+    refs = [
+        str(item.get("@id", ""))
+        for item in (catalog.get("dataset") or [])
+        if isinstance(item, dict)
+    ]
+    expected_refs = [f"{BASE}/{research_id}.html#dataset" for research_id in catalog_ids]
+    if refs != expected_refs:
+        errors.append(
+            f"ratings.html: DataCatalog.dataset must match visible catalog order/count ({len(expected_refs)}); found {len(refs)}."
+        )
+    if latest_catalog_date and catalog.get("dateModified") != latest_catalog_date:
+        errors.append(
+            f"ratings.html: DataCatalog.dateModified is {catalog.get('dateModified')!r}, expected {latest_catalog_date!r}."
+        )
+
+index_text_for_schema = (ROOT / "index.html").read_text(encoding="utf-8") if (ROOT / "index.html").exists() else ""
+index_types = schema_objects_by_type(index_text_for_schema, "index.html")
+home_datasets = index_types.get("Dataset", [])
+home_dataset_ids = [
+    str(item.get("url", "")).removeprefix(BASE + "/").removesuffix(".html")
+    for item in home_datasets
+    if isinstance(item, dict) and item.get("url")
+]
+if home_dataset_ids != catalog_ids:
+    errors.append(
+        f"index.html: Dataset graph must match visible catalog order/count ({len(catalog_ids)}); found {len(home_dataset_ids)}."
+    )
+for item in home_datasets:
+    missing = [field for field in required_dataset_fields if not item.get(field)]
+    if missing:
+        errors.append(
+            f"index.html: Dataset summary {item.get('url') or item.get('name') or '[unknown]'} missing: {', '.join(missing)}."
+        )
+home_collections = index_types.get("CollectionPage", [])
+if len(home_collections) != 1:
+    errors.append(f"index.html: expected exactly 1 CollectionPage, found {len(home_collections)}.")
+elif latest_catalog_date and home_collections[0].get("dateModified") != latest_catalog_date:
+    errors.append(
+        f"index.html: CollectionPage.dateModified is {home_collections[0].get('dateModified')!r}, expected {latest_catalog_date!r}."
+    )
+
+
 for path in html_paths:
     text = path.read_text(encoding="utf-8")
     name = path.name
@@ -147,6 +272,41 @@ for path in html_paths:
         errors.append(f"{name}: must contain exactly one H1.")
     if 'application/ld+json' not in text:
         errors.append(f"{name}: missing Schema.org JSON-LD.")
+
+    html_lang = re.search(r'<html\b[^>]*\blang=["\']([^"\']+)["\']', text, re.I)
+    if not html_lang or html_lang.group(1).lower() != "ru":
+        errors.append(f"{name}: <html lang> must be ru.")
+
+    required_og = ["og:type", "og:site_name", "og:locale", "og:title", "og:description", "og:url", "og:image", "og:image:alt"]
+    for prop in required_og:
+        count = len(re.findall(
+            rf'<meta\b(?=[^>]*\bproperty=["\']{re.escape(prop)}["\'])[^>]*>',
+            text,
+            re.I,
+        ))
+        if count != 1:
+            errors.append(f"{name}: Open Graph property {prop} must appear exactly once; found {count}.")
+
+    if "indexresearch-ru.github.io" in text:
+        errors.append(f"{name}: contains staging GitHub Pages hostname indexresearch-ru.github.io.")
+
+    for href in re.findall(r'href=["\']([^"\']*)["\']', text, re.I):
+        if not href:
+            errors.append(f"{name}: contains empty href.")
+            continue
+        if href.startswith(("#", "mailto:", "tel:", "javascript:")):
+            continue
+        local = None
+        if href.startswith("/"):
+            local = href.split("#", 1)[0].split("?", 1)[0]
+            if local == "/":
+                local = "/index.html"
+        elif re.match(r"^[^:/?#]+\.html(?:[?#].*)?$", href):
+            local = "/" + href.split("#", 1)[0].split("?", 1)[0]
+        if local and local.endswith(".html"):
+            target = ROOT / local.lstrip("/")
+            if not target.exists():
+                errors.append(f"{name}: internal link points to missing file: {href}.")
 
     robots = re.search(r'<meta\s+name="robots"\s+content="([^"]+)"', text, re.I)
     indexed = not (robots and "noindex" in robots.group(1).lower())
