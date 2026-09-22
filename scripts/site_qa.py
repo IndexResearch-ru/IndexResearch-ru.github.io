@@ -48,9 +48,11 @@ else:
 
 ratings = (ROOT / "ratings.html").read_text(encoding="utf-8") if (ROOT / "ratings.html").exists() else ""
 en_ratings = (ROOT / "en" / "ratings.html").read_text(encoding="utf-8") if (ROOT / "en" / "ratings.html").exists() else ""
+en_home = (ROOT / "en" / "index.html").read_text(encoding="utf-8") if (ROOT / "en" / "index.html").exists() else ""
+cn_home = (ROOT / "cn" / "index.html").read_text(encoding="utf-8") if (ROOT / "cn" / "index.html").exists() else ""
 non_research = {"index.html", "ratings.html", "methodology.html", "404.html"}
 
-# Shared site chrome: RU and EN header/footer each have one canonical source.
+# Shared site chrome: RU, EN and CN header/footer each have one canonical source.
 chrome_partial_paths = [
     ROOT / "templates" / "partials" / "site-header.html",
     ROOT / "templates" / "partials" / "site-footer.html",
@@ -124,6 +126,30 @@ def catalog_card_ids(page_text):
 
 
 catalog_ids = catalog_card_ids(ratings)
+
+def home_feed_ids(page_text, label):
+    if not page_text:
+        return []
+    if page_text.count("<!-- RESEARCH_FEED_START -->") != 1 or page_text.count("<!-- RESEARCH_FEED_END -->") != 1:
+        errors.append(f"{label}: must contain exactly one research feed marker pair.")
+        return []
+    block = page_text.split("<!-- RESEARCH_FEED_START -->", 1)[1].split("<!-- RESEARCH_FEED_END -->", 1)[0]
+    ids = re.findall(
+        r'<article\b[^>]*\bdata-research-card=["\']true["\'][^>]*\bdata-research-id=["\']([^"\']+)["\']',
+        block,
+        re.I,
+    )
+    if len(ids) != len(set(ids)):
+        errors.append(f"{label}: duplicate data-research-id in research feed.")
+    return ids
+
+for label, page_text in (("en/index.html", en_home), ("cn/index.html", cn_home)):
+    if page_text:
+        ids = home_feed_ids(page_text, label)
+        if ids != catalog_ids:
+            errors.append(
+                f"{label}: research feed must match canonical RU catalog order/count ({len(catalog_ids)}); found {len(ids)}."
+            )
 research_page_ids = sorted(
     path.stem for path in html_paths
     if path.parent == ROOT and path.name not in non_research
