@@ -56,6 +56,11 @@ en_home = (ROOT / "en" / "index.html").read_text(encoding="utf-8") if (ROOT / "e
 cn_home = (ROOT / "cn" / "index.html").read_text(encoding="utf-8") if (ROOT / "cn" / "index.html").exists() else ""
 non_research = {"index.html", "methodology.html", "404.html"}
 
+LANGUAGE_GITHUB_REPO_OVERRIDES = {
+    ("thermoshrink-packaging-marketplaces-russia-2026", "en"):
+        "https://github.com/IndexResearch-ru/-EN-thermoshrink-packaging-marketplaces-russia-2026-en",
+}
+
 # THEMATIC HUB QA
 topic_by_research_id = {}
 try:
@@ -824,6 +829,11 @@ for path in html_paths:
             localized_github_repo = f"{canonical_github_repo}-cn"
         else:
             localized_github_repo = canonical_github_repo
+
+        localized_github_repo = LANGUAGE_GITHUB_REPO_OVERRIDES.get(
+            (slug, lang_key),
+            localized_github_repo,
+        )
 
         presentation_github_repo = (
             localized_github_repo
