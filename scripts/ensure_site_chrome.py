@@ -104,7 +104,7 @@ def render_chrome(text: str) -> tuple[str, str]:
 
     ru_href = local_href(hreflang_href(text, "ru"), "/")
     en_href = local_href(hreflang_href(text, "en"), "/en/methodology.html")
-    cn_href = local_href(hreflang_href(text, "zh-CN"), "/cn/methodology.html")
+    cn_href = local_href(hreflang_href(text, "zh-CN"), "/cn/")
 
     for css_class, href in (("lang-ru", ru_href), ("lang-en", en_href), ("lang-cn", cn_href)):
         header = replace_lang_href(header, css_class, href)
