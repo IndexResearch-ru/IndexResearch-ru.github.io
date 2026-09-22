@@ -114,14 +114,14 @@ def render_chrome(text: str) -> tuple[str, str]:
 
 
 def ensure_no_translate(text: str) -> str:
-    html_match = re.search(r'<html\\b[^>]*>', text, re.I)
+    html_match = re.search(r'<html\b[^>]*>', text, re.I)
     if not html_match:
         raise SystemExit("HTML document is missing <html> tag")
 
     html_tag = html_match.group(0)
-    if re.search(r'\\btranslate\\s*=', html_tag, re.I):
+    if re.search(r'\btranslate\s*=', html_tag, re.I):
         html_tag = re.sub(
-            r'\\s+translate\\s*=\\s*(?:"[^"]*"|\\'[^\\']*\\'|[^\\s>]+)',
+            r'\s+translate\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+)',
             ' translate="no"',
             html_tag,
             count=1,
@@ -132,18 +132,17 @@ def ensure_no_translate(text: str) -> str:
     text = text[:html_match.start()] + html_tag + text[html_match.end():]
 
     google_meta_re = re.compile(
-        r'<meta\\b(?=[^>]*\\bname\\s*=\\s*["\\']google["\\'])[^>]*>',
+        r'<meta\b(?=[^>]*\bname\s*=\s*["\']google["\'])[^>]*>',
         re.I,
     )
     text = google_meta_re.sub("", text)
     google_meta = '<meta name="google" content="notranslate">'
-    head_match = re.search(r'<head\\b[^>]*>', text, re.I)
+    head_match = re.search(r'<head\b[^>]*>', text, re.I)
     if not head_match:
         raise SystemExit("HTML document is missing <head> tag")
     text = text[:head_match.end()] + "\n" + google_meta + text[head_match.end():]
 
     return text
-
 
 def sync_file(path: Path, style_version: str) -> bool:
     text = path.read_text(encoding="utf-8")
