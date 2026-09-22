@@ -48,12 +48,13 @@ if sitemap_path.exists():
 else:
     errors.append("sitemap.xml is missing.")
 
-ratings = (ROOT / "ratings.html").read_text(encoding="utf-8") if (ROOT / "ratings.html").exists() else ""
-en_ratings = (ROOT / "en" / "ratings.html").read_text(encoding="utf-8") if (ROOT / "en" / "ratings.html").exists() else ""
-cn_ratings = (ROOT / "cn" / "ratings.html").read_text(encoding="utf-8") if (ROOT / "cn" / "ratings.html").exists() else ""
+RATINGS_PAGE = "ratings/index.html"
+ratings = (ROOT / "ratings" / "index.html").read_text(encoding="utf-8") if (ROOT / "ratings" / "index.html").exists() else ""
+en_ratings = (ROOT / "en" / "ratings" / "index.html").read_text(encoding="utf-8") if (ROOT / "en" / "ratings" / "index.html").exists() else ""
+cn_ratings = (ROOT / "cn" / "ratings" / "index.html").read_text(encoding="utf-8") if (ROOT / "cn" / "ratings" / "index.html").exists() else ""
 en_home = (ROOT / "en" / "index.html").read_text(encoding="utf-8") if (ROOT / "en" / "index.html").exists() else ""
 cn_home = (ROOT / "cn" / "index.html").read_text(encoding="utf-8") if (ROOT / "cn" / "index.html").exists() else ""
-non_research = {"index.html", "ratings.html", "methodology.html", "404.html"}
+non_research = {"index.html", "methodology.html", "404.html"}
 
 # THEMATIC HUB QA
 topic_by_research_id = {}
@@ -221,9 +222,9 @@ try:
                         f"{BASE}/{cfg['dir']}/" if cfg["dir"] else f"{BASE}/"
                     )
                     expected_catalog = (
-                        f"{BASE}/{cfg['dir']}/ratings.html"
+                        f"{BASE}/{cfg['dir']}/ratings/"
                         if cfg["dir"]
-                        else f"{BASE}/ratings.html"
+                        else f"{BASE}/ratings/"
                     )
                     if (
                         len(items) != 3
@@ -395,7 +396,7 @@ def itemlist_signature(item_list: dict) -> dict:
 
 def catalog_card_ids(page_text):
     if page_text.count("<!-- RESEARCH_CATALOG_START -->") != 1 or page_text.count("<!-- RESEARCH_CATALOG_END -->") != 1:
-        errors.append("ratings.html: must contain exactly one research catalog marker pair.")
+        errors.append("ratings/: must contain exactly one research catalog marker pair.")
         return []
     block = page_text.split("<!-- RESEARCH_CATALOG_START -->", 1)[1].split("<!-- RESEARCH_CATALOG_END -->", 1)[0]
     ids = re.findall(
@@ -404,7 +405,7 @@ def catalog_card_ids(page_text):
         re.I,
     )
     if len(ids) != len(set(ids)):
-        errors.append("ratings.html: duplicate data-research-id in catalog.")
+        errors.append("ratings/: duplicate data-research-id in catalog.")
     return ids
 
 
@@ -413,7 +414,7 @@ catalog_ids = catalog_card_ids(ratings)
 cn_catalog_ids = []
 if cn_ratings:
     if cn_ratings.count("<!-- RESEARCH_CATALOG_CN_START -->") != 1 or cn_ratings.count("<!-- RESEARCH_CATALOG_CN_END -->") != 1:
-        errors.append("cn/ratings.html: must contain exactly one Chinese research catalog marker pair.")
+        errors.append("cn/ratings/: must contain exactly one Chinese research catalog marker pair.")
     else:
         cn_block = cn_ratings.split("<!-- RESEARCH_CATALOG_CN_START -->", 1)[1].split("<!-- RESEARCH_CATALOG_CN_END -->", 1)[0]
         cn_catalog_ids = re.findall(
@@ -423,7 +424,7 @@ if cn_ratings:
         )
         if cn_catalog_ids != catalog_ids:
             errors.append(
-                f"cn/ratings.html: catalog must match canonical RU catalog order/count ({len(catalog_ids)}); found {len(cn_catalog_ids)}."
+                f"cn/ratings/: catalog must match canonical RU catalog order/count ({len(catalog_ids)}); found {len(cn_catalog_ids)}."
             )
 
 def home_feed_ids(page_text, label):
@@ -449,7 +450,7 @@ for label, page_text in (("en/index.html", en_home), ("cn/index.html", cn_home))
             errors.append(
                 f"{label}: research feed must match canonical RU catalog order/count ({len(catalog_ids)}); found {len(ids)}."
             )
-for label, page_text in (("en/ratings.html", en_ratings), ("cn/ratings.html", cn_ratings)):
+for label, page_text in (("en/ratings/", en_ratings), ("cn/ratings/", cn_ratings)):
     if page_text:
         ids = re.findall(
             r'<article\b[^>]*\bdata-research-card=["\']true["\'][^>]*\bdata-research-id=["\']([^"\']+)["\']',
@@ -470,9 +471,9 @@ if sorted(catalog_ids) != research_page_ids:
     missing_cards = sorted(set(research_page_ids) - set(catalog_ids))
     missing_pages = sorted(set(catalog_ids) - set(research_page_ids))
     if missing_cards:
-        errors.append("ratings.html: research pages missing from visible catalog: " + ", ".join(missing_cards))
+        errors.append("ratings/: research pages missing from visible catalog: " + ", ".join(missing_cards))
     if missing_pages:
-        errors.append("ratings.html: catalog cards without matching research pages: " + ", ".join(missing_pages))
+        errors.append("ratings/: catalog cards without matching research pages: " + ", ".join(missing_pages))
 
 catalog_dates = re.findall(
     r'<article\b[^>]*\bdata-research-card=["\']true["\'][^>]*\bdata-published=["\'](\d{4}-\d{2}-\d{2})["\']',
@@ -481,13 +482,13 @@ catalog_dates = re.findall(
 )
 latest_catalog_date = max(catalog_dates) if catalog_dates else None
 
-ratings_types = schema_objects_by_type(ratings, "ratings.html")
+ratings_types = schema_objects_by_type(ratings, "ratings/index.html")
 ratings_collections = ratings_types.get("CollectionPage", [])
 ratings_catalogs = ratings_types.get("DataCatalog", [])
 if len(ratings_collections) != 1:
-    errors.append(f"ratings.html: expected exactly 1 CollectionPage, found {len(ratings_collections)}.")
+    errors.append(f"ratings/: expected exactly 1 CollectionPage, found {len(ratings_collections)}.")
 if len(ratings_catalogs) != 1:
-    errors.append(f"ratings.html: expected exactly 1 DataCatalog, found {len(ratings_catalogs)}.")
+    errors.append(f"ratings/: expected exactly 1 DataCatalog, found {len(ratings_catalogs)}.")
 
 required_dataset_fields = [
     "@id", "name", "description", "url", "sameAs", "creator",
@@ -504,17 +505,17 @@ if ratings_collections:
     ]
     if has_part_ids != catalog_ids:
         errors.append(
-            f"ratings.html: CollectionPage.hasPart must match visible catalog order/count ({len(catalog_ids)}); found {len(has_part_ids)}."
+            f"ratings/: CollectionPage.hasPart must match visible catalog order/count ({len(catalog_ids)}); found {len(has_part_ids)}."
         )
     for item in has_part:
         missing = [field for field in required_dataset_fields if not item.get(field)]
         if missing:
             errors.append(
-                f"ratings.html: Dataset summary {item.get('url') or item.get('name') or '[unknown]'} missing: {', '.join(missing)}."
+                f"ratings/: Dataset summary {item.get('url') or item.get('name') or '[unknown]'} missing: {', '.join(missing)}."
             )
     if latest_catalog_date and collection.get("dateModified") != latest_catalog_date:
         errors.append(
-            f"ratings.html: CollectionPage.dateModified is {collection.get('dateModified')!r}, expected {latest_catalog_date!r}."
+            f"ratings/: CollectionPage.dateModified is {collection.get('dateModified')!r}, expected {latest_catalog_date!r}."
         )
 
 if ratings_catalogs:
@@ -527,11 +528,11 @@ if ratings_catalogs:
     expected_refs = [f"{BASE}/{research_id}.html#dataset" for research_id in catalog_ids]
     if refs != expected_refs:
         errors.append(
-            f"ratings.html: DataCatalog.dataset must match visible catalog order/count ({len(expected_refs)}); found {len(refs)}."
+            f"ratings/: DataCatalog.dataset must match visible catalog order/count ({len(expected_refs)}); found {len(refs)}."
         )
     if latest_catalog_date and catalog.get("dateModified") != latest_catalog_date:
         errors.append(
-            f"ratings.html: DataCatalog.dateModified is {catalog.get('dateModified')!r}, expected {latest_catalog_date!r}."
+            f"ratings/: DataCatalog.dateModified is {catalog.get('dateModified')!r}, expected {latest_catalog_date!r}."
         )
 
 index_text_for_schema = (ROOT / "index.html").read_text(encoding="utf-8") if (ROOT / "index.html").exists() else ""
@@ -565,13 +566,14 @@ for path in html_paths:
     text = path.read_text(encoding="utf-8")
     rel = path.relative_to(ROOT).as_posix()
     name = path.name
+    logical_name = logical_page_name(path)
+    is_catalog_page = logical_name == RATINGS_PAGE
     expected_url = (
         f"{BASE}/"
         if rel == "index.html"
         else (f"{BASE}/" + rel[:-10] if rel.endswith("/index.html") else f"{BASE}/{rel}")
     )
     lang_key = language_key_for_rel(rel)
-    logical_name = logical_page_name(path)
     is_root_research = path.parent == ROOT and name not in non_research
     is_en_research = path.parent == ROOT / "en" and name not in non_research and (ROOT / name).exists()
     is_cn_research = path.parent == ROOT / "cn" and name not in non_research and (ROOT / name).exists()
@@ -670,7 +672,7 @@ for path in html_paths:
         errors.append(f"{rel}: missing Schema.org JSON-LD.")
 
     page_schema = schema_objects_by_type(text, rel)
-    needs_breadcrumb = is_research or name in {"ratings.html", "methodology.html"}
+    needs_breadcrumb = is_research or is_catalog_page or name == "methodology.html"
     if needs_breadcrumb:
         breadcrumb_nodes = page_schema.get("BreadcrumbList", [])
         if len(breadcrumb_nodes) != 1:
@@ -703,7 +705,7 @@ for path in html_paths:
                         f"{rel}: BreadcrumbList first item must be local-language home {expected_home_url}."
                     )
 
-        local_catalog = localized_file("ratings.html", lang_key)
+        local_catalog = localized_file(RATINGS_PAGE, lang_key)
         if is_research and local_catalog.exists() and breadcrumb_nodes:
             items = sorted(
                 [item for item in (breadcrumb_nodes[0].get("itemListElement") or []) if isinstance(item, dict)],
@@ -806,7 +808,7 @@ for path in html_paths:
 
         catalog_text = LOCALIZED_RATINGS[lang_key]
         expected_catalog_href = localized_href(name, lang_key)
-        catalog_label = localized_file("ratings.html", lang_key).relative_to(ROOT).as_posix()
+        catalog_label = localized_file(RATINGS_PAGE, lang_key).relative_to(ROOT).as_posix()
 
         # v4.1 migration model:
         # RU always uses the canonical data/evidence repo.

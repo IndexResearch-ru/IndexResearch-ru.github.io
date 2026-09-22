@@ -34,6 +34,9 @@ jobs:
       - name: Normalize structured data, Open Graph and research links
         run: python scripts/ensure_site_metadata.py
 
+      - name: Normalize catalog URLs
+        run: python scripts/ensure_catalog_urls.py
+
       - name: Rebuild sitemap from published HTML pages
         run: python scripts/build_sitemap.py
 

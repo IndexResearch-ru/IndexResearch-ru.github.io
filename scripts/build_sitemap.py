@@ -15,12 +15,12 @@ JSONLD_RE = re.compile(
 DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
 SERVICE_PAGES = {
     "index.html",
-    "ratings.html",
+    "ratings/index.html",
     "methodology.html",
     "404.html",
     "en/methodology.html",
     "cn/methodology.html",
-    "cn/ratings.html",
+    "cn/ratings/index.html",
 }
 
 
@@ -104,9 +104,9 @@ priority = {
     "index.html": 0,
     "en/index.html": 1,
     "cn/index.html": 2,
-    "ratings.html": 3,
-    "en/ratings.html": 4,
-    "cn/ratings.html": 5,
+    "ratings/index.html": 3,
+    "en/ratings/index.html": 4,
+    "cn/ratings/index.html": 5,
     "methodology.html": 6,
     "en/methodology.html": 7,
     "cn/methodology.html": 8,

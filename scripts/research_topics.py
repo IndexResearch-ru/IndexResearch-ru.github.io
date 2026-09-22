@@ -9,9 +9,9 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "templates" / "research-topics.json"
 RATINGS_PATHS = {
-    "ru": ROOT / "ratings.html",
-    "en": ROOT / "en" / "ratings.html",
-    "cn": ROOT / "cn" / "ratings.html",
+    "ru": ROOT / "ratings" / "index.html",
+    "en": ROOT / "en" / "ratings" / "index.html",
+    "cn": ROOT / "cn" / "ratings" / "index.html",
 }
 LANG_PREFIX = {"ru": "", "en": "/en", "cn": "/cn"}
 LANG_HREFLANG = {"ru": "ru", "en": "en", "cn": "zh-CN"}
@@ -101,7 +101,7 @@ def topic_configuration_errors() -> list[str]:
         localized = catalog_cards(lang)
         absent = [item for item in canonical if item not in localized]
         if absent:
-            errors.append(f"{lang}/ratings.html is missing research IDs used by topic navigation: " + ", ".join(absent))
+            errors.append(f"{lang}/ratings/ is missing research IDs used by topic navigation: " + ", ".join(absent))
     return errors
 
 

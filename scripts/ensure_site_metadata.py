@@ -10,10 +10,12 @@ from research_topics import load_topic_config
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = "https://indexresearch.ru"
-CATALOG_ID = f"{BASE}/ratings.html#catalog"
+CATALOG_URL = f"{BASE}/ratings/"
+CATALOG_ID = f"{CATALOG_URL}#catalog"
+CATALOG_PATH = ROOT / "ratings" / "index.html"
 ORG_ID = f"{BASE}/#organization"
 LOGO_IMAGE = f"{BASE}/assets/indexresearch-logo-horizontal.png"
-NON_RESEARCH = {"index.html", "ratings.html", "methodology.html", "404.html"}
+NON_RESEARCH = {"index.html", "methodology.html", "404.html"}
 TOPIC_CONFIG = load_topic_config()
 TOPIC_BY_RESEARCH_ID = {
     research_id: topic
@@ -190,14 +192,14 @@ def upgrade_orgs(value) -> None:
 def add_breadcrumbs(text: str, data, page_name: str, label: str, research: bool):
     data, graph = ensure_graph(data)
     graph[:] = [n for n in graph if not has_type(n, "BreadcrumbList")]
-    url = f"{BASE}/{page_name}"
+    url = CATALOG_URL if page_name == "ratings/index.html" else f"{BASE}/{page_name}"
     items = [
         {"@type": "ListItem", "position": 1, "name": "IndexResearch", "item": f"{BASE}/"},
     ]
 
     topic = TOPIC_BY_RESEARCH_ID.get(Path(page_name).stem) if research else None
     if research:
-        items.append({"@type": "ListItem", "position": 2, "name": "Исследования", "item": f"{BASE}/ratings.html"})
+        items.append({"@type": "ListItem", "position": 2, "name": "Исследования", "item": CATALOG_URL})
         if topic:
             topic_label = topic_title_for_language(topic, "ru")
             topic_url = f"{BASE}/ratings/{topic['slug']}/"
@@ -221,7 +223,7 @@ def add_breadcrumbs(text: str, data, page_name: str, label: str, research: bool)
             crumbs = (
                 '<nav class="breadcrumbs" aria-label="Хлебные крошки">'
                 '<a href="/">Главная</a><span aria-hidden="true">/</span>'
-                '<a href="/ratings.html">Исследования</a><span aria-hidden="true">/</span>'
+                '<a href="/ratings/">Исследования</a><span aria-hidden="true">/</span>'
                 f'<a href="{topic_href}">{topic_label}</a><span aria-hidden="true">/</span>'
                 f'<span aria-current="page">{html_module.escape(label)}</span></nav>'
             )
@@ -229,7 +231,7 @@ def add_breadcrumbs(text: str, data, page_name: str, label: str, research: bool)
             crumbs = (
                 '<nav class="breadcrumbs" aria-label="Хлебные крошки">'
                 '<a href="/">Главная</a><span aria-hidden="true">/</span>'
-                '<a href="/ratings.html">Исследования</a><span aria-hidden="true">/</span>'
+                '<a href="/ratings/">Исследования</a><span aria-hidden="true">/</span>'
                 f'<span aria-current="page">{html_module.escape(label)}</span></nav>'
             )
     else:
@@ -328,13 +330,13 @@ DATASET_SUMMARY_FIELDS = (
 
 def catalog_research_ids(ratings_text: str) -> list[str]:
     if ratings_text.count("<!-- RESEARCH_CATALOG_START -->") != 1 or ratings_text.count("<!-- RESEARCH_CATALOG_END -->") != 1:
-        raise RuntimeError("ratings.html must contain exactly one research catalog marker pair.")
+        raise RuntimeError("ratings/ must contain exactly one research catalog marker pair.")
     block = ratings_text.split("<!-- RESEARCH_CATALOG_START -->", 1)[1].split("<!-- RESEARCH_CATALOG_END -->", 1)[0]
     ids = CATALOG_CARD_RE.findall(block)
     if not ids:
-        raise RuntimeError("ratings.html research catalog contains no cards.")
+        raise RuntimeError("ratings/ research catalog contains no cards.")
     if len(ids) != len(set(ids)):
-        raise RuntimeError("ratings.html research catalog contains duplicate data-research-id values.")
+        raise RuntimeError("ratings/ research catalog contains duplicate data-research-id values.")
     return ids
 
 
@@ -343,7 +345,7 @@ def collect_catalog_datasets(ratings_text: str) -> list[dict]:
     for research_id in catalog_research_ids(ratings_text):
         path = ROOT / f"{research_id}.html"
         if not path.exists():
-            raise RuntimeError(f"ratings.html references missing research page: {path.name}")
+            raise RuntimeError(f"ratings/ references missing research page: {path.name}")
         page_data = load_jsonld(path.read_text(encoding="utf-8"))
         dataset = next(
             (node for node in graph_of(page_data) if has_type(node, "Dataset")),
@@ -389,7 +391,7 @@ def ensure_catalog(data, datasets: list[dict]):
     collection = next((n for n in graph if has_type(n, "CollectionPage")), None)
     if not collection:
         return data
-    collection["@id"] = f"{BASE}/ratings.html#page"
+    collection["@id"] = f"{CATALOG_URL}#page"
     collection["mainEntity"] = {"@id": CATALOG_ID}
     collection["hasPart"] = datasets
     latest = latest_catalog_date(datasets)
@@ -402,7 +404,7 @@ def ensure_catalog(data, datasets: list[dict]):
         "@id": CATALOG_ID,
         "name": "Каталог исследований IndexResearch",
         "description": "Каталог рейтингов и сравнительных исследований IndexResearch с опубликованными методиками, источниками и машиночитаемыми результатами.",
-        "url": f"{BASE}/ratings.html",
+        "url": CATALOG_URL,
         "publisher": {
             "@type": "ResearchOrganization",
             "@id": ORG_ID,
@@ -459,6 +461,9 @@ def normalize(path: Path, catalog_datasets: list[dict] | None = None) -> bool:
     text = path.read_text(encoding="utf-8")
     original = text
     name = path.name
+    is_home = path == ROOT / "index.html"
+    is_catalog = path == CATALOG_PATH
+    is_methodology = path == ROOT / "methodology.html"
 
     if name in TITLE_OVERRIDES:
         title, og_title = TITLE_OVERRIDES[name]
@@ -468,8 +473,8 @@ def normalize(path: Path, catalog_datasets: list[dict] | None = None) -> bool:
     text = set_meta_property(text, "og:site_name", "IndexResearch")
     text = set_meta_property(text, "og:locale", "ru_RU")
 
-    if name in {"index.html", "ratings.html", "methodology.html"}:
-        url = f"{BASE}/" if name == "index.html" else f"{BASE}/{name}"
+    if is_home or is_catalog or is_methodology:
+        url = f"{BASE}/" if is_home else (CATALOG_URL if is_catalog else f"{BASE}/methodology.html")
         text = set_meta_property(text, "og:type", "website")
         text = set_meta_property(text, "og:title", get_title(text))
         text = set_meta_property(text, "og:description", get_description(text))
@@ -485,21 +490,21 @@ def normalize(path: Path, catalog_datasets: list[dict] | None = None) -> bool:
     if data is not None:
         upgrade_orgs(data)
 
-        if name == "index.html":
+        if is_home:
             data = ensure_home_org(data)
             if catalog_datasets is not None:
                 data = sync_home_datasets(data, catalog_datasets)
             data = add_catalog_membership(data)
             text, data = ensure_home_faq(text, data)
 
-        elif name == "ratings.html":
+        elif is_catalog:
             if catalog_datasets is not None:
                 data = ensure_catalog(data, catalog_datasets)
             label = get_h1(text) or "Исследования IndexResearch"
-            text, data = add_breadcrumbs(text, data, name, label, research=False)
+            text, data = add_breadcrumbs(text, data, "ratings/index.html" if is_catalog else name, label, research=False)
             text = text.replace(">Краткий вывод и данные<", ">Читать исследование<")
 
-        elif name == "methodology.html":
+        elif is_methodology:
             label = get_h1(text) or "Методология IndexResearch"
             text, data = add_breadcrumbs(text, data, name, label, research=False)
 
@@ -555,7 +560,7 @@ def normalize_localized_research_breadcrumbs(path: Path, lang: str) -> bool:
         "@id": f"{page_url}#breadcrumb",
         "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": labels["home"], "item": f"{BASE}{prefix}/"},
-            {"@type": "ListItem", "position": 2, "name": labels["research"], "item": f"{BASE}{prefix}/ratings.html"},
+            {"@type": "ListItem", "position": 2, "name": labels["research"], "item": f"{BASE}{prefix}/ratings/"},
             {"@type": "ListItem", "position": 3, "name": topic_label, "item": topic_url},
             {"@type": "ListItem", "position": 4, "name": get_h1(text), "item": page_url},
         ],
@@ -564,7 +569,7 @@ def normalize_localized_research_breadcrumbs(path: Path, lang: str) -> bool:
     crumbs = (
         f'<nav class="breadcrumbs" aria-label="{labels["aria"]}">'
         f'<a href="{prefix}/">{labels["home"]}</a><span aria-hidden="true">/</span>'
-        f'<a href="{prefix}/ratings.html">{labels["research"]}</a><span aria-hidden="true">/</span>'
+        f'<a href="{prefix}/ratings/">{labels["research"]}</a><span aria-hidden="true">/</span>'
         f'<a href="{prefix}/ratings/{topic["slug"]}/">{html_module.escape(topic_label)}</a>'
         '<span aria-hidden="true">/</span>'
         f'<span aria-current="page">{html_module.escape(get_h1(text))}</span></nav>'
@@ -584,15 +589,17 @@ def normalize_localized_research_breadcrumbs(path: Path, lang: str) -> bool:
 
 
 def main() -> None:
-    ratings_path = ROOT / "ratings.html"
+    ratings_path = CATALOG_PATH
     if not ratings_path.exists():
-        raise SystemExit("ratings.html is missing.")
+        raise SystemExit("ratings/index.html is missing.")
     catalog_datasets = collect_catalog_datasets(ratings_path.read_text(encoding="utf-8"))
     changed = [
         p.relative_to(ROOT).as_posix()
         for p in sorted(ROOT.glob("*.html"))
         if normalize(p, catalog_datasets)
     ]
+    if normalize(CATALOG_PATH, catalog_datasets):
+        changed.append(CATALOG_PATH.relative_to(ROOT).as_posix())
     for lang in ("en", "cn"):
         language_root = ROOT / lang
         for path in sorted(language_root.glob("*.html")):

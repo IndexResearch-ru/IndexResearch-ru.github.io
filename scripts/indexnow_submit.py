@@ -93,7 +93,7 @@ def all_current_urls() -> list[str]:
 
 
 def newly_linked_html(before: str | None) -> set[str]:
-    """Find newly added public HTML links in index.html/ratings.html.
+    """Find newly added public HTML links in index.html/ratings/.
 
     This covers multi-commit publishing where the summary page is created first,
     its initial workflow fails QA, and a later catalog/homepage commit makes the
@@ -105,7 +105,7 @@ def newly_linked_html(before: str | None) -> set[str]:
 
     try:
         diff = subprocess.check_output(
-            ["git", "diff", "--unified=0", before, "HEAD", "--", "index.html", "ratings.html"],
+            ["git", "diff", "--unified=0", before, "HEAD", "--", "index.html", "ratings/index.html"],
             cwd=ROOT,
             text=True,
             stderr=subprocess.STDOUT,

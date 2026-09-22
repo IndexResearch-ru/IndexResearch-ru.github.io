@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
-RATINGS = ROOT / "ratings.html"
+RATINGS = ROOT / "ratings" / "index.html"
 
 ATTR_RE = re.compile(r'([\w-]+)="([^"]*)"')
 
@@ -133,19 +133,19 @@ def mix_one_date(cards: list[str], date: str) -> list[str]:
 
 def normalize_catalog(html: str) -> tuple[str, list[str]]:
     if html.count(CATALOG_START) != 1 or html.count(CATALOG_END) != 1:
-        raise FeedError("ratings.html must contain exactly one research marker pair")
+        raise FeedError("ratings/ must contain exactly one research marker pair")
 
     before, rest = html.split(CATALOG_START, 1)
     block, after = rest.split(CATALOG_END, 1)
     cards = CATALOG_CARD_RE.findall(block)
     if not cards:
-        raise FeedError("ratings.html: research catalog contains no cards")
+        raise FeedError("ratings/: research catalog contains no cards")
 
     if len(CATALOG_CARD_RE.findall(html)) != len(cards):
-        raise FeedError("ratings.html: data-research-card found outside catalog markers")
+        raise FeedError("ratings/: data-research-card found outside catalog markers")
 
     if CATALOG_CARD_RE.sub("", block).strip():
-        raise FeedError("ratings.html: catalog markers may contain only research cards")
+        raise FeedError("ratings/: catalog markers may contain only research cards")
 
     by_date: dict[str, list[str]] = defaultdict(list)
     ids: set[str] = set()
@@ -153,7 +153,7 @@ def normalize_catalog(html: str) -> tuple[str, list[str]]:
         attrs = parse_card(card)
         rid = attrs["data-research-id"]
         if rid in ids:
-            raise FeedError(f"ratings.html: duplicate data-research-id: {rid}")
+            raise FeedError(f"ratings/: duplicate data-research-id: {rid}")
         ids.add(rid)
         by_date[attrs["data-published"]].append(card)
 
@@ -359,7 +359,7 @@ def sync_home(index_html: str, catalog_cards: list[str]) -> str:
     home_ids = [parse_card(card)["data-research-id"] for card in home_cards]
     catalog_ids = [parse_card(card)["data-research-id"] for card in catalog_cards]
     if home_ids != catalog_ids:
-        raise FeedError("index.html: homepage research order differs from ratings.html")
+        raise FeedError("index.html: homepage research order differs from ratings/")
 
     feed = normalized.split(INDEX_START, 1)[1].split(INDEX_END, 1)[0]
     if 'class="note"' in feed:
