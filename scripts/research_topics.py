@@ -138,12 +138,17 @@ def render_topic_navigation(lang: str) -> tuple[str, str]:
             f'<div class="nav-research-panel">{research_html}</div>'
             '</div>'
         )
+        panel_id = f"mobile-research-{topic['id']}"
         mobile_topics.append(
-            '<details class="mobile-research">'
-            f'<summary aria-label="{open_label}"></summary>'
+            '<div class="mobile-research">'
+            '<div class="mobile-topic-row">'
             f'<a class="mobile-topic-link" href="{hub_href}" hreflang="ru">{topic_label}</a>'
-            f'<div class="mobile-research-panel">{research_html}</div>'
-            '</details>'
+            f'<button class="mobile-submenu-toggle" type="button" data-menu-toggle="{panel_id}" '
+            f'aria-expanded="false" aria-controls="{panel_id}" aria-label="{open_label}">'
+            '<span class="mobile-menu-chevron" aria-hidden="true"></span>'
+            '</button></div>'
+            f'<div class="mobile-research-panel" id="{panel_id}" hidden>{research_html}</div>'
+            '</div>'
         )
 
     topics_label = html_module.escape(labels["topics"])
@@ -154,9 +159,12 @@ def render_topic_navigation(lang: str) -> tuple[str, str]:
         '</div>'
     )
     mobile = (
-        '<details class="mobile-topics">'
-        f'<summary>{topics_label}</summary>'
-        f'<div class="mobile-topics-panel">{"".join(mobile_topics)}</div>'
-        '</details>'
+        '<div class="mobile-topics">'
+        f'<button class="mobile-topics-toggle" type="button" data-menu-toggle="mobile-topics-panel" '
+        f'aria-expanded="false" aria-controls="mobile-topics-panel">'
+        f'<span>{topics_label}</span><span class="mobile-menu-chevron" aria-hidden="true"></span>'
+        '</button>'
+        f'<div class="mobile-topics-panel" id="mobile-topics-panel" hidden>{"".join(mobile_topics)}</div>'
+        '</div>'
     )
     return desktop, mobile

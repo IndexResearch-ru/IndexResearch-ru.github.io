@@ -174,19 +174,23 @@ html[lang="ru"] .footer-lang .lang-ru,html[lang="en"] .footer-lang .lang-en,html
   .menu-mobile[open]>summary span:nth-child(1){transform:translateY(7px) rotate(45deg)}
   .menu-mobile[open]>summary span:nth-child(2){opacity:0}
   .menu-mobile[open]>summary span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-  .menu-mobile nav{position:absolute;right:0;top:44px;width:min(360px,calc(100vw - 28px));min-width:0;max-height:calc(100vh - 76px);overflow:auto;display:flex;flex-direction:column;gap:0;padding:7px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 30px rgba(17,24,39,.12)}
+  .menu-mobile nav{position:absolute;right:0;top:44px;width:min(380px,calc(100vw - 28px));min-width:0;max-height:calc(100vh - 76px);overflow:auto;display:flex;flex-direction:column;gap:0;padding:7px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 30px rgba(17,24,39,.12)}
   .menu-mobile nav>a{display:block;padding:10px 12px;border-radius:7px;font-size:17px;white-space:nowrap}
-  .menu-mobile nav .mobile-topics>summary{list-style:none;width:auto;height:auto;padding:10px 12px;display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;border-radius:7px;color:var(--muted);font-size:17px;font-weight:400;cursor:pointer}
-  .menu-mobile nav .mobile-topics>summary:hover,.menu-mobile nav .mobile-topics>summary:focus{background:var(--soft);color:var(--accent)}
+  .mobile-topics{border:0;padding:0;margin:0}
+  .mobile-topics-toggle{width:100%;border:0;background:transparent;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:7px;color:var(--muted);font:inherit;font-size:17px;text-align:left;cursor:pointer}
+  .mobile-topics-toggle:hover,.mobile-topics-toggle:focus-visible,.mobile-submenu-toggle:hover,.mobile-submenu-toggle:focus-visible{background:var(--soft);color:var(--accent);outline:none}
+  .mobile-menu-chevron{display:block;width:8px;height:8px;flex:0 0 8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);transform-origin:center;transition:transform .16s ease}
+  .mobile-topics-toggle[aria-expanded="true"] .mobile-menu-chevron{transform:rotate(225deg) translate(-1px,-1px)}
   .mobile-topics-panel{padding:2px 0 4px 10px}
-  .mobile-research{position:relative}
-  .menu-mobile nav .mobile-research>summary{position:absolute;right:2px;top:2px;width:40px;height:40px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:7px;color:var(--muted);cursor:pointer;z-index:2}
-  .menu-mobile nav .mobile-research>summary:hover,.menu-mobile nav .mobile-research>summary:focus{background:var(--soft);color:var(--accent)}
-  .mobile-research[open]>summary::after{transform:rotate(45deg)}
-  .menu-mobile nav .mobile-topic-link{display:block;padding:10px 48px 10px 12px;border-radius:7px;font-size:16px;line-height:1.35;white-space:normal}
+  .mobile-research{border:0;padding:0;margin:0}
+  .mobile-topic-row{display:grid;grid-template-columns:minmax(0,1fr) 42px;align-items:stretch}
+  .menu-mobile nav .mobile-topic-link{display:block;padding:10px 8px 10px 12px;border-radius:7px;font-size:16px;line-height:1.35;white-space:normal}
   .menu-mobile nav .mobile-topic-link:hover,.menu-mobile nav .mobile-topic-link:focus{background:var(--soft);color:var(--accent)}
-  .mobile-research-panel{display:none;padding:0 0 6px 12px}
-  .mobile-research[open]>.mobile-research-panel{display:block}
+  .mobile-submenu-toggle{width:42px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;border-radius:7px;color:var(--muted);cursor:pointer}
+  .mobile-submenu-toggle .mobile-menu-chevron{transform:rotate(-45deg)}
+  .mobile-submenu-toggle[aria-expanded="true"] .mobile-menu-chevron{transform:rotate(45deg)}
+  .mobile-research-panel{padding:0 0 6px 12px}
   .menu-mobile nav .mobile-research-panel a{display:block;padding:8px 10px;border-radius:7px;font-size:15px;line-height:1.35;white-space:normal}
   .menu-mobile nav .mobile-research-panel a:hover,.menu-mobile nav .mobile-research-panel a:focus{background:var(--soft);color:var(--accent)}
+  .mobile-topics-panel[hidden],.mobile-research-panel[hidden]{display:none!important}
 }
