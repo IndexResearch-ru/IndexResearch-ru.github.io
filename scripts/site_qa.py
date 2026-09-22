@@ -583,27 +583,58 @@ for path in html_paths:
 
     if is_research:
         slug = name[:-5]
-        github_repo = f"https://github.com/IndexResearch-ru/{slug}"
+        canonical_github_repo = f"https://github.com/IndexResearch-ru/{slug}"
 
         catalog_text = LOCALIZED_RATINGS[lang_key]
         expected_catalog_href = localized_href(name, lang_key)
         catalog_label = localized_file("ratings.html", lang_key).relative_to(ROOT).as_posix()
 
+        # v4.1 migration model:
+        # RU always uses the canonical data/evidence repo.
+        # EN/CN use a language presentation repo once the localized catalog links to it;
+        # legacy pages may continue to fall back to the canonical repo until migrated.
+        if lang_key == "en":
+            localized_github_repo = f"{canonical_github_repo}-en"
+        elif lang_key == "cn":
+            localized_github_repo = f"{canonical_github_repo}-cn"
+        else:
+            localized_github_repo = canonical_github_repo
+
+        presentation_github_repo = (
+            localized_github_repo
+            if catalog_text and f'href="{localized_github_repo}"' in catalog_text
+            else canonical_github_repo
+        )
+
         if catalog_text:
             if f'href="{expected_catalog_href}"' not in catalog_text:
                 errors.append(f"{rel}: research page is not linked from {catalog_label}.")
 
-            if f'href="{github_repo}"' not in catalog_text:
-                errors.append(f"{rel}: primary GitHub repository is not linked directly from {catalog_label}.")
+            if f'href="{presentation_github_repo}"' not in catalog_text:
+                errors.append(
+                    f"{rel}: language-matched GitHub repository is not linked directly from {catalog_label}."
+                )
 
-        if len(re.findall(rf'href="{re.escape(github_repo)}"', text)) < 2:
-            errors.append(f"{rel}: summary page must contain at least 2 visible links to the primary GitHub repository.")
+        if presentation_github_repo == canonical_github_repo:
+            if len(re.findall(rf'href="{re.escape(canonical_github_repo)}"', text)) < 2:
+                errors.append(
+                    f"{rel}: summary page must contain at least 2 visible links to the canonical GitHub repository."
+                )
+        else:
+            if not re.search(rf'href="{re.escape(presentation_github_repo)}"', text):
+                errors.append(
+                    f"{rel}: summary page must contain a visible link to the language presentation GitHub repository."
+                )
+            if not re.search(rf'href="{re.escape(canonical_github_repo)}"', text):
+                errors.append(
+                    f"{rel}: localized summary page must also link to the canonical data/evidence GitHub repository."
+                )
 
         site_url = expected_url
         if not re.search(rf'"url"\s*:\s*"{re.escape(site_url)}"', text):
             errors.append(f"{rel}: Dataset.url must point to the IndexResearch summary page.")
-        if not re.search(rf'"sameAs"\s*:\s*"{re.escape(github_repo)}"', text):
-            errors.append(f"{rel}: Dataset.sameAs must point to the primary GitHub repository.")
+        if not re.search(rf'"sameAs"\s*:\s*"{re.escape(canonical_github_repo)}"', text):
+            errors.append(f"{rel}: Dataset.sameAs must point to the canonical data/evidence GitHub repository.")
         if not re.search(rf'"@id"\s*:\s*"{re.escape(site_url)}#dataset"', text):
             errors.append(f"{rel}: Dataset @id must use the IndexResearch summary URL.")
 
@@ -646,6 +677,26 @@ for path in html_paths:
         for schema_type in ["Dataset", "Article", "ItemList", "FAQPage", "BreadcrumbList"]:
             if schema_type not in by_type:
                 errors.append(f"{rel}: missing Schema.org {schema_type}.")
+
+        article_objects = by_type.get("Article", [])
+        if article_objects:
+            article_obj = article_objects[0]
+            article_same_as = article_obj.get("sameAs")
+            article_based_on = article_obj.get("isBasedOn")
+            if presentation_github_repo != canonical_github_repo:
+                if article_same_as != presentation_github_repo:
+                    errors.append(
+                        f"{rel}: Article.sameAs must point to the language presentation GitHub repository."
+                    )
+                based_on_id = (
+                    article_based_on.get("@id")
+                    if isinstance(article_based_on, dict)
+                    else article_based_on
+                )
+                if based_on_id != canonical_github_repo:
+                    errors.append(
+                        f"{rel}: localized Article.isBasedOn must point to the canonical data/evidence GitHub repository."
+                    )
 
         ranking_match = re.search(
             r'<table[^>]+class=["\'][^"\']*research-table--ranking[^"\']*["\'][^>]*>[\s\S]*?<tbody>([\s\S]*?)</tbody>',
