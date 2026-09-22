@@ -380,6 +380,20 @@ for path in html_paths:
     is_translated_research = is_en_research or is_cn_research
     is_research = is_root_research or is_translated_research
 
+    html_tag = re.search(r'<html\\b[^>]*>', text, re.I)
+    if not html_tag or not re.search(r'\\btranslate\\s*=\\s*["\\']no["\\']', html_tag.group(0), re.I):
+        errors.append(f"{rel}: <html> must contain translate=\"no\".")
+
+    google_notranslate = re.findall(
+        r'<meta\\b(?=[^>]*\\bname\\s*=\\s*["\\']google["\\'])(?=[^>]*\\bcontent\\s*=\\s*["\\']notranslate["\\'])[^>]*>',
+        text,
+        re.I,
+    )
+    if len(google_notranslate) != 1:
+        errors.append(
+            f"{rel}: Google notranslate meta must appear exactly once; found {len(google_notranslate)}."
+        )
+
     expected_header, expected_footer = render_chrome(text)
     expected_header_block = f"<!-- SITE_HEADER_START -->\n{expected_header}\n<!-- SITE_HEADER_END -->"
     expected_footer_block = f"<!-- SITE_FOOTER_START -->\n{expected_footer}\n<!-- SITE_FOOTER_END -->"
