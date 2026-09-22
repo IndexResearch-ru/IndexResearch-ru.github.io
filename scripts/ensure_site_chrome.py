@@ -18,6 +18,10 @@ PARTIALS = {
         ROOT / "templates" / "partials" / "site-header-en.html",
         ROOT / "templates" / "partials" / "site-footer-en.html",
     ),
+    "cn": (
+        ROOT / "templates" / "partials" / "site-header-cn.html",
+        ROOT / "templates" / "partials" / "site-footer-cn.html",
+    ),
 }
 
 HEADER_START = "<!-- SITE_HEADER_START -->"
@@ -50,8 +54,12 @@ def attrs(tag: str) -> dict[str, str]:
 
 def page_language(text: str) -> str:
     match = HTML_LANG_RE.search(text)
-    if match and match.group(1).lower().startswith("en"):
-        return "en"
+    if match:
+        value = match.group(1).lower()
+        if value.startswith("en"):
+            return "en"
+        if value.startswith("zh"):
+            return "cn"
     return "ru"
 
 
@@ -96,8 +104,9 @@ def render_chrome(text: str) -> tuple[str, str]:
 
     ru_href = local_href(hreflang_href(text, "ru"), "/")
     en_href = local_href(hreflang_href(text, "en"), "/en/methodology.html")
+    cn_href = local_href(hreflang_href(text, "zh-CN"), "/cn/methodology.html")
 
-    for css_class, href in (("lang-ru", ru_href), ("lang-en", en_href)):
+    for css_class, href in (("lang-ru", ru_href), ("lang-en", en_href), ("lang-cn", cn_href)):
         header = replace_lang_href(header, css_class, href)
         footer = replace_lang_href(footer, css_class, href)
 
@@ -164,7 +173,7 @@ def main() -> None:
         if sync_file(path, style_version):
             changed.append(path.relative_to(ROOT).as_posix())
 
-    print(f"Shared IndexResearch RU/EN chrome synchronized; CSS version {style_version}.")
+    print(f"Shared IndexResearch RU/EN/CN chrome synchronized; CSS version {style_version}.")
     if changed:
         print("Updated:", ", ".join(changed))
     else:
