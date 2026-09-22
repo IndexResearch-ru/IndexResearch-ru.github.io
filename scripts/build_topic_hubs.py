@@ -21,7 +21,6 @@ def build_schema(topic: dict, cards: list[dict]) -> str:
         }
         for index, card in enumerate(cards, start=1)
     ]
-    latest = max((card.get("published") or "" for card in cards), default="")
     graph = [
         {
             "@type": "CollectionPage",
@@ -29,7 +28,6 @@ def build_schema(topic: dict, cards: list[dict]) -> str:
             "url": canonical,
             "name": topic["seo"]["h1"],
             "description": topic["seo"]["description"],
-            "dateModified": latest or None,
             "inLanguage": "ru-RU",
             "isPartOf": {"@type": "WebSite", "name": "IndexResearch", "url": BASE + "/"},
             "publisher": {"@id": BASE + "/#organization"},
@@ -53,7 +51,6 @@ def build_schema(topic: dict, cards: list[dict]) -> str:
             ],
         },
     ]
-    graph[0] = {key: value for key, value in graph[0].items() if value is not None}
     return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, indent=2)
 
 
