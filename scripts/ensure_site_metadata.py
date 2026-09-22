@@ -21,6 +21,12 @@ TOPIC_BY_RESEARCH_ID = {
     for research_id in (topic.get("research_ids") or [])
 }
 
+
+def topic_title_for_language(topic: dict, lang: str) -> str:
+    if lang == "ru":
+        return topic["seo"]["h1"]
+    return topic["seo_i18n"][lang]["h1"]
+
 TITLE_OVERRIDES = {
     "antarctica-tours-russia-2026.html": (
         "Туры в Антарктиду под ключ: ТОП-10 организаторов, 2026–2027 | IndexResearch",
@@ -193,8 +199,8 @@ def add_breadcrumbs(text: str, data, page_name: str, label: str, research: bool)
     if research:
         items.append({"@type": "ListItem", "position": 2, "name": "Исследования", "item": f"{BASE}/ratings.html"})
         if topic:
-            topic_label = topic["labels"]["ru"]
-            topic_url = f"{BASE}/topics/{topic['slug']}.html"
+            topic_label = topic_title_for_language(topic, "ru")
+            topic_url = f"{BASE}/ratings/{topic['slug']}/"
             items.append({"@type": "ListItem", "position": 3, "name": topic_label, "item": topic_url})
             items.append({"@type": "ListItem", "position": 4, "name": label, "item": url})
         else:
@@ -210,8 +216,8 @@ def add_breadcrumbs(text: str, data, page_name: str, label: str, research: bool)
 
     if research:
         if topic:
-            topic_label = html_module.escape(topic["labels"]["ru"])
-            topic_href = f"/topics/{topic['slug']}.html"
+            topic_label = html_module.escape(topic_title_for_language(topic, "ru"))
+            topic_href = f"/ratings/{topic['slug']}/"
             crumbs = (
                 '<nav class="breadcrumbs" aria-label="Хлебные крошки">'
                 '<a href="/">Главная</a><span aria-hidden="true">/</span>'
@@ -512,16 +518,87 @@ def normalize(path: Path, catalog_datasets: list[dict] | None = None) -> bool:
     return False
 
 
+def normalize_localized_research_breadcrumbs(path: Path, lang: str) -> bool:
+    if path.name in NON_RESEARCH:
+        return False
+    topic = TOPIC_BY_RESEARCH_ID.get(path.stem)
+    if not topic:
+        return False
+
+    text = path.read_text(encoding="utf-8")
+    original = text
+    data = load_jsonld(text)
+    if data is None:
+        return False
+
+    labels = {
+        "en": {
+            "home": "Home",
+            "research": "Research",
+            "aria": "Breadcrumbs",
+        },
+        "cn": {
+            "home": "首页",
+            "research": "研究",
+            "aria": "面包屑导航",
+        },
+    }[lang]
+    topic_label = topic_title_for_language(topic, lang)
+    prefix = f"/{lang}"
+    page_url = f"{BASE}{prefix}/{path.name}"
+    topic_url = f"{BASE}{prefix}/ratings/{topic['slug']}/"
+
+    data, graph = ensure_graph(data)
+    graph[:] = [node for node in graph if not has_type(node, "BreadcrumbList")]
+    graph.append({
+        "@type": "BreadcrumbList",
+        "@id": f"{page_url}#breadcrumb",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": labels["home"], "item": f"{BASE}{prefix}/"},
+            {"@type": "ListItem", "position": 2, "name": labels["research"], "item": f"{BASE}{prefix}/ratings.html"},
+            {"@type": "ListItem", "position": 3, "name": topic_label, "item": topic_url},
+            {"@type": "ListItem", "position": 4, "name": get_h1(text), "item": page_url},
+        ],
+    })
+
+    crumbs = (
+        f'<nav class="breadcrumbs" aria-label="{labels["aria"]}">'
+        f'<a href="{prefix}/">{labels["home"]}</a><span aria-hidden="true">/</span>'
+        f'<a href="{prefix}/ratings.html">{labels["research"]}</a><span aria-hidden="true">/</span>'
+        f'<a href="{prefix}/ratings/{topic["slug"]}/">{html_module.escape(topic_label)}</a>'
+        '<span aria-hidden="true">/</span>'
+        f'<span aria-current="page">{html_module.escape(get_h1(text))}</span></nav>'
+    )
+    breadcrumb_pattern = re.compile(
+        r'<nav\b[^>]*class=["\'][^"\']*\bbreadcrumbs\b[^"\']*["\'][^>]*>[\s\S]*?</nav>',
+        re.I,
+    )
+    if breadcrumb_pattern.search(text):
+        text = breadcrumb_pattern.sub(lambda _: crumbs, text, count=1)
+
+    text = save_jsonld(text, data)
+    if text != original:
+        path.write_text(text, encoding="utf-8")
+        return True
+    return False
+
+
 def main() -> None:
     ratings_path = ROOT / "ratings.html"
     if not ratings_path.exists():
         raise SystemExit("ratings.html is missing.")
     catalog_datasets = collect_catalog_datasets(ratings_path.read_text(encoding="utf-8"))
     changed = [
-        p.name
+        p.relative_to(ROOT).as_posix()
         for p in sorted(ROOT.glob("*.html"))
         if normalize(p, catalog_datasets)
     ]
+    for lang in ("en", "cn"):
+        language_root = ROOT / lang
+        for path in sorted(language_root.glob("*.html")):
+            if normalize_localized_research_breadcrumbs(path, lang):
+                changed.append(path.relative_to(ROOT).as_posix())
+
     print(f"Site metadata normalized for {len(catalog_datasets)} catalog research pages.")
     print("Updated:", ", ".join(changed) if changed else "none")
 

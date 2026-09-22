@@ -122,7 +122,7 @@ def render_topic_navigation(lang: str) -> tuple[str, str]:
 
     for topic in config["topics"]:
         topic_label = html_module.escape(topic["labels"][lang])
-        hub_href = f"{prefix}/topics/{topic['slug']}.html" if prefix else f"/topics/{topic['slug']}.html"
+        hub_href = f"{prefix}/ratings/{topic['slug']}/" if prefix else f"/ratings/{topic['slug']}/"
         hub_hreflang = LANG_HREFLANG[lang]
         research_links = []
         for research_id in topic["research_ids"]:

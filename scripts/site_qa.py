@@ -75,18 +75,18 @@ try:
 
         hub_urls = {
             lang: (
-                f"{BASE}/{cfg['dir']}/topics/{topic['slug']}.html"
+                f"{BASE}/{cfg['dir']}/ratings/{topic['slug']}/"
                 if cfg["dir"]
-                else f"{BASE}/topics/{topic['slug']}.html"
+                else f"{BASE}/ratings/{topic['slug']}/"
             )
             for lang, cfg in topic_langs.items()
         }
 
         for lang, cfg in topic_langs.items():
             hub_path = (
-                ROOT / cfg["dir"] / "topics" / f"{topic['slug']}.html"
+                ROOT / cfg["dir"] / "ratings" / topic["slug"] / "index.html"
                 if cfg["dir"]
-                else ROOT / "topics" / f"{topic['slug']}.html"
+                else ROOT / "ratings" / topic["slug"] / "index.html"
             )
             rel_label = hub_path.relative_to(ROOT).as_posix()
             if not hub_path.exists():
@@ -312,6 +312,14 @@ def language_key_for_rel(rel: str) -> str:
     return "ru"
 
 
+def logical_page_name(path: Path) -> str:
+    rel = path.relative_to(ROOT)
+    parts = rel.parts
+    if parts and parts[0] in {"en", "cn"}:
+        parts = parts[1:]
+    return Path(*parts).as_posix()
+
+
 def localized_file(page_name: str, lang_key: str) -> Path:
     directory = LANGUAGES[lang_key]["dir"]
     return ROOT / page_name if directory is None else ROOT / directory / page_name
@@ -330,6 +338,9 @@ def localized_href(page_name: str, lang_key: str) -> str:
     directory = LANGUAGES[lang_key]["dir"]
     if page_name == "index.html":
         return "/" if directory is None else f"/{directory}/"
+    if page_name.endswith("/index.html"):
+        visible = page_name[:-10]
+        return f"/{visible}" if directory is None else f"/{directory}/{visible}"
     return f"/{page_name}" if directory is None else f"/{directory}/{page_name}"
 
 
@@ -350,6 +361,8 @@ def internal_href_target(href: str, source_url: str):
     if parsed.netloc.lower() not in {"indexresearch.ru", "www.indexresearch.ru"}:
         return None
     clean = parsed.path or "/"
+    if clean not in {"/", "/en/", "/cn/"} and clean.endswith("/"):
+        clean += "index.html"
     if clean in {"/", "/en/", "/cn/"}:
         if clean == "/en/":
             return "en", "index.html"
@@ -558,6 +571,7 @@ for path in html_paths:
         else (f"{BASE}/" + rel[:-10] if rel.endswith("/index.html") else f"{BASE}/{rel}")
     )
     lang_key = language_key_for_rel(rel)
+    logical_name = logical_page_name(path)
     is_root_research = path.parent == ROOT and name not in non_research
     is_en_research = path.parent == ROOT / "en" and name not in non_research and (ROOT / name).exists()
     is_cn_research = path.parent == ROOT / "cn" and name not in non_research and (ROOT / name).exists()
@@ -637,7 +651,7 @@ for path in html_paths:
         errors.append(f"{rel}: canonical is {canonical.group(1)!r}, expected {expected_url!r}.")
 
     for counterpart_key, counterpart_cfg in LANGUAGES.items():
-        counterpart = localized_file(name, counterpart_key)
+        counterpart = localized_file(logical_name, counterpart_key)
         if not counterpart.exists():
             continue
         counterpart_url = public_url_for_file(counterpart)
@@ -645,7 +659,7 @@ for path in html_paths:
             errors.append(
                 f"{rel}: missing hreflang={counterpart_cfg['hreflang']} for existing counterpart {counterpart_url}."
             )
-    ru_counterpart = localized_file(name, "ru")
+    ru_counterpart = localized_file(logical_name, "ru")
     if ru_counterpart.exists():
         ru_url = public_url_for_file(ru_counterpart)
         if not has_hreflang(text, "x-default", ru_url):
@@ -701,24 +715,26 @@ for path in html_paths:
                     f"{rel}: BreadcrumbList second item must be local-language catalog {expected_catalog_url}."
                 )
 
-    if is_root_research and breadcrumb_nodes:
+    if is_research and breadcrumb_nodes:
         research_id = name[:-5]
         topic = topic_by_research_id.get(research_id)
         if topic:
-            expected_topic_url = f"{BASE}/topics/{topic['slug']}.html"
+            prefix = "" if lang_key == "ru" else f"/{lang_key}"
+            expected_topic_url = f"{BASE}{prefix}/ratings/{topic['slug']}/"
             items = sorted(
                 [item for item in (breadcrumb_nodes[0].get("itemListElement") or []) if isinstance(item, dict)],
                 key=lambda item: item.get("position", 0),
             )
             if len(items) < 4 or items[2].get("item") != expected_topic_url or items[-1].get("item") != expected_url:
                 errors.append(
-                    f"{rel}: RU research breadcrumb must include thematic hub {expected_topic_url} before the current page."
+                    f"{rel}: research breadcrumb must include local thematic category {expected_topic_url} before the current page."
                 )
-            expected_topic_href = f"/topics/{topic['slug']}.html"
+            expected_topic_href = f"{prefix}/ratings/{topic['slug']}/"
             if visible_breadcrumb and f'href="{expected_topic_href}"' not in visible_breadcrumb.group(1):
                 errors.append(
-                    f"{rel}: visible RU breadcrumb must link to thematic hub {expected_topic_href}."
+                    f"{rel}: visible research breadcrumb must link to local thematic category {expected_topic_href}."
                 )
+
 
     html_lang = re.search(r'<html\b[^>]*\blang=["\']([^"\']+)["\']', text, re.I)
     expected_lang = LANGUAGES[lang_key]["html_lang"]

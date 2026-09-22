@@ -69,12 +69,14 @@ def seo_for(topic: dict, lang: str) -> dict:
 
 def topic_path(slug: str, lang: str):
     directory = LANGS[lang]["dir"]
-    return ROOT / directory / "topics" / f"{slug}.html" if directory else ROOT / "topics" / f"{slug}.html"
+    base = ROOT / directory if directory else ROOT
+    return base / "ratings" / slug / "index.html"
 
 
 def topic_url(slug: str, lang: str) -> str:
     directory = LANGS[lang]["dir"]
-    return f"{BASE}/{directory}/topics/{slug}.html" if directory else f"{BASE}/topics/{slug}.html"
+    prefix = f"/{directory}" if directory else ""
+    return f"{BASE}{prefix}/ratings/{slug}/"
 
 
 def research_url(research_id: str, lang: str) -> str:
@@ -157,6 +159,21 @@ def main() -> None:
     template = TEMPLATE_PATH.read_text(encoding="utf-8")
     cards_by_lang = {lang: catalog_cards(lang) for lang in LANGS}
     written = []
+    removed = []
+
+    # Remove the short-lived legacy /topics/<slug>.html URLs so there is only
+    # one public category URL family: /ratings/<slug>/ in each language.
+    for topic in config["topics"]:
+        for lang, lang_cfg in LANGS.items():
+            directory = lang_cfg["dir"]
+            legacy = (
+                ROOT / directory / "topics" / f"{topic['slug']}.html"
+                if directory
+                else ROOT / "topics" / f"{topic['slug']}.html"
+            )
+            if legacy.exists():
+                legacy.unlink()
+                removed.append(legacy.relative_to(ROOT).as_posix())
 
     for topic in config["topics"]:
         hreflang_urls = {
@@ -208,6 +225,8 @@ def main() -> None:
     print(f"Thematic hubs synchronized: {len(config['topics'])} topics x {len(LANGS)} languages.")
     if written:
         print("Updated:", ", ".join(written))
+    if removed:
+        print("Removed legacy topic URLs:", ", ".join(removed))
 
 
 if __name__ == "__main__":
