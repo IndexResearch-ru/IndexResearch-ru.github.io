@@ -379,23 +379,6 @@ for path in html_paths:
     is_cn_research = path.parent == ROOT / "cn" and name not in non_research and (ROOT / name).exists()
     is_translated_research = is_en_research or is_cn_research
 
-    required_favicon_links = [
-        ("icon", "/android-chrome-192x192.png"),
-        ("icon", "/favicon-32x32.png"),
-        ("icon", "/favicon-16x16.png"),
-        ("icon", "/favicon.ico"),
-        ("apple-touch-icon", "/apple-touch-icon.png"),
-    ]
-    for rel_value, href_value in required_favicon_links:
-        count = len(re.findall(
-            rf'<link\\b(?=[^>]*\\brel=["\\\']{re.escape(rel_value)}["\\\'])(?=[^>]*\\bhref=["\\\']{re.escape(href_value)}["\\\'])[^>]*>',
-            text,
-            re.I,
-        ))
-        if count != 1:
-            errors.append(
-                f"{rel}: favicon link rel={rel_value!r} href={href_value!r} must appear exactly once; found {count}."
-            )
     is_research = is_root_research or is_translated_research
 
     html_tag = re.search(r'<html\b[^>]*>', text, re.I)
@@ -440,6 +423,7 @@ for path in html_paths:
         errors.append(f"{rel}: must contain exactly one Yandex noscript fallback.")
 
     favicon_checks = [
+        'href="/android-chrome-192x192.png"',
         'href="/favicon.ico"',
         'href="/assets/indexresearch-shield.svg"',
         'href="/favicon-32x32.png"',
