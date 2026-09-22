@@ -40,7 +40,7 @@ def build_schema(topic: dict, cards: list[dict]) -> str:
             "@id": canonical + "#list",
             "name": topic["seo"]["h1"],
             "numberOfItems": len(items),
-            "itemListOrder": "https://schema.org/ItemListOrderAscending",
+            "itemListOrder": "https://schema.org/ItemListUnordered",
             "itemListElement": items,
         },
         {
