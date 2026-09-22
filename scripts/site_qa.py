@@ -748,12 +748,12 @@ for path in html_paths:
                     f"{rel}: ItemList count {item_count} does not match visible ranking rows {ranking_rows}."
                 )
 
-        main_scope_match = re.search(r"<main\\b[^>]*>([\\s\\S]*?)</main>", text, re.I)
+        main_scope_match = re.search(r"<main\b[^>]*>([\s\S]*?)</main>", text, re.I)
         faq_scope = main_scope_match.group(1) if main_scope_match else text
         visible_faq = [
             visible_text(question)
             for question in re.findall(
-                r"<details[^>]*>\\s*<summary>([\\s\\S]*?)</summary>",
+                r"<details[^>]*>\s*<summary>([\s\S]*?)</summary>",
                 faq_scope,
                 re.I,
             )
