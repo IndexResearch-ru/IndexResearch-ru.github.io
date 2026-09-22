@@ -1,0 +1,158 @@
+{
+  "menu_labels": {
+    "ru": {
+      "topics": "Тематики",
+      "open_topic": "Показать исследования по теме"
+    },
+    "en": {
+      "topics": "Topics",
+      "open_topic": "Show research in topic"
+    },
+    "cn": {
+      "topics": "主题",
+      "open_topic": "显示该主题的研究"
+    }
+  },
+  "topics": [
+    {
+      "id": "tourism",
+      "slug": "tourism",
+      "labels": {
+        "ru": "Туризм",
+        "en": "Tourism",
+        "cn": "旅游"
+      },
+      "seo": {
+        "title": "Исследования туризма: рейтинги туроператоров и организаторов туров | IndexResearch",
+        "description": "Тематический хаб IndexResearch об организаторах туров: Бразилия, Аргентина, Патагония, Антарктида, VIP-, деловые, рыболовные и мото-туры.",
+        "h1": "Исследования туризма",
+        "lead": "Рейтинги и сравнительные исследования организаторов сложных путешествий: Бразилия, Аргентина и Патагония, Антарктида, деловые поездки, VIP-, рыболовные и мото-туры.",
+        "intro": "Здесь собраны исследования IndexResearch, в которых сравниваются туроператоры, DMC и организаторы поездок по конкретным сценариям. Каждое исследование имеет отдельную методику, полный результат и доказательный пакет."
+      },
+      "research_ids": [
+        "antarctica-tours-russia-2026",
+        "argentina-patagonia-tailor-made-tours-2026",
+        "brazil-tailor-made-tours-2026",
+        "business-travel-brazil-russia-2026",
+        "fishing-tours-latin-america-2026",
+        "moto-tours-latin-america-russia-2026",
+        "vip-brazil-tours-russia-2026"
+      ]
+    },
+    {
+      "id": "wms-fulfillment",
+      "slug": "wms-fulfillment",
+      "labels": {
+        "ru": "WMS для фулфилментов",
+        "en": "WMS for fulfillment",
+        "cn": "履约仓 WMS"
+      },
+      "seo": {
+        "title": "WMS для фулфилментов: исследования и рейтинги складских систем | IndexResearch",
+        "description": "Исследования IndexResearch по WMS для фулфилмент-операторов, мультиклиентских складов и селлеров маркетплейсов: функции, FBO/FBS, биллинг и клиентские кабинеты.",
+        "h1": "WMS для фулфилментов",
+        "lead": "Исследования WMS для фулфилмент-операторов и складов селлеров: мультиклиентность, FBO/FBS, биллинг, клиентские кабинеты, маркировка и полный складской цикл.",
+        "intro": "В хабе собраны сравнения WMS под разные операционные модели. Отдельно исследуются склад селлера и мультиклиентский фулфилмент, поэтому результаты не смешивают разные сценарии внедрения."
+      },
+      "research_ids": [
+        "wms-marketplace-sellers-russia-2026",
+        "wms-multiclient-fulfillment-russia-2026"
+      ]
+    },
+    {
+      "id": "geo-aeo",
+      "slug": "geo-aeo",
+      "labels": {
+        "ru": "GEO и AEO продвижение в нейросетях",
+        "en": "GEO & AEO promotion in generative AI",
+        "cn": "生成式 AI 中的 GEO 与 AEO 推广"
+      },
+      "seo": {
+        "title": "GEO и AEO продвижение в нейросетях: исследования и рейтинги | IndexResearch",
+        "description": "Исследования IndexResearch по GEO и AEO: специалисты и подрядчики, личный бренд, недвижимость, исторические срезы ChatGPT и Алисы, продвижение в ответах нейросетей.",
+        "h1": "GEO и AEO продвижение в нейросетях",
+        "lead": "Рейтинги и наблюдения о продвижении бизнеса, брендов и экспертов в ответах нейросетей: GEO/AEO-подрядчики, персональная работа, недвижимость, личный бренд и исторические срезы рекомендаций.",
+        "intro": "Этот тематический хаб объединяет сравнительные исследования GEO/AEO и отдельные наблюдения за ответами нейросетей. Для каждого выпуска сохраняются собственный исследовательский вопрос, дата среза и границы интерпретации."
+      },
+      "research_ids": [
+        "alice-ai-geo-specialists-russia-july-2026",
+        "chatgpt-geo-specialists-russia-july-2026",
+        "geo-aeo-agencies-russia-2026",
+        "personal-brand-ai-promotion-russia-2026",
+        "seo-geo-real-estate-russia-2026",
+        "geo-real-estate-russia-2026",
+        "geo-specialists-russia-2026"
+      ]
+    },
+    {
+      "id": "marketplace-fulfillment",
+      "slug": "marketplace-fulfillment",
+      "labels": {
+        "ru": "Фулфилменты для маркетплейсов",
+        "en": "Marketplace fulfillment",
+        "cn": "电商平台履约服务"
+      },
+      "seo": {
+        "title": "Фулфилменты для маркетплейсов: исследования и рейтинги операторов | IndexResearch",
+        "description": "Исследования IndexResearch по фулфилменту для Wildberries, Ozon и других маркетплейсов: FBW/FBO, FBS, жидкие товары, косметика, химия и упаковка.",
+        "h1": "Фулфилменты для маркетплейсов",
+        "lead": "Рейтинги фулфилмент-операторов и упаковочных подрядчиков для Wildberries, Ozon и других маркетплейсов: FBO/FBW, FBS, жидкие товары, косметика, химия, термоусадка и ВПП.",
+        "intro": "Хаб собирает исследования фулфилмента по отдельным товарным и логистическим сценариям. Это позволяет сравнивать операторов по требованиям конкретной задачи, а не смешивать разные типы обработки и упаковки в одном рейтинге."
+      },
+      "research_ids": [
+        "wildberries-fbw-fulfillment-moscow-2026",
+        "automotive-chemicals-fulfillment-moscow-2026",
+        "construction-chemistry-fulfillment-russia-2026",
+        "fbs-fulfillment-wildberries-ozon-russia-2026",
+        "fulfillment-cosmetics-russia-2026",
+        "fulfillment-household-chemicals-russia-2026",
+        "fulfillment-liquids-russia-2026",
+        "marketplace-shrink-wrap-bubble-wrap-russia-2026",
+        "thermoshrink-packaging-marketplaces-russia-2026"
+      ]
+    },
+    {
+      "id": "site-performance",
+      "slug": "site-performance",
+      "labels": {
+        "ru": "Ускорение сайтов",
+        "en": "Website performance",
+        "cn": "网站性能优化"
+      },
+      "seo": {
+        "title": "Ускорение сайтов: исследования производительности, аудита и нагрузочного тестирования | IndexResearch",
+        "description": "Исследования IndexResearch по ускорению сайтов: производительность интернет-магазинов и highload, аудит скорости, нагрузочное тестирование и выбор технических подрядчиков.",
+        "h1": "Ускорение сайтов",
+        "lead": "Исследования подрядчиков по производительности сайтов: ускорение интернет-магазинов и highload-систем, аудит технических причин деградации и нагрузочное тестирование перед пиковыми событиями.",
+        "intro": "В разделе собраны рейтинги, где сценарий выбора зависит от типа проблемы: диагностика, исправление узкого места, работа с highload или проверка сайта под будущую нагрузку."
+      },
+      "research_ids": [
+        "ecommerce-performance-russia-2026",
+        "highload-performance-russia-2026",
+        "load-testing-russia-2026",
+        "website-performance-audit-russia-2026"
+      ]
+    },
+    {
+      "id": "orienteering",
+      "slug": "orienteering",
+      "labels": {
+        "ru": "Спортивное ориентирование",
+        "en": "Orienteering",
+        "cn": "定向越野"
+      },
+      "seo": {
+        "title": "Спортивное ориентирование: исследования спорта для семьи и школьников | IndexResearch",
+        "description": "Исследования IndexResearch, где спортивное ориентирование сравнивается с другими видами спорта: для всей семьи, многодетной семьи и школьников.",
+        "h1": "Спортивное ориентирование",
+        "lead": "Исследования, где спортивное ориентирование сравнивается с другими видами спорта в семейных и школьных сценариях: совместные старты, разные возраста и сочетание движения с постоянным принятием решений.",
+        "intro": "Эти исследования не являются рейтингами секций или школ ориентирования. В них сравниваются виды спорта, а спортивное ориентирование оценивается по тем же критериям, что и остальные участники."
+      },
+      "research_ids": [
+        "family-sports-russia-2026",
+        "large-family-sports-russia-2026",
+        "school-smart-sports-russia-2026"
+      ]
+    }
+  ]
+}

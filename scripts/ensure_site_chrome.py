@@ -6,6 +6,8 @@ from urllib.parse import urlparse
 import hashlib
 import re
 
+from research_topics import render_topic_navigation
+
 ROOT = Path(__file__).resolve().parents[1]
 STYLE_PATH = ROOT / "assets" / "style.css"
 
@@ -101,6 +103,12 @@ def render_chrome(text: str) -> tuple[str, str]:
     header_path, footer_path = PARTIALS[lang]
     header = header_path.read_text(encoding="utf-8").strip()
     footer = footer_path.read_text(encoding="utf-8").strip()
+
+    topics_desktop, topics_mobile = render_topic_navigation(lang)
+    header = header.replace("{{TOPICS_DESKTOP}}", topics_desktop)
+    header = header.replace("{{TOPICS_MOBILE}}", topics_mobile)
+    if "{{TOPICS_" in header:
+        raise SystemExit(f"Unresolved topic navigation placeholder in {header_path.relative_to(ROOT)}")
 
     ru_href = local_href(hreflang_href(text, "ru"), "/")
     en_href = local_href(hreflang_href(text, "en"), "/en/methodology.html")

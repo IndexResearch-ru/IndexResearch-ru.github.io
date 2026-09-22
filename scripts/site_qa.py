@@ -10,6 +10,7 @@ import xml.etree.ElementTree as ET
 from urllib.parse import urljoin, urlparse
 
 from ensure_site_chrome import render_chrome
+from research_topics import load_topic_config, topic_configuration_errors
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = "https://indexresearch.ru"
@@ -53,6 +54,34 @@ cn_ratings = (ROOT / "cn" / "ratings.html").read_text(encoding="utf-8") if (ROOT
 en_home = (ROOT / "en" / "index.html").read_text(encoding="utf-8") if (ROOT / "en" / "index.html").exists() else ""
 cn_home = (ROOT / "cn" / "index.html").read_text(encoding="utf-8") if (ROOT / "cn" / "index.html").exists() else ""
 non_research = {"index.html", "ratings.html", "methodology.html", "404.html"}
+
+# THEMATIC HUB QA
+try:
+    topic_config = load_topic_config()
+    for topic_error in topic_configuration_errors():
+        errors.append("research-topics.json: " + topic_error)
+    for topic in topic_config.get("topics", []):
+        hub_path = ROOT / "topics" / f"{topic['slug']}.html"
+        if not hub_path.exists():
+            errors.append(f"Missing thematic hub: {hub_path.relative_to(ROOT).as_posix()}.")
+            continue
+        hub_text = hub_path.read_text(encoding="utf-8")
+        hub_ids = re.findall(
+            r'<article\b[^>]*\bdata-research-card=["\']true["\'][^>]*\bdata-research-id=["\']([^"\']+)["\']',
+            hub_text,
+            re.I,
+        )
+        expected_ids = topic.get("research_ids") or []
+        if hub_ids != expected_ids:
+            errors.append(
+                f"{hub_path.relative_to(ROOT).as_posix()}: research cards must match topic config order "
+                f"({len(expected_ids)} expected, {len(hub_ids)} found)."
+            )
+        if 'class="breadcrumbs"' not in hub_text:
+            errors.append(f"{hub_path.relative_to(ROOT).as_posix()}: visible breadcrumbs are required.")
+except Exception as exc:
+    errors.append(f"Thematic research configuration failed: {exc}")
+
 
 LANGUAGES = {
     "ru": {"dir": None, "html_lang": "ru", "hreflang": "ru", "og_locale": "ru_RU"},
