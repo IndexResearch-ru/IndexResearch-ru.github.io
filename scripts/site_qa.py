@@ -47,6 +47,7 @@ else:
     errors.append("sitemap.xml is missing.")
 
 ratings = (ROOT / "ratings.html").read_text(encoding="utf-8") if (ROOT / "ratings.html").exists() else ""
+en_ratings = (ROOT / "en" / "ratings.html").read_text(encoding="utf-8") if (ROOT / "en" / "ratings.html").exists() else ""
 non_research = {"index.html", "ratings.html", "methodology.html", "404.html"}
 
 # Shared site chrome: RU and EN header/footer each have one canonical source.
@@ -230,6 +231,8 @@ for path in html_paths:
         else (f"{BASE}/" + rel[:-10] if rel.endswith("/index.html") else f"{BASE}/{rel}")
     )
     is_root_research = path.parent == ROOT and name not in non_research
+    is_en_research = path.parent == ROOT / "en" and name not in non_research and (ROOT / name).exists()
+    is_research = is_root_research or is_en_research
 
     expected_header, expected_footer = render_chrome(text)
     expected_header_block = f"<!-- SITE_HEADER_START -->\n{expected_header}\n<!-- SITE_HEADER_END -->"
@@ -290,6 +293,10 @@ for path in html_paths:
         errors.append(f"{rel}: <html lang> must be {expected_lang}.")
 
     required_og = ["og:type", "og:site_name", "og:locale", "og:title", "og:description", "og:url", "og:image", "og:image:alt"]
+    expected_og_locale = "en_US" if expected_lang == "en" else "ru_RU"
+    locale_match = re.search(r'<meta\\b(?=[^>]*\\bproperty=["\\\']og:locale["\\\'])[^>]*\\bcontent=["\\\']([^"\\\']+)["\\\'][^>]*>', text, re.I)
+    if locale_match and locale_match.group(1) != expected_og_locale:
+        errors.append(f"{rel}: og:locale is {locale_match.group(1)!r}, expected {expected_og_locale!r}.")
     for prop in required_og:
         count = len(re.findall(
             rf'<meta\b(?=[^>]*\bproperty=["\']{re.escape(prop)}["\'])[^>]*>',
@@ -325,20 +332,24 @@ for path in html_paths:
     if indexed and expected_url not in sitemap_urls:
         errors.append(f"{rel}: missing from sitemap.xml.")
 
-    if is_root_research:
+    if is_research:
         slug = name[:-5]
         github_repo = f"https://github.com/IndexResearch-ru/{slug}"
 
-        if f'href="/{name}"' not in ratings and f'href="{name}"' not in ratings:
-            errors.append(f"{rel}: research page is not linked from ratings.html.")
+        catalog_text = en_ratings if is_en_research else ratings
+        expected_catalog_href = f"/en/{name}" if is_en_research else f"/{name}"
+        catalog_label = "en/ratings.html" if is_en_research else "ratings.html"
 
-        if f'href="{github_repo}"' not in ratings:
-            errors.append(f"{rel}: primary GitHub repository is not linked directly from ratings.html.")
+        if f'href="{expected_catalog_href}"' not in catalog_text:
+            errors.append(f"{rel}: research page is not linked from {catalog_label}.")
+
+        if f'href="{github_repo}"' not in catalog_text:
+            errors.append(f"{rel}: primary GitHub repository is not linked directly from {catalog_label}.")
 
         if len(re.findall(rf'href="{re.escape(github_repo)}"', text)) < 2:
             errors.append(f"{rel}: summary page must contain at least 2 visible links to the primary GitHub repository.")
 
-        site_url = f"{BASE}/{name}"
+        site_url = f"{BASE}/en/{name}" if is_en_research else f"{BASE}/{name}"
         if not re.search(rf'"url"\s*:\s*"{re.escape(site_url)}"', text):
             errors.append(f"{rel}: Dataset.url must point to the IndexResearch summary page.")
         if not re.search(rf'"sameAs"\s*:\s*"{re.escape(github_repo)}"', text):
@@ -346,7 +357,7 @@ for path in html_paths:
         if not re.search(rf'"@id"\s*:\s*"{re.escape(site_url)}#dataset"', text):
             errors.append(f"{rel}: Dataset @id must use the IndexResearch summary URL.")
 
-        if not re.search(r'<link[^>]+href=["\']assets/style\.css\?v=[^"\']+["\']', text, re.I):
+        if not re.search(r'<link[^>]+href=["\']/?assets/style\.css\?v=[^"\']+["\']', text, re.I):
             errors.append(f"{rel}: research page stylesheet must use cache-busting ?v=.")
 
         required_components = [
@@ -371,7 +382,7 @@ for path in html_paths:
         if snapshot and re.search(r"<(?:img|svg)\b", snapshot.group(1), re.I):
             errors.append(f"{rel}: research-snapshot must remain text-first; img/svg found inside it.")
 
-        graph = jsonld_graph(text, name)
+        graph = jsonld_graph(text, rel)
         by_type = {}
         for obj in graph:
             if not isinstance(obj, dict):
@@ -440,6 +451,48 @@ for path in html_paths:
                 for candidate in ["SCORE_MATRIX.csv", "OBSERVATION_MATRIX.csv", "CURRENT_RECHECK.csv"]
             ):
                 errors.append(f"{rel}: Dataset.distribution must expose SCORE_MATRIX.csv or an equivalent matrix.")
+
+        # A translated research page must preserve the quantitative result and release identity.
+        if is_en_research:
+            ru_path = ROOT / name
+            ru_text = ru_path.read_text(encoding="utf-8")
+            ru_scores = [
+                value.replace(",", ".")
+                for value in re.findall(r'<td class=["\']num["\']>(?:<strong>)?([0-9]+(?:[.,][0-9]+)?/100)', ru_text, re.I)
+            ]
+            en_scores = [
+                value.replace(",", ".")
+                for value in re.findall(r'<td class=["\']num["\']>(?:<strong>)?([0-9]+(?:[.,][0-9]+)?/100)', text, re.I)
+            ]
+            if ru_scores != en_scores:
+                errors.append(f"{rel}: EN ranking scores differ from the RU canonical research page.")
+
+            ru_types = schema_objects_by_type(ru_text, name)
+            en_types = schema_objects_by_type(text, rel)
+            ru_datasets = ru_types.get("Dataset", [])
+            en_datasets = en_types.get("Dataset", [])
+            if ru_datasets and en_datasets:
+                for field in ("datePublished", "dateModified", "version"):
+                    if ru_datasets[0].get(field) != en_datasets[0].get(field):
+                        errors.append(
+                            f"{rel}: Dataset.{field} differs from RU canonical page "
+                            f"({en_datasets[0].get(field)!r} vs {ru_datasets[0].get(field)!r})."
+                        )
+
+            expected_ru_alt = f"{BASE}/{name}"
+            expected_en_alt = f"{BASE}/en/{name}"
+            if not re.search(
+                rf'<link\b(?=[^>]*\brel=["\']alternate["\'])(?=[^>]*\bhreflang=["\']ru["\'])(?=[^>]*\bhref=["\']{re.escape(expected_ru_alt)}["\'])[^>]*>',
+                text,
+                re.I,
+            ):
+                errors.append(f"{rel}: missing exact RU hreflang counterpart.")
+            if not re.search(
+                rf'<link\b(?=[^>]*\brel=["\']alternate["\'])(?=[^>]*\bhreflang=["\']en["\'])(?=[^>]*\bhref=["\']{re.escape(expected_en_alt)}["\'])[^>]*>',
+                ru_text,
+                re.I,
+            ):
+                errors.append(f"{rel}: RU counterpart does not link back with hreflang=en.")
 
 index_text = (ROOT / "index.html").read_text(encoding="utf-8") if (ROOT / "index.html").exists() else ""
 if not re.search(r'"sameAs"\s*:\s*\[[^\]]*"https://github.com/IndexResearch-ru"', index_text, re.S):
