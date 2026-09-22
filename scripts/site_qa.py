@@ -205,6 +205,22 @@ def catalog_card_ids(page_text):
 
 catalog_ids = catalog_card_ids(ratings)
 
+cn_catalog_ids = []
+if cn_ratings:
+    if cn_ratings.count("<!-- RESEARCH_CATALOG_CN_START -->") != 1 or cn_ratings.count("<!-- RESEARCH_CATALOG_CN_END -->") != 1:
+        errors.append("cn/ratings.html: must contain exactly one Chinese research catalog marker pair.")
+    else:
+        cn_block = cn_ratings.split("<!-- RESEARCH_CATALOG_CN_START -->", 1)[1].split("<!-- RESEARCH_CATALOG_CN_END -->", 1)[0]
+        cn_catalog_ids = re.findall(
+            r'<article\b[^>]*\bdata-research-card=["\']true["\'][^>]*\bdata-research-id=["\']([^"\']+)["\']',
+            cn_block,
+            re.I,
+        )
+        if cn_catalog_ids != catalog_ids:
+            errors.append(
+                f"cn/ratings.html: catalog must match canonical RU catalog order/count ({len(catalog_ids)}); found {len(cn_catalog_ids)}."
+            )
+
 def home_feed_ids(page_text, label):
     if not page_text:
         return []
