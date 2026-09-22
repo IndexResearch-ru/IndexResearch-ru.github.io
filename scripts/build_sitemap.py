@@ -20,6 +20,7 @@ SERVICE_PAGES = {
     "404.html",
     "en/methodology.html",
     "cn/methodology.html",
+    "cn/ratings.html",
 }
 
 
@@ -104,9 +105,11 @@ priority = {
     "en/index.html": 1,
     "cn/index.html": 2,
     "ratings.html": 3,
-    "methodology.html": 4,
-    "en/methodology.html": 5,
-    "cn/methodology.html": 6,
+    "en/ratings.html": 4,
+    "cn/ratings.html": 5,
+    "methodology.html": 6,
+    "en/methodology.html": 7,
+    "cn/methodology.html": 8,
 }
 pages.sort(key=lambda item: (priority.get(item[0], 10), item[0]))
 
