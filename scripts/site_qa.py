@@ -48,9 +48,17 @@ else:
 
 ratings = (ROOT / "ratings.html").read_text(encoding="utf-8") if (ROOT / "ratings.html").exists() else ""
 en_ratings = (ROOT / "en" / "ratings.html").read_text(encoding="utf-8") if (ROOT / "en" / "ratings.html").exists() else ""
+cn_ratings = (ROOT / "cn" / "ratings.html").read_text(encoding="utf-8") if (ROOT / "cn" / "ratings.html").exists() else ""
 en_home = (ROOT / "en" / "index.html").read_text(encoding="utf-8") if (ROOT / "en" / "index.html").exists() else ""
 cn_home = (ROOT / "cn" / "index.html").read_text(encoding="utf-8") if (ROOT / "cn" / "index.html").exists() else ""
 non_research = {"index.html", "ratings.html", "methodology.html", "404.html"}
+
+LANGUAGES = {
+    "ru": {"dir": None, "html_lang": "ru", "hreflang": "ru", "og_locale": "ru_RU"},
+    "en": {"dir": "en", "html_lang": "en", "hreflang": "en", "og_locale": "en_US"},
+    "cn": {"dir": "cn", "html_lang": "zh-CN", "hreflang": "zh-CN", "og_locale": "zh_CN"},
+}
+LOCALIZED_RATINGS = {"ru": ratings, "en": en_ratings, "cn": cn_ratings}
 
 # Shared site chrome: RU, EN and CN header/footer each have one canonical source.
 chrome_partial_paths = [
@@ -110,6 +118,76 @@ def schema_objects_by_type(page_text, page_name):
     return by_type
 
 
+
+def language_key_for_rel(rel: str) -> str:
+    if rel.startswith("en/"):
+        return "en"
+    if rel.startswith("cn/"):
+        return "cn"
+    return "ru"
+
+
+def localized_file(page_name: str, lang_key: str) -> Path:
+    directory = LANGUAGES[lang_key]["dir"]
+    return ROOT / page_name if directory is None else ROOT / directory / page_name
+
+
+def public_url_for_file(path: Path) -> str:
+    rel = path.relative_to(ROOT).as_posix()
+    if rel == "index.html":
+        return f"{BASE}/"
+    if rel.endswith("/index.html"):
+        return f"{BASE}/" + rel[:-10]
+    return f"{BASE}/{rel}"
+
+
+def localized_href(page_name: str, lang_key: str) -> str:
+    directory = LANGUAGES[lang_key]["dir"]
+    if page_name == "index.html":
+        return "/" if directory is None else f"/{directory}/"
+    return f"/{page_name}" if directory is None else f"/{directory}/{page_name}"
+
+
+def has_hreflang(page_text: str, code: str, href: str) -> bool:
+    return bool(re.search(
+        rf'<link\b(?=[^>]*\brel=["\']alternate["\'])(?=[^>]*\bhreflang=["\']{re.escape(code)}["\'])(?=[^>]*\bhref=["\']{re.escape(href)}["\'])[^>]*>',
+        page_text,
+        re.I,
+    ))
+
+
+def internal_href_target(href: str):
+    clean = href.split("#", 1)[0].split("?", 1)[0]
+    if clean in {"/", "/en/", "/cn/"}:
+        if clean == "/en/":
+            return "en", "index.html"
+        if clean == "/cn/":
+            return "cn", "index.html"
+        return "ru", "index.html"
+    if clean.startswith("/en/"):
+        return "en", clean.removeprefix("/en/")
+    if clean.startswith("/cn/"):
+        return "cn", clean.removeprefix("/cn/")
+    if clean.startswith("/"):
+        return "ru", clean.removeprefix("/")
+    return None
+
+
+def itemlist_signature(item_list: dict) -> dict:
+    elements = [item for item in (item_list.get("itemListElement") or []) if isinstance(item, dict)]
+    scores = []
+    for element in elements:
+        payload = element.get("item") if isinstance(element.get("item"), dict) else {}
+        match = re.search(r'([0-9]+(?:[.,][0-9]+)?)/100', json.dumps(payload, ensure_ascii=False))
+        scores.append(match.group(1).replace(",", ".") if match else None)
+    return {
+        "numberOfItems": item_list.get("numberOfItems"),
+        "itemListOrder": item_list.get("itemListOrder"),
+        "positions": [item.get("position") for item in elements],
+        "scores": scores,
+    }
+
+
 def catalog_card_ids(page_text):
     if page_text.count("<!-- RESEARCH_CATALOG_START -->") != 1 or page_text.count("<!-- RESEARCH_CATALOG_END -->") != 1:
         errors.append("ratings.html: must contain exactly one research catalog marker pair.")
@@ -150,6 +228,19 @@ for label, page_text in (("en/index.html", en_home), ("cn/index.html", cn_home))
             errors.append(
                 f"{label}: research feed must match canonical RU catalog order/count ({len(catalog_ids)}); found {len(ids)}."
             )
+for label, page_text in (("en/ratings.html", en_ratings), ("cn/ratings.html", cn_ratings)):
+    if page_text:
+        ids = re.findall(
+            r'<article\b[^>]*\bdata-research-card=["\']true["\'][^>]*\bdata-research-id=["\']([^"\']+)["\']',
+            page_text,
+            re.I,
+        )
+        if ids != catalog_ids:
+            errors.append(
+                f"{label}: localized catalog must match canonical RU catalog order/count "
+                f"({len(catalog_ids)}); found {len(ids)}."
+            )
+
 research_page_ids = sorted(
     path.stem for path in html_paths
     if path.parent == ROOT and path.name not in non_research
@@ -258,9 +349,12 @@ for path in html_paths:
         if rel == "index.html"
         else (f"{BASE}/" + rel[:-10] if rel.endswith("/index.html") else f"{BASE}/{rel}")
     )
+    lang_key = language_key_for_rel(rel)
     is_root_research = path.parent == ROOT and name not in non_research
     is_en_research = path.parent == ROOT / "en" and name not in non_research and (ROOT / name).exists()
-    is_research = is_root_research or is_en_research
+    is_cn_research = path.parent == ROOT / "cn" and name not in non_research and (ROOT / name).exists()
+    is_translated_research = is_en_research or is_cn_research
+    is_research = is_root_research or is_translated_research
 
     expected_header, expected_footer = render_chrome(text)
     expected_header_block = f"<!-- SITE_HEADER_START -->\n{expected_header}\n<!-- SITE_HEADER_END -->"
@@ -303,6 +397,13 @@ for path in html_paths:
 
     if not re.search(r"<title>[^<]{3,}</title>", text, re.I):
         errors.append(f"{rel}: missing/non-empty <title>.")
+    title_match = re.search(r"<title>([^<]+)</title>", text, re.I)
+    title_text = visible_text(title_match.group(1)) if title_match else ""
+    if lang_key == "en" and (
+        re.search(r"\bTop\s+\d+\s+Russia\b", title_text, re.I)
+        or re.search(r"\bTop\s+\d+\s+(?:Companies|Specialists|Providers|Operators|Systems)\s+Russia\b", title_text, re.I)
+    ):
+        errors.append(f"{rel}: unnatural EN title construction; use 'in Russia'.")
     if not re.search(r'<meta\s+name="description"\s+content="[^"]{20,}"', text, re.I):
         errors.append(f"{rel}: missing meta description.")
     canonical = re.search(r'<link\s+rel="canonical"\s+href="([^"]+)"', text, re.I)
@@ -310,19 +411,80 @@ for path in html_paths:
         errors.append(f"{rel}: missing canonical.")
     elif canonical.group(1) != expected_url:
         errors.append(f"{rel}: canonical is {canonical.group(1)!r}, expected {expected_url!r}.")
+
+    for counterpart_key, counterpart_cfg in LANGUAGES.items():
+        counterpart = localized_file(name, counterpart_key)
+        if not counterpart.exists():
+            continue
+        counterpart_url = public_url_for_file(counterpart)
+        if not has_hreflang(text, counterpart_cfg["hreflang"], counterpart_url):
+            errors.append(
+                f"{rel}: missing hreflang={counterpart_cfg['hreflang']} for existing counterpart {counterpart_url}."
+            )
+    ru_counterpart = localized_file(name, "ru")
+    if ru_counterpart.exists():
+        ru_url = public_url_for_file(ru_counterpart)
+        if not has_hreflang(text, "x-default", ru_url):
+            errors.append(f"{rel}: x-default must point to RU counterpart {ru_url}.")
     if len(re.findall(r"<h1(?:\s[^>]*)?>", text, re.I)) != 1:
         errors.append(f"{rel}: must contain exactly one H1.")
     if 'application/ld+json' not in text:
         errors.append(f"{rel}: missing Schema.org JSON-LD.")
 
+    page_schema = schema_objects_by_type(text, rel)
+    needs_breadcrumb = is_research or name in {"ratings.html", "methodology.html"}
+    if needs_breadcrumb:
+        breadcrumb_nodes = page_schema.get("BreadcrumbList", [])
+        if len(breadcrumb_nodes) != 1:
+            errors.append(f"{rel}: expected exactly 1 BreadcrumbList, found {len(breadcrumb_nodes)}.")
+        visible_breadcrumb = re.search(
+            r'<nav\b[^>]*class=["\'][^"\']*\bbreadcrumbs\b[^"\']*["\'][^>]*>([\s\S]*?)</nav>',
+            text,
+            re.I,
+        )
+        if not visible_breadcrumb:
+            errors.append(f"{rel}: missing visible breadcrumbs.")
+
+        local_home = localized_file("index.html", lang_key)
+        if local_home.exists():
+            expected_home_href = localized_href("index.html", lang_key)
+            if visible_breadcrumb:
+                first_href = re.search(r'<a\b[^>]*href=["\']([^"\']+)["\']', visible_breadcrumb.group(1), re.I)
+                if not first_href or first_href.group(1) != expected_home_href:
+                    errors.append(
+                        f"{rel}: first visible breadcrumb must link to local-language home {expected_home_href}."
+                    )
+            if breadcrumb_nodes:
+                items = sorted(
+                    [item for item in (breadcrumb_nodes[0].get("itemListElement") or []) if isinstance(item, dict)],
+                    key=lambda item: item.get("position", 0),
+                )
+                expected_home_url = public_url_for_file(local_home)
+                if not items or items[0].get("item") != expected_home_url:
+                    errors.append(
+                        f"{rel}: BreadcrumbList first item must be local-language home {expected_home_url}."
+                    )
+
+        local_catalog = localized_file("ratings.html", lang_key)
+        if is_research and local_catalog.exists() and breadcrumb_nodes:
+            items = sorted(
+                [item for item in (breadcrumb_nodes[0].get("itemListElement") or []) if isinstance(item, dict)],
+                key=lambda item: item.get("position", 0),
+            )
+            expected_catalog_url = public_url_for_file(local_catalog)
+            if len(items) < 2 or items[1].get("item") != expected_catalog_url:
+                errors.append(
+                    f"{rel}: BreadcrumbList second item must be local-language catalog {expected_catalog_url}."
+                )
+
     html_lang = re.search(r'<html\b[^>]*\blang=["\']([^"\']+)["\']', text, re.I)
-    expected_lang = "zh-cn" if rel.startswith("cn/") else ("en" if rel.startswith("en/") else "ru")
-    if not html_lang or html_lang.group(1).lower() != expected_lang:
+    expected_lang = LANGUAGES[lang_key]["html_lang"]
+    if not html_lang or html_lang.group(1).lower() != expected_lang.lower():
         errors.append(f"{rel}: <html lang> must be {expected_lang}.")
 
     required_og = ["og:type", "og:site_name", "og:locale", "og:title", "og:description", "og:url", "og:image", "og:image:alt"]
-    expected_og_locale = "zh_CN" if expected_lang == "zh-cn" else ("en_US" if expected_lang == "en" else "ru_RU")
-    locale_match = re.search(r'<meta\\b(?=[^>]*\\bproperty=["\\\']og:locale["\\\'])[^>]*\\bcontent=["\\\']([^"\\\']+)["\\\'][^>]*>', text, re.I)
+    expected_og_locale = LANGUAGES[lang_key]["og_locale"]
+    locale_match = re.search(r'<meta\b(?=[^>]*\bproperty=["\']og:locale["\'])[^>]*\bcontent=["\']([^"\']+)["\'][^>]*>', text, re.I)
     if locale_match and locale_match.group(1) != expected_og_locale:
         errors.append(f"{rel}: og:locale is {locale_match.group(1)!r}, expected {expected_og_locale!r}.")
     for prop in required_og:
@@ -355,6 +517,25 @@ for path in html_paths:
             if not target.exists():
                 errors.append(f"{rel}: internal link points to missing file: {href}.")
 
+    if lang_key != "ru":
+        for anchor in re.finditer(r'<a\b([^>]*)href=["\']([^"\']+)["\']([^>]*)>', text, re.I):
+            attrs_text = (anchor.group(1) or "") + " " + (anchor.group(3) or "")
+            href = anchor.group(2)
+            if "lang-link" in attrs_text or re.search(r'\bhreflang\s*=', attrs_text, re.I):
+                continue
+            target_info = internal_href_target(href)
+            if not target_info:
+                continue
+            target_lang, target_name = target_info
+            if target_lang == lang_key:
+                continue
+            local_counterpart = localized_file(target_name, lang_key)
+            if local_counterpart.exists():
+                errors.append(
+                    f"{rel}: internal link {href!r} crosses language although local counterpart exists: "
+                    f"{localized_href(target_name, lang_key)!r}."
+                )
+
     robots = re.search(r'<meta\s+name="robots"\s+content="([^"]+)"', text, re.I)
     indexed = not (robots and "noindex" in robots.group(1).lower())
     if indexed and expected_url not in sitemap_urls:
@@ -364,20 +545,21 @@ for path in html_paths:
         slug = name[:-5]
         github_repo = f"https://github.com/IndexResearch-ru/{slug}"
 
-        catalog_text = en_ratings if is_en_research else ratings
-        expected_catalog_href = f"/en/{name}" if is_en_research else f"/{name}"
-        catalog_label = "en/ratings.html" if is_en_research else "ratings.html"
+        catalog_text = LOCALIZED_RATINGS[lang_key]
+        expected_catalog_href = localized_href(name, lang_key)
+        catalog_label = localized_file("ratings.html", lang_key).relative_to(ROOT).as_posix()
 
-        if f'href="{expected_catalog_href}"' not in catalog_text:
-            errors.append(f"{rel}: research page is not linked from {catalog_label}.")
+        if catalog_text:
+            if f'href="{expected_catalog_href}"' not in catalog_text:
+                errors.append(f"{rel}: research page is not linked from {catalog_label}.")
 
-        if f'href="{github_repo}"' not in catalog_text:
-            errors.append(f"{rel}: primary GitHub repository is not linked directly from {catalog_label}.")
+            if f'href="{github_repo}"' not in catalog_text:
+                errors.append(f"{rel}: primary GitHub repository is not linked directly from {catalog_label}.")
 
         if len(re.findall(rf'href="{re.escape(github_repo)}"', text)) < 2:
             errors.append(f"{rel}: summary page must contain at least 2 visible links to the primary GitHub repository.")
 
-        site_url = f"{BASE}/en/{name}" if is_en_research else f"{BASE}/{name}"
+        site_url = expected_url
         if not re.search(rf'"url"\s*:\s*"{re.escape(site_url)}"', text):
             errors.append(f"{rel}: Dataset.url must point to the IndexResearch summary page.")
         if not re.search(rf'"sameAs"\s*:\s*"{re.escape(github_repo)}"', text):
@@ -421,7 +603,7 @@ for path in html_paths:
                 if item_type:
                     by_type.setdefault(item_type, []).append(obj)
 
-        for schema_type in ["Dataset", "Article", "ItemList", "FAQPage"]:
+        for schema_type in ["Dataset", "Article", "ItemList", "FAQPage", "BreadcrumbList"]:
             if schema_type not in by_type:
                 errors.append(f"{rel}: missing Schema.org {schema_type}.")
 
@@ -480,47 +662,64 @@ for path in html_paths:
             ):
                 errors.append(f"{rel}: Dataset.distribution must expose SCORE_MATRIX.csv or an equivalent matrix.")
 
-        # A translated research page must preserve the quantitative result and release identity.
-        if is_en_research:
+        # A translated research page must preserve quantitative results and release identity.
+        if is_translated_research:
+            translated_label = "EN" if is_en_research else "CN"
+            expected_schema_language = "en" if is_en_research else "zh-CN"
             ru_path = ROOT / name
             ru_text = ru_path.read_text(encoding="utf-8")
             ru_scores = [
                 value.replace(",", ".")
                 for value in re.findall(r'<td class=["\']num["\']>(?:<strong>)?([0-9]+(?:[.,][0-9]+)?/100)', ru_text, re.I)
             ]
-            en_scores = [
+            translated_scores = [
                 value.replace(",", ".")
                 for value in re.findall(r'<td class=["\']num["\']>(?:<strong>)?([0-9]+(?:[.,][0-9]+)?/100)', text, re.I)
             ]
-            if ru_scores != en_scores:
-                errors.append(f"{rel}: EN ranking scores differ from the RU canonical research page.")
+            if ru_scores != translated_scores:
+                errors.append(
+                    f"{rel}: {translated_label} ranking scores differ from the RU canonical research page."
+                )
 
-            ru_types = schema_objects_by_type(ru_text, name)
-            en_types = schema_objects_by_type(text, rel)
-            ru_datasets = ru_types.get("Dataset", [])
-            en_datasets = en_types.get("Dataset", [])
-            if ru_datasets and en_datasets:
-                for field in ("datePublished", "dateModified", "version"):
-                    if ru_datasets[0].get(field) != en_datasets[0].get(field):
-                        errors.append(
-                            f"{rel}: Dataset.{field} differs from RU canonical page "
-                            f"({en_datasets[0].get(field)!r} vs {ru_datasets[0].get(field)!r})."
-                        )
-
-            expected_ru_alt = f"{BASE}/{name}"
-            expected_en_alt = f"{BASE}/en/{name}"
-            if not re.search(
-                rf'<link\b(?=[^>]*\brel=["\']alternate["\'])(?=[^>]*\bhreflang=["\']ru["\'])(?=[^>]*\bhref=["\']{re.escape(expected_ru_alt)}["\'])[^>]*>',
-                text,
-                re.I,
-            ):
-                errors.append(f"{rel}: missing exact RU hreflang counterpart.")
-            if not re.search(
-                rf'<link\b(?=[^>]*\brel=["\']alternate["\'])(?=[^>]*\bhreflang=["\']en["\'])(?=[^>]*\bhref=["\']{re.escape(expected_en_alt)}["\'])[^>]*>',
+            ru_ranking_match = re.search(
+                r'<table[^>]+class=["\'][^"\']*research-table--ranking[^"\']*["\'][^>]*>[\s\S]*?<tbody>([\s\S]*?)</tbody>',
                 ru_text,
                 re.I,
-            ):
-                errors.append(f"{rel}: RU counterpart does not link back with hreflang=en.")
+            )
+            ru_ranking_rows = (
+                len(re.findall(r"<tr(?:\s[^>]*)?>", ru_ranking_match.group(1), re.I))
+                if ru_ranking_match else 0
+            )
+            if ranking_rows != ru_ranking_rows:
+                errors.append(
+                    f"{rel}: visible ranking row count {ranking_rows} differs from RU canonical {ru_ranking_rows}."
+                )
+
+            ru_types = schema_objects_by_type(ru_text, name)
+            translated_types = schema_objects_by_type(text, rel)
+            ru_datasets = ru_types.get("Dataset", [])
+            translated_datasets = translated_types.get("Dataset", [])
+            if ru_datasets and translated_datasets:
+                for field in ("datePublished", "dateModified", "version"):
+                    if ru_datasets[0].get(field) != translated_datasets[0].get(field):
+                        errors.append(
+                            f"{rel}: Dataset.{field} differs from RU canonical page "
+                            f"({translated_datasets[0].get(field)!r} vs {ru_datasets[0].get(field)!r})."
+                        )
+                if translated_datasets[0].get("inLanguage") != expected_schema_language:
+                    errors.append(f"{rel}: Dataset.inLanguage must be {expected_schema_language!r}.")
+
+            translated_articles = translated_types.get("Article", [])
+            if translated_articles and translated_articles[0].get("inLanguage") != expected_schema_language:
+                errors.append(f"{rel}: Article.inLanguage must be {expected_schema_language!r}.")
+
+            ru_item_lists = ru_types.get("ItemList", [])
+            translated_item_lists = translated_types.get("ItemList", [])
+            if ru_item_lists and translated_item_lists:
+                if itemlist_signature(ru_item_lists[0]) != itemlist_signature(translated_item_lists[0]):
+                    errors.append(
+                        f"{rel}: ItemList quantitative identity/order differs from RU canonical page."
+                    )
 
 index_text = (ROOT / "index.html").read_text(encoding="utf-8") if (ROOT / "index.html").exists() else ""
 if not re.search(r'"sameAs"\s*:\s*\[[^\]]*"https://github.com/IndexResearch-ru"', index_text, re.S):
