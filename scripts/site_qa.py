@@ -605,9 +605,9 @@ for path in html_paths:
     if text.count("<!-- SITE_FOOTER_START -->") != 1 or text.count("<!-- SITE_FOOTER_END -->") != 1:
         errors.append(f"{rel}: shared footer markers must appear exactly once.")
     if expected_style_version:
-        style_href = re.search(r'href=["\']/?assets/style\.css\?v=([^"\']+)["\']', text, re.I)
+        style_href = re.search(r'href=["\']/assets/style\.css\?v=([^"\']+)["\']', text, re.I)
         if not style_href:
-            errors.append(f"{rel}: stylesheet must use the generated cache-busting version.")
+            errors.append(f"{rel}: stylesheet must use absolute /assets/style.css with the generated cache-busting version.")
         elif style_href.group(1) != expected_style_version:
             errors.append(
                 f"{rel}: stylesheet cache version {style_href.group(1)!r} does not match {expected_style_version!r}."
