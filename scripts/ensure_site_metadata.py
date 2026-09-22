@@ -6,12 +6,20 @@ import html as html_module
 import json
 import re
 
+from research_topics import load_topic_config
+
 ROOT = Path(__file__).resolve().parents[1]
 BASE = "https://indexresearch.ru"
 CATALOG_ID = f"{BASE}/ratings.html#catalog"
 ORG_ID = f"{BASE}/#organization"
 LOGO_IMAGE = f"{BASE}/assets/indexresearch-logo-horizontal.png"
 NON_RESEARCH = {"index.html", "ratings.html", "methodology.html", "404.html"}
+TOPIC_CONFIG = load_topic_config()
+TOPIC_BY_RESEARCH_ID = {
+    research_id: topic
+    for topic in TOPIC_CONFIG.get("topics", [])
+    for research_id in (topic.get("research_ids") or [])
+}
 
 TITLE_OVERRIDES = {
     "antarctica-tours-russia-2026.html": (
@@ -180,36 +188,62 @@ def add_breadcrumbs(text: str, data, page_name: str, label: str, research: bool)
     items = [
         {"@type": "ListItem", "position": 1, "name": "IndexResearch", "item": f"{BASE}/"},
     ]
+
+    topic = TOPIC_BY_RESEARCH_ID.get(Path(page_name).stem) if research else None
     if research:
         items.append({"@type": "ListItem", "position": 2, "name": "Исследования", "item": f"{BASE}/ratings.html"})
-        items.append({"@type": "ListItem", "position": 3, "name": label, "item": url})
+        if topic:
+            topic_label = topic["labels"]["ru"]
+            topic_url = f"{BASE}/topics/{topic['slug']}.html"
+            items.append({"@type": "ListItem", "position": 3, "name": topic_label, "item": topic_url})
+            items.append({"@type": "ListItem", "position": 4, "name": label, "item": url})
+        else:
+            items.append({"@type": "ListItem", "position": 3, "name": label, "item": url})
     else:
         items.append({"@type": "ListItem", "position": 2, "name": label, "item": url})
+
     graph.append({
         "@type": "BreadcrumbList",
         "@id": f"{url}#breadcrumb",
         "itemListElement": items,
     })
 
-    if 'class="breadcrumbs"' not in text:
-        if research:
+    if research:
+        if topic:
+            topic_label = html_module.escape(topic["labels"]["ru"])
+            topic_href = f"/topics/{topic['slug']}.html"
             crumbs = (
                 '<nav class="breadcrumbs" aria-label="Хлебные крошки">'
                 '<a href="/">Главная</a><span aria-hidden="true">/</span>'
                 '<a href="/ratings.html">Исследования</a><span aria-hidden="true">/</span>'
+                f'<a href="{topic_href}">{topic_label}</a><span aria-hidden="true">/</span>'
                 f'<span aria-current="page">{html_module.escape(label)}</span></nav>'
             )
         else:
             crumbs = (
                 '<nav class="breadcrumbs" aria-label="Хлебные крошки">'
                 '<a href="/">Главная</a><span aria-hidden="true">/</span>'
+                '<a href="/ratings.html">Исследования</a><span aria-hidden="true">/</span>'
                 f'<span aria-current="page">{html_module.escape(label)}</span></nav>'
             )
+    else:
+        crumbs = (
+            '<nav class="breadcrumbs" aria-label="Хлебные крошки">'
+            '<a href="/">Главная</a><span aria-hidden="true">/</span>'
+            f'<span aria-current="page">{html_module.escape(label)}</span></nav>'
+        )
+
+    breadcrumb_pattern = re.compile(
+        r'<nav\b[^>]*class=["\'][^"\']*\bbreadcrumbs\b[^"\']*["\'][^>]*>[\s\S]*?</nav>',
+        re.I,
+    )
+    if breadcrumb_pattern.search(text):
+        text = breadcrumb_pattern.sub(lambda _: crumbs, text, count=1)
+    else:
         marker = '<section class="hero small"><div class="wrap">'
         if marker in text:
             text = text.replace(marker, marker + "\n" + crumbs, 1)
     return text, data
-
 
 def ensure_home_faq(text: str, data):
     lines = [

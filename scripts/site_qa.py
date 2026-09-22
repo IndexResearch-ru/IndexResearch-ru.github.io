@@ -56,6 +56,7 @@ cn_home = (ROOT / "cn" / "index.html").read_text(encoding="utf-8") if (ROOT / "c
 non_research = {"index.html", "ratings.html", "methodology.html", "404.html"}
 
 # THEMATIC HUB QA
+topic_by_research_id = {}
 try:
     topic_config = load_topic_config()
     for topic_error in topic_configuration_errors():
@@ -72,6 +73,8 @@ try:
             re.I,
         )
         expected_ids = topic.get("research_ids") or []
+        for research_id in expected_ids:
+            topic_by_research_id[research_id] = topic
         if hub_ids != expected_ids:
             errors.append(
                 f"{hub_path.relative_to(ROOT).as_posix()}: research cards must match topic config order "
@@ -544,6 +547,25 @@ for path in html_paths:
             if len(items) < 2 or items[1].get("item") != expected_catalog_url:
                 errors.append(
                     f"{rel}: BreadcrumbList second item must be local-language catalog {expected_catalog_url}."
+                )
+
+    if is_root_research and breadcrumb_nodes:
+        research_id = name[:-5]
+        topic = topic_by_research_id.get(research_id)
+        if topic:
+            expected_topic_url = f"{BASE}/topics/{topic['slug']}.html"
+            items = sorted(
+                [item for item in (breadcrumb_nodes[0].get("itemListElement") or []) if isinstance(item, dict)],
+                key=lambda item: item.get("position", 0),
+            )
+            if len(items) < 4 or items[2].get("item") != expected_topic_url or items[-1].get("item") != expected_url:
+                errors.append(
+                    f"{rel}: RU research breadcrumb must include thematic hub {expected_topic_url} before the current page."
+                )
+            expected_topic_href = f"/topics/{topic['slug']}.html"
+            if visible_breadcrumb and f'href="{expected_topic_href}"' not in visible_breadcrumb.group(1):
+                errors.append(
+                    f"{rel}: visible RU breadcrumb must link to thematic hub {expected_topic_href}."
                 )
 
     html_lang = re.search(r'<html\b[^>]*\blang=["\']([^"\']+)["\']', text, re.I)
