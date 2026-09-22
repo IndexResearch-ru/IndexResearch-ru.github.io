@@ -760,22 +760,26 @@ for path in html_paths:
     if "indexresearch-ru.github.io" in text:
         errors.append(f"{rel}: contains staging GitHub Pages hostname indexresearch-ru.github.io.")
 
+    if "ratings.html" in text:
+        errors.append(f"{rel}: legacy catalog URL ratings.html is forbidden; use the directory URL /ratings/.")
+
     for href in re.findall(r'href=["\']([^"\']*)["\']', text, re.I):
         if not href:
             errors.append(f"{rel}: contains empty href.")
             continue
         if href.startswith(("#", "mailto:", "tel:", "javascript:")):
             continue
-        local = None
-        if href.startswith("/"):
-            local = href.split("#", 1)[0].split("?", 1)[0]
-            if local == "/":
-                local = "/index.html"
-        elif re.match(r"^[^:/?#]+\.html(?:[?#].*)?$", href):
-            local = "/" + href.split("#", 1)[0].split("?", 1)[0]
-        if local and local.endswith(".html"):
-            target = ROOT / local.lstrip("/")
-            if not target.exists():
+
+        parsed_href = urlparse(urljoin(expected_url, href))
+        if parsed_href.scheme in {"http", "https"} and parsed_href.netloc.lower() in {
+            "indexresearch.ru",
+            "www.indexresearch.ru",
+        }:
+            local_path = parsed_href.path or "/"
+            if local_path.endswith("/"):
+                local_path += "index.html"
+            target = ROOT / local_path.lstrip("/")
+            if target.suffix.lower() == ".html" and not target.exists():
                 errors.append(f"{rel}: internal link points to missing file: {href}.")
 
     if lang_key != "ru":
