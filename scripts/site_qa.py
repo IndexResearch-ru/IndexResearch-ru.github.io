@@ -304,6 +304,44 @@ def schema_objects_by_type(page_text, page_name):
     return by_type
 
 
+def check_google_dataset_fields(dataset: dict, label: str) -> None:
+    name = str(dataset.get("name") or "").strip()
+    if not name:
+        errors.append(f"{label}: Dataset.name is required by Google.")
+
+    description = str(dataset.get("description") or "").strip()
+    if not 50 <= len(description) <= 5000:
+        errors.append(
+            f"{label}: Dataset.description must contain 50-5000 characters for Google; found {len(description)}."
+        )
+
+    creator = dataset.get("creator")
+    if not isinstance(creator, dict):
+        errors.append(f"{label}: Dataset.creator is missing.")
+    elif creator.get("@type") not in {"Person", "Organization"}:
+        errors.append(
+            f"{label}: Dataset.creator @type must be Person or Organization for Google; "
+            f"found {creator.get('@type')!r}."
+        )
+
+    publisher = dataset.get("publisher")
+    if publisher is not None:
+        if not isinstance(publisher, dict) or publisher.get("@type") not in {"Person", "Organization"}:
+            publisher_type = publisher.get("@type") if isinstance(publisher, dict) else type(publisher).__name__
+            errors.append(
+                f"{label}: Dataset.publisher @type must be Person or Organization when present; "
+                f"found {publisher_type!r}."
+            )
+
+    catalog = dataset.get("includedInDataCatalog")
+    if catalog is not None:
+        if not isinstance(catalog, dict):
+            errors.append(f"{label}: Dataset.includedInDataCatalog must be a DataCatalog object.")
+        elif not (catalog.get("name") or catalog.get("url")):
+            errors.append(
+                f"{label}: Dataset.includedInDataCatalog must provide name or url for Google."
+            )
+
 
 def language_key_for_rel(rel: str) -> str:
     if rel.startswith("en/"):
@@ -509,7 +547,7 @@ if len(ratings_catalogs) != 1:
     errors.append(f"ratings/: expected exactly 1 DataCatalog, found {len(ratings_catalogs)}.")
 
 required_dataset_fields = [
-    "@id", "name", "description", "url", "sameAs", "creator",
+    "@id", "name", "description", "url", "sameAs", "creator", "publisher",
     "datePublished", "version", "inLanguage", "includedInDataCatalog",
 ]
 
@@ -531,6 +569,10 @@ if ratings_collections:
             errors.append(
                 f"ratings/: Dataset summary {item.get('url') or item.get('name') or '[unknown]'} missing: {', '.join(missing)}."
             )
+        check_google_dataset_fields(
+            item,
+            f"ratings/: Dataset summary {item.get('url') or item.get('name') or '[unknown]'}",
+        )
     if latest_catalog_date and collection.get("dateModified") != latest_catalog_date:
         errors.append(
             f"ratings/: CollectionPage.dateModified is {collection.get('dateModified')!r}, expected {latest_catalog_date!r}."
@@ -571,6 +613,10 @@ for item in home_datasets:
         errors.append(
             f"index.html: Dataset summary {item.get('url') or item.get('name') or '[unknown]'} missing: {', '.join(missing)}."
         )
+    check_google_dataset_fields(
+        item,
+        f"index.html: Dataset summary {item.get('url') or item.get('name') or '[unknown]'}",
+    )
 home_collections = index_types.get("CollectionPage", [])
 if len(home_collections) != 1:
     errors.append(f"index.html: expected exactly 1 CollectionPage, found {len(home_collections)}.")
@@ -983,6 +1029,7 @@ for path in html_paths:
 
         datasets = by_type.get("Dataset", [])
         if datasets:
+            check_google_dataset_fields(datasets[0], rel)
             dataset_dump = json.dumps(datasets[0], ensure_ascii=False)
             if "RESULTS.json" not in dataset_dump:
                 errors.append(f"{rel}: Dataset.distribution must expose RESULTS.json.")
