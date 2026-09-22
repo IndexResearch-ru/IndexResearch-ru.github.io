@@ -7,6 +7,7 @@ SHARED = '<script src="/assets/analytics.js" defer></script>'
 NOSCRIPT = '''<!-- Yandex.Metrika noscript fallback -->
 <noscript><div><img src="https://mc.yandex.ru/watch/112773213" style="position:absolute; left:-9999px;" alt="" /></div></noscript>'''
 FAVICONS = '''<!-- IndexResearch favicons -->
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/svg+xml" href="/assets/indexresearch-shield.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -40,6 +41,14 @@ FAVICON_BLOCK_RE = re.compile(
     r'[ \t]*<!-- IndexResearch favicons -->[\s\S]*?<!-- /IndexResearch favicons -->\s*',
     re.MULTILINE,
 )
+ANY_FAVICON_LINK_RE = re.compile(
+    r'[ \t]*<link\b(?=[^>]*\brel=["\'](?:icon|shortcut icon|apple-touch-icon)["\'])[^>]*>\s*',
+    re.I | re.MULTILINE,
+)
+ANY_FAVICON_META_RE = re.compile(
+    r'[ \t]*<meta\b(?=[^>]*\bname=["\'](?:theme-color|msapplication-TileColor|msapplication-TileImage)["\'])[^>]*>\s*',
+    re.I | re.MULTILINE,
+)
 
 changed = []
 for path in sorted(ROOT.rglob("*.html")):
@@ -55,6 +64,9 @@ for path in sorted(ROOT.rglob("*.html")):
     text = ANY_METRIKA_NOSCRIPT_RE.sub("", text)
     text = re.sub(r'\s*<script src="/assets/analytics\.js" defer></script>\s*', "\n", text)
     text = FAVICON_BLOCK_RE.sub("", text)
+    # Remove orphaned favicon tags from older generators or interrupted migrations.
+    text = ANY_FAVICON_LINK_RE.sub("", text)
+    text = ANY_FAVICON_META_RE.sub("", text)
 
     if "</head>" not in text or "<body>" not in text:
         raise SystemExit(f"{path.relative_to(ROOT).as_posix()}: missing </head> or <body>")
