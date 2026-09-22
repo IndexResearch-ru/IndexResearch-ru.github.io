@@ -135,10 +135,8 @@ def render_topic_navigation(lang: str) -> tuple[str, str]:
         desktop_topics.append(
             '<div class="nav-topic-entry">'
             f'<a class="nav-topic-link" href="{hub_href}" hreflang="ru">{topic_label}</a>'
-            '<details class="nav-topic-more">'
-            f'<summary aria-label="{open_label}"></summary>'
             f'<div class="nav-research-panel">{research_html}</div>'
-            '</details></div>'
+            '</div>'
         )
         mobile_topics.append(
             '<details class="mobile-research">'
@@ -150,10 +148,10 @@ def render_topic_navigation(lang: str) -> tuple[str, str]:
 
     topics_label = html_module.escape(labels["topics"])
     desktop = (
-        '<details class="nav-topics">'
-        f'<summary>{topics_label}</summary>'
+        '<div class="nav-topics">'
+        f'<span class="nav-topics-label">{topics_label}</span>'
         f'<div class="nav-topics-panel">{"".join(desktop_topics)}</div>'
-        '</details>'
+        '</div>'
     )
     mobile = (
         '<details class="mobile-topics">'
