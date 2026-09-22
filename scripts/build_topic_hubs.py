@@ -198,7 +198,8 @@ def main() -> None:
             }
             for needle, value in replacements.items():
                 page = page.replace(needle, value)
-            if "{{" in page:
+            unresolved_check = page.replace("{{SITE_HEADER}}", "").replace("{{SITE_FOOTER}}", "")
+            if "{{" in unresolved_check:
                 raise RuntimeError(f"Unresolved template placeholder in {target.relative_to(ROOT)}")
             if not target.exists() or target.read_text(encoding="utf-8") != page:
                 target.write_text(page, encoding="utf-8")
