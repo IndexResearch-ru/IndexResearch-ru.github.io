@@ -56,11 +56,6 @@ en_home = (ROOT / "en" / "index.html").read_text(encoding="utf-8") if (ROOT / "e
 cn_home = (ROOT / "cn" / "index.html").read_text(encoding="utf-8") if (ROOT / "cn" / "index.html").exists() else ""
 non_research = {"index.html", "methodology.html", "404.html"}
 
-LANGUAGE_GITHUB_REPO_OVERRIDES = {
-    ("thermoshrink-packaging-marketplaces-russia-2026", "en"):
-        "https://github.com/IndexResearch-ru/-EN-thermoshrink-packaging-marketplaces-russia-2026-en",
-}
-
 # THEMATIC HUB QA
 topic_by_research_id = {}
 try:
@@ -382,6 +377,24 @@ def internal_href_target(href: str, source_url: str):
     if clean.startswith("/"):
         return "ru", clean.removeprefix("/")
     return None
+
+
+def catalog_github_repo_for_research(catalog_text: str, research_id: str) -> str | None:
+    if not catalog_text:
+        return None
+    match = re.search(
+        rf'<article\b(?=[^>]*\bdata-research-id=["\']{re.escape(research_id)}["\'])[^>]*>[\s\S]*?</article>',
+        catalog_text,
+        re.I,
+    )
+    if not match:
+        return None
+    repos = re.findall(
+        r'href=["\'](https://github\.com/IndexResearch-ru/[^"\']+)["\']',
+        match.group(0),
+        re.I,
+    )
+    return repos[-1] if repos else None
 
 
 def itemlist_signature(item_list: dict) -> dict:
@@ -819,51 +832,42 @@ for path in html_paths:
         expected_catalog_href = localized_href(name, lang_key)
         catalog_label = localized_file(RATINGS_PAGE, lang_key).relative_to(ROOT).as_posix()
 
-        # v4.1 migration model:
-        # RU always uses the canonical data/evidence repo.
-        # EN/CN use a language presentation repo once the localized catalog links to it;
-        # legacy pages may continue to fall back to the canonical repo until migrated.
-        if lang_key == "en":
-            localized_github_repo = f"{canonical_github_repo}-en"
-        elif lang_key == "cn":
-            localized_github_repo = f"{canonical_github_repo}-cn"
-        else:
-            localized_github_repo = canonical_github_repo
-
-        localized_github_repo = LANGUAGE_GITHUB_REPO_OVERRIDES.get(
-            (slug, lang_key),
-            localized_github_repo,
-        )
-
-        presentation_github_repo = (
-            localized_github_repo
-            if catalog_text and f'href="{localized_github_repo}"' in catalog_text
-            else canonical_github_repo
-        )
+        presentation_github_repo = catalog_github_repo_for_research(catalog_text, slug)
 
         if catalog_text:
             if f'href="{expected_catalog_href}"' not in catalog_text:
                 errors.append(f"{rel}: research page is not linked from {catalog_label}.")
 
-            if f'href="{presentation_github_repo}"' not in catalog_text:
+            if not presentation_github_repo:
                 errors.append(
-                    f"{rel}: language-matched GitHub repository is not linked directly from {catalog_label}."
+                    f"{rel}: localized catalog card in {catalog_label} must link to an IndexResearch GitHub repository."
                 )
+            else:
+                repo_name = presentation_github_repo.rstrip("/").rsplit("/", 1)[-1]
+                if slug not in repo_name:
+                    errors.append(
+                        f"{rel}: catalog GitHub repository {presentation_github_repo} does not match research slug {slug}."
+                    )
+                if lang_key == "ru" and presentation_github_repo != canonical_github_repo:
+                    errors.append(
+                        f"{rel}: RU catalog must link to canonical GitHub repository {canonical_github_repo}."
+                    )
 
-        if presentation_github_repo == canonical_github_repo:
-            if len(re.findall(rf'href="{re.escape(canonical_github_repo)}"', text)) < 2:
-                errors.append(
-                    f"{rel}: summary page must contain at least 2 visible links to the canonical GitHub repository."
-                )
-        else:
+        if presentation_github_repo:
             if not re.search(rf'href="{re.escape(presentation_github_repo)}"', text):
                 errors.append(
-                    f"{rel}: summary page must contain a visible link to the language presentation GitHub repository."
+                    f"{rel}: summary page must contain the same GitHub repository link as its localized catalog card."
                 )
-            if not re.search(rf'href="{re.escape(canonical_github_repo)}"', text):
+            if presentation_github_repo != canonical_github_repo and not re.search(
+                rf'href="{re.escape(canonical_github_repo)}"', text
+            ):
                 errors.append(
                     f"{rel}: localized summary page must also link to the canonical data/evidence GitHub repository."
                 )
+        elif not re.search(rf'href="{re.escape(canonical_github_repo)}"', text):
+            errors.append(
+                f"{rel}: summary page must contain a visible link to the canonical GitHub repository."
+            )
 
         site_url = expected_url
         if not re.search(rf'"url"\s*:\s*"{re.escape(site_url)}"', text):
