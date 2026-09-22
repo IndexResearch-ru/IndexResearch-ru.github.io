@@ -380,12 +380,12 @@ for path in html_paths:
     is_translated_research = is_en_research or is_cn_research
     is_research = is_root_research or is_translated_research
 
-    html_tag = re.search(r'<html\\b[^>]*>', text, re.I)
-    if not html_tag or not re.search(r'\\btranslate\\s*=\\s*["\\']no["\\']', html_tag.group(0), re.I):
-        errors.append(f"{rel}: <html> must contain translate=\"no\".")
+    html_tag = re.search(r'<html\b[^>]*>', text, re.I)
+    if not html_tag or not re.search(r'\btranslate\s*=\s*["\']no["\']', html_tag.group(0), re.I):
+        errors.append(f'{rel}: <html> must contain translate="no".')
 
     google_notranslate = re.findall(
-        r'<meta\\b(?=[^>]*\\bname\\s*=\\s*["\\']google["\\'])(?=[^>]*\\bcontent\\s*=\\s*["\\']notranslate["\\'])[^>]*>',
+        r'<meta\b(?=[^>]*\bname\s*=\s*["\']google["\'])(?=[^>]*\bcontent\s*=\s*["\']notranslate["\'])[^>]*>',
         text,
         re.I,
     )
