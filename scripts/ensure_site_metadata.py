@@ -327,6 +327,57 @@ DATASET_SUMMARY_FIELDS = (
     "keywords",
 )
 
+DATASET_ORGANIZATION = {
+    "@type": "Organization",
+    "name": "IndexResearch",
+    "url": f"{BASE}/",
+    "sameAs": "https://github.com/IndexResearch-ru",
+}
+
+DATA_CATALOG_REF = {
+    "@type": "DataCatalog",
+    "@id": CATALOG_ID,
+    "name": "Каталог исследований IndexResearch",
+    "url": CATALOG_URL,
+}
+
+
+def normalize_google_dataset_fields(data, fallback_description: str = ""):
+    """Keep Dataset markup inside Google's supported value types."""
+    data, graph = ensure_graph(data)
+    fallback_description = (fallback_description or "").strip()
+    for node in graph:
+        if not has_type(node, "Dataset"):
+            continue
+
+        description = str(node.get("description") or "").strip()
+        if len(description) < 50 and len(fallback_description) >= 50:
+            node["description"] = fallback_description
+
+        for field in ("creator", "publisher"):
+            value = node.get(field)
+            if not isinstance(value, dict) or value.get("@type") not in {"Person", "Organization"}:
+                node[field] = dict(DATASET_ORGANIZATION)
+            elif value.get("name") == "IndexResearch":
+                normalized = dict(value)
+                normalized["@type"] = "Organization"
+                normalized.pop("@id", None)
+                normalized.setdefault("url", f"{BASE}/")
+                normalized.setdefault("sameAs", "https://github.com/IndexResearch-ru")
+                node[field] = normalized
+
+        catalog = node.get("includedInDataCatalog")
+        if not isinstance(catalog, dict):
+            node["includedInDataCatalog"] = dict(DATA_CATALOG_REF)
+        else:
+            normalized_catalog = dict(catalog)
+            normalized_catalog.setdefault("@type", "DataCatalog")
+            normalized_catalog["@id"] = CATALOG_ID
+            normalized_catalog.setdefault("name", DATA_CATALOG_REF["name"])
+            normalized_catalog.setdefault("url", CATALOG_URL)
+            node["includedInDataCatalog"] = normalized_catalog
+    return data
+
 
 def catalog_research_ids(ratings_text: str) -> list[str]:
     if ratings_text.count("<!-- RESEARCH_CATALOG_START -->") != 1 or ratings_text.count("<!-- RESEARCH_CATALOG_END -->") != 1:
@@ -346,7 +397,9 @@ def collect_catalog_datasets(ratings_text: str) -> list[dict]:
         path = ROOT / f"{research_id}.html"
         if not path.exists():
             raise RuntimeError(f"ratings/ references missing research page: {path.name}")
-        page_data = load_jsonld(path.read_text(encoding="utf-8"))
+        page_text = path.read_text(encoding="utf-8")
+        page_data = load_jsonld(page_text)
+        page_data = normalize_google_dataset_fields(page_data, get_description(page_text))
         dataset = next(
             (node for node in graph_of(page_data) if has_type(node, "Dataset")),
             None,
@@ -361,7 +414,7 @@ def collect_catalog_datasets(ratings_text: str) -> list[dict]:
         summary["@type"] = "Dataset"
         summary.setdefault("@id", f"{BASE}/{path.name}#dataset")
         summary.setdefault("url", f"{BASE}/{path.name}")
-        summary["includedInDataCatalog"] = {"@id": CATALOG_ID}
+        summary["includedInDataCatalog"] = dict(DATA_CATALOG_REF)
         datasets.append(summary)
     return datasets
 
@@ -405,12 +458,7 @@ def ensure_catalog(data, datasets: list[dict]):
         "name": "Каталог исследований IndexResearch",
         "description": "Каталог рейтингов и сравнительных исследований IndexResearch с опубликованными методиками, источниками и машиночитаемыми результатами.",
         "url": CATALOG_URL,
-        "publisher": {
-            "@type": "ResearchOrganization",
-            "@id": ORG_ID,
-            "name": "IndexResearch",
-            "url": f"{BASE}/",
-        },
+        "publisher": dict(DATASET_ORGANIZATION),
         "dataset": refs,
         "inLanguage": "ru-RU",
     }
@@ -424,7 +472,7 @@ def add_catalog_membership(data):
     data, graph = ensure_graph(data)
     for node in graph:
         if has_type(node, "Dataset"):
-            node["includedInDataCatalog"] = {"@id": CATALOG_ID}
+            node["includedInDataCatalog"] = dict(DATA_CATALOG_REF)
     return data
 
 
@@ -489,6 +537,7 @@ def normalize(path: Path, catalog_datasets: list[dict] | None = None) -> bool:
     data = load_jsonld(text)
     if data is not None:
         upgrade_orgs(data)
+        data = normalize_google_dataset_fields(data, get_description(text))
 
         if is_home:
             data = ensure_home_org(data)
@@ -535,6 +584,7 @@ def normalize_localized_research_breadcrumbs(path: Path, lang: str) -> bool:
     data = load_jsonld(text)
     if data is None:
         return False
+    data = normalize_google_dataset_fields(data, get_description(text))
 
     labels = {
         "en": {
