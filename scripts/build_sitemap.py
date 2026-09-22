@@ -102,10 +102,11 @@ for path in sorted(ROOT.rglob("*.html")):
 priority = {
     "index.html": 0,
     "en/index.html": 1,
-    "ratings.html": 2,
-    "methodology.html": 3,
-    "en/methodology.html": 4,
-    "cn/methodology.html": 5,
+    "cn/index.html": 2,
+    "ratings.html": 3,
+    "methodology.html": 4,
+    "en/methodology.html": 5,
+    "cn/methodology.html": 6,
 }
 pages.sort(key=lambda item: (priority.get(item[0], 10), item[0]))
 
