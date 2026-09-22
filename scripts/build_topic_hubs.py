@@ -21,6 +21,15 @@ def build_schema(topic: dict, cards: list[dict]) -> str:
         }
         for index, card in enumerate(cards, start=1)
     ]
+    parts = [
+        {
+            "@type": "Article",
+            "@id": f"{BASE}/{card['id']}.html#article",
+            "url": f"{BASE}/{card['id']}.html",
+            "name": card["title"],
+        }
+        for card in cards
+    ]
     graph = [
         {
             "@type": "CollectionPage",
@@ -32,6 +41,7 @@ def build_schema(topic: dict, cards: list[dict]) -> str:
             "isPartOf": {"@type": "WebSite", "name": "IndexResearch", "url": BASE + "/"},
             "publisher": {"@id": BASE + "/#organization"},
             "mainEntity": {"@id": canonical + "#list"},
+            "hasPart": parts,
         },
         {
             "@type": "ItemList",

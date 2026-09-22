@@ -82,6 +82,48 @@ try:
             )
         if 'class="breadcrumbs"' not in hub_text:
             errors.append(f"{hub_path.relative_to(ROOT).as_posix()}: visible breadcrumbs are required.")
+
+        jsonld_match = re.search(
+            r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>([\s\S]*?)</script>',
+            hub_text,
+            re.I,
+        )
+        if not jsonld_match:
+            errors.append(f"{hub_path.relative_to(ROOT).as_posix()}: missing JSON-LD.")
+        else:
+            try:
+                parsed = json.loads(jsonld_match.group(1))
+                graph = parsed.get("@graph", []) if isinstance(parsed, dict) else []
+                collection = next(
+                    (
+                        node for node in graph
+                        if isinstance(node, dict) and node.get("@type") == "CollectionPage"
+                    ),
+                    None,
+                )
+                if not collection:
+                    errors.append(
+                        f"{hub_path.relative_to(ROOT).as_posix()}: missing CollectionPage in JSON-LD."
+                    )
+                else:
+                    has_part = [
+                        item for item in (collection.get("hasPart") or [])
+                        if isinstance(item, dict)
+                    ]
+                    expected_part_ids = [
+                        f"{BASE}/{research_id}.html#article"
+                        for research_id in expected_ids
+                    ]
+                    actual_part_ids = [item.get("@id") for item in has_part]
+                    if actual_part_ids != expected_part_ids:
+                        errors.append(
+                            f"{hub_path.relative_to(ROOT).as_posix()}: CollectionPage.hasPart must match "
+                            f"topic research order/count ({len(expected_part_ids)} expected, {len(actual_part_ids)} found)."
+                        )
+            except Exception as exc:
+                errors.append(
+                    f"{hub_path.relative_to(ROOT).as_posix()}: invalid thematic JSON-LD: {exc}"
+                )
 except Exception as exc:
     errors.append(f"Thematic research configuration failed: {exc}")
 
