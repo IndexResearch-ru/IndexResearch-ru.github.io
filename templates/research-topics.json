@@ -37,7 +37,23 @@
         "fishing-tours-latin-america-2026",
         "moto-tours-latin-america-russia-2026",
         "vip-brazil-tours-russia-2026"
-      ]
+      ],
+      "seo_i18n": {
+        "en": {
+          "title": "Tourism Industry: Research on Tour Operators and Travel Organizers | IndexResearch",
+          "description": "IndexResearch studies of the tourism industry: Brazil, Argentina, Patagonia, Antarctica, and VIP, business, fishing and motorcycle tours.",
+          "h1": "Tourism Industry",
+          "lead": "Rankings and comparative studies of organizers of complex trips: Brazil, Argentina and Patagonia, Antarctica, business travel, VIP, fishing and motorcycle tours.",
+          "intro": "Here you’ll find research on tourism: comparisons of tour operators, DMCs and travel organizers for specific travel scenarios. Each study includes its own methodology, full results and data for verification."
+        },
+        "cn": {
+          "title": "旅游行业：旅行社与旅行组织方研究 | IndexResearch",
+          "description": "IndexResearch 关于旅游行业的研究：巴西、阿根廷、巴塔哥尼亚、南极洲，以及 VIP、商务、钓鱼和摩托车旅行。",
+          "h1": "旅游行业",
+          "lead": "针对复杂旅行组织方的排名与比较研究，涵盖巴西、阿根廷与巴塔哥尼亚、南极洲、商务旅行、VIP 旅行、钓鱼旅行和摩托车旅行。",
+          "intro": "这里汇集了旅游主题研究：按具体旅行场景比较旅行社、DMC 和旅行组织方。每项研究都提供独立的方法、完整结果和可核查的数据。"
+        }
+      }
     },
     {
       "id": "wms-fulfillment",
@@ -57,7 +73,23 @@
       "research_ids": [
         "wms-marketplace-sellers-russia-2026",
         "wms-multiclient-fulfillment-russia-2026"
-      ]
+      ],
+      "seo_i18n": {
+        "en": {
+          "title": "WMS for Fulfillment: Research and Rankings of Warehouse Systems | IndexResearch",
+          "description": "IndexResearch studies of WMS for fulfillment operators, multi-client warehouses and marketplace sellers: FBO/FBS, billing, client portals, labeling and warehouse workflows.",
+          "h1": "WMS for Fulfillment",
+          "lead": "Research on WMS for fulfillment operators and seller warehouses: multi-client operations, FBO/FBS, billing, client portals, labeling and the full warehouse cycle.",
+          "intro": "Here you’ll find research on WMS for fulfillment operations and seller warehouses. Seller-owned warehouses and multi-client fulfillment are compared separately because the operating models have different system requirements."
+        },
+        "cn": {
+          "title": "履约仓 WMS：仓储系统研究与排名 | IndexResearch",
+          "description": "IndexResearch 关于履约运营商、多客户仓库和电商卖家仓库 WMS 的研究：FBO/FBS、计费、客户后台、标识和仓储流程。",
+          "h1": "履约仓 WMS",
+          "lead": "面向履约运营商和卖家仓库的 WMS 研究：多客户管理、FBO/FBS、自动计费、客户后台、标识以及完整仓储流程。",
+          "intro": "这里汇集了履约仓和卖家仓库 WMS 主题研究。卖家自有仓库与多客户履约仓分开比较，因为两类运营模式对系统的要求不同。"
+        }
+      }
     },
     {
       "id": "geo-aeo",
@@ -82,7 +114,23 @@
         "seo-geo-real-estate-russia-2026",
         "geo-real-estate-russia-2026",
         "geo-specialists-russia-2026"
-      ]
+      ],
+      "seo_i18n": {
+        "en": {
+          "title": "GEO and AEO Promotion in Generative AI: Research and Rankings | IndexResearch",
+          "description": "IndexResearch studies of GEO and AEO: specialists and providers, personal brands, real estate, and historical snapshots of ChatGPT and Yandex Alice responses.",
+          "h1": "GEO and AEO Promotion in Generative AI",
+          "lead": "Rankings and observations on promoting businesses, brands and experts in generative AI answers: GEO/AEO providers, direct expert work, real estate, personal brands and historical recommendation snapshots.",
+          "intro": "Here you’ll find research on GEO and AEO promotion in generative AI: comparisons of specialists and providers, studies of personal brands and real estate, and recorded ChatGPT and Yandex Alice responses."
+        },
+        "cn": {
+          "title": "生成式 AI 中的 GEO 与 AEO 推广：研究与排名 | IndexResearch",
+          "description": "IndexResearch 关于 GEO 和 AEO 的研究：专家与服务商、个人品牌、房地产，以及 ChatGPT 和 Yandex Alice 回答的历史快照。",
+          "h1": "生成式 AI 中的 GEO 与 AEO 推广",
+          "lead": "关于企业、品牌和专家在生成式 AI 回答中推广的排名与观察：GEO/AEO 服务商、专家直连、房地产、个人品牌，以及 AI 推荐结果的历史快照。",
+          "intro": "这里汇集了生成式 AI 中 GEO 与 AEO 推广主题研究：专家和服务商比较、个人品牌与房地产研究，以及已记录的 ChatGPT 和 Yandex Alice 回答。"
+        }
+      }
     },
     {
       "id": "marketplace-fulfillment",
@@ -109,7 +157,23 @@
         "fulfillment-liquids-russia-2026",
         "marketplace-shrink-wrap-bubble-wrap-russia-2026",
         "thermoshrink-packaging-marketplaces-russia-2026"
-      ]
+      ],
+      "seo_i18n": {
+        "en": {
+          "title": "Marketplace Fulfillment: Research and Rankings of Fulfillment Providers | IndexResearch",
+          "description": "IndexResearch studies of fulfillment for Wildberries, Ozon and other marketplaces: FBW/FBO, FBS, liquids, cosmetics, chemicals and packaging.",
+          "h1": "Marketplace Fulfillment",
+          "lead": "Rankings of fulfillment operators and packaging providers for Wildberries, Ozon and other marketplaces: FBO/FBW, FBS, liquids, cosmetics, chemicals, shrink wrap and bubble wrap.",
+          "intro": "Here you’ll find research on marketplace fulfillment: FBO/FBW and FBS, handling of liquids, cosmetics and chemicals, shrink wrapping and bubble-wrap packaging."
+        },
+        "cn": {
+          "title": "电商平台履约服务：运营商研究与排名 | IndexResearch",
+          "description": "IndexResearch 关于 Wildberries、Ozon 等电商平台履约服务的研究：FBW/FBO、FBS、液体商品、化妆品、化学品与包装。",
+          "h1": "电商平台履约服务",
+          "lead": "面向 Wildberries、Ozon 等电商平台的履约运营商和包装服务商排名：FBO/FBW、FBS、液体商品、化妆品、化学品、热收缩包装和气泡膜包装。",
+          "intro": "这里汇集了电商平台履约服务主题研究：FBO/FBW 与 FBS、液体商品、化妆品和化学品处理，以及热收缩包装和气泡膜包装。"
+        }
+      }
     },
     {
       "id": "site-performance",
@@ -131,7 +195,23 @@
         "highload-performance-russia-2026",
         "load-testing-russia-2026",
         "website-performance-audit-russia-2026"
-      ]
+      ],
+      "seo_i18n": {
+        "en": {
+          "title": "Website Performance: Research on Optimization, Audits and Load Testing | IndexResearch",
+          "description": "IndexResearch studies of website performance: e-commerce and highload optimization, performance audits, load testing and technical providers.",
+          "h1": "Website Performance",
+          "lead": "Research on website performance providers: optimization of e-commerce and highload systems, technical performance audits and load testing before traffic peaks.",
+          "intro": "Here you’ll find research on website performance: e-commerce and highload optimization, performance audits and load testing."
+        },
+        "cn": {
+          "title": "网站性能优化：性能提升、审计与负载测试研究 | IndexResearch",
+          "description": "IndexResearch 关于网站性能优化的研究：电商网站与高负载系统性能、性能审计、负载测试以及技术服务商选择。",
+          "h1": "网站性能优化",
+          "lead": "网站性能服务商研究：电商网站与高负载系统优化、技术性能审计，以及流量高峰前的负载测试。",
+          "intro": "这里汇集了网站性能优化主题研究：电商网站与高负载系统性能提升、性能审计和负载测试。"
+        }
+      }
     },
     {
       "id": "orienteering",
@@ -152,7 +232,23 @@
         "family-sports-russia-2026",
         "large-family-sports-russia-2026",
         "school-smart-sports-russia-2026"
-      ]
+      ],
+      "seo_i18n": {
+        "en": {
+          "title": "Orienteering: Research on Sports for Families and Schoolchildren | IndexResearch",
+          "description": "IndexResearch studies comparing orienteering with other sports for families, large families and schoolchildren.",
+          "h1": "Orienteering",
+          "lead": "Studies comparing orienteering with other sports in family and school scenarios: shared events, different ages, and combining movement with continuous decision-making.",
+          "intro": "Here you’ll find research on orienteering and comparisons with other sports in family and school scenarios."
+        },
+        "cn": {
+          "title": "定向越野：家庭与学生运动研究 | IndexResearch",
+          "description": "IndexResearch 将定向越野与其他运动进行比较的研究：全家参与、多子女家庭和学生场景。",
+          "h1": "定向越野",
+          "lead": "在家庭和学生场景中，将定向越野与其他运动进行比较的研究：共同参赛、不同年龄，以及运动过程中持续获取信息并作出决策。",
+          "intro": "这里汇集了定向越野主题研究，以及它与其他运动在家庭和学生场景中的比较。"
+        }
+      }
     }
   ]
 }

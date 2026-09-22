@@ -14,6 +14,7 @@ RATINGS_PATHS = {
     "cn": ROOT / "cn" / "ratings.html",
 }
 LANG_PREFIX = {"ru": "", "en": "/en", "cn": "/cn"}
+LANG_HREFLANG = {"ru": "ru", "en": "en", "cn": "zh-CN"}
 
 
 def visible_text(fragment: str) -> str:
@@ -121,7 +122,8 @@ def render_topic_navigation(lang: str) -> tuple[str, str]:
 
     for topic in config["topics"]:
         topic_label = html_module.escape(topic["labels"][lang])
-        hub_href = f"/topics/{topic['slug']}.html"
+        hub_href = f"{prefix}/topics/{topic['slug']}.html" if prefix else f"/topics/{topic['slug']}.html"
+        hub_hreflang = LANG_HREFLANG[lang]
         research_links = []
         for research_id in topic["research_ids"]:
             card = cards[research_id]
@@ -134,7 +136,7 @@ def render_topic_navigation(lang: str) -> tuple[str, str]:
         )
         desktop_topics.append(
             '<div class="nav-topic-entry">'
-            f'<a class="nav-topic-link" href="{hub_href}" hreflang="ru">{topic_label}</a>'
+            f'<a class="nav-topic-link" href="{hub_href}" hreflang="{hub_hreflang}">{topic_label}</a>'
             f'<div class="nav-research-panel">{research_html}</div>'
             '</div>'
         )
@@ -142,7 +144,7 @@ def render_topic_navigation(lang: str) -> tuple[str, str]:
         mobile_topics.append(
             '<div class="mobile-research">'
             '<div class="mobile-topic-row">'
-            f'<a class="mobile-topic-link" href="{hub_href}" hreflang="ru">{topic_label}</a>'
+            f'<a class="mobile-topic-link" href="{hub_href}" hreflang="{hub_hreflang}">{topic_label}</a>'
             f'<button class="mobile-submenu-toggle" type="button" data-menu-toggle="{panel_id}" '
             f'aria-expanded="false" aria-controls="{panel_id}" aria-label="{open_label}">'
             '<span class="mobile-menu-chevron" aria-hidden="true"></span>'

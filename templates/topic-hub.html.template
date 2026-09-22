@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="{{HTML_LANG}}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -7,11 +7,13 @@
   <meta name="description" content="{{DESCRIPTION}}">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="{{CANONICAL}}">
-  <link rel="alternate" hreflang="ru" href="{{CANONICAL}}">
-  <link rel="alternate" hreflang="x-default" href="{{CANONICAL}}">
+  <link rel="alternate" hreflang="ru" href="{{HREFLANG_RU}}">
+  <link rel="alternate" hreflang="en" href="{{HREFLANG_EN}}">
+  <link rel="alternate" hreflang="zh-CN" href="{{HREFLANG_CN}}">
+  <link rel="alternate" hreflang="x-default" href="{{HREFLANG_RU}}">
   <link rel="stylesheet" href="/assets/style.css?v=topic-hub">
   <meta property="og:site_name" content="IndexResearch">
-  <meta property="og:locale" content="ru_RU">
+  <meta property="og:locale" content="{{OG_LOCALE}}">
   <meta property="og:type" content="website">
   <meta property="og:title" content="{{TITLE}}">
   <meta property="og:description" content="{{DESCRIPTION}}">
@@ -40,22 +42,22 @@
 {{SITE_HEADER}}
 <main>
 <section class="hero small"><div class="wrap">
-  <nav class="breadcrumbs" aria-label="Хлебные крошки"><a href="/">Главная</a><span aria-hidden="true">/</span><a href="/ratings.html">Исследования</a><span aria-hidden="true">/</span><span aria-current="page">{{H1}}</span></nav>
-  <p class="kicker">Тематика исследований</p>
+  <nav class="breadcrumbs" aria-label="{{BREADCRUMBS_ARIA}}"><a href="{{HOME_HREF}}">{{HOME_LABEL}}</a><span aria-hidden="true">/</span><a href="{{RATINGS_HREF}}">{{RESEARCH_LABEL}}</a><span aria-hidden="true">/</span><span aria-current="page">{{H1}}</span></nav>
+  <p class="kicker">{{TOPIC_KICKER}}</p>
   <h1>{{H1}}</h1>
   <p class="lead">{{LEAD}}</p>
 </div></section>
 <section class="section"><div class="wrap">
-  <h2>Исследования по теме</h2>
+  <h2>{{RESEARCH_IN_TOPIC_H2}}</h2>
   <p class="note topic-hub-intro">{{INTRO}}</p>
   <div class="grid topic-hub-grid" data-topic-hub="{{TOPIC_ID}}">
 {{CARDS}}
   </div>
 </div></section>
 <section class="section alt"><div class="wrap">
-  <h2>Полный каталог IndexResearch</h2>
-  <p>Все опубликованные исследования, независимо от тематики, собраны в общем каталоге.</p>
-  <p><a class="button" href="/ratings.html">Открыть все исследования</a></p>
+  <h2>{{FULL_CATALOG_H2}}</h2>
+  <p>{{FULL_CATALOG_TEXT}}</p>
+  <p><a class="button" href="{{RATINGS_HREF}}">{{FULL_CATALOG_BUTTON}}</a></p>
 </div></section>
 </main>
 {{SITE_FOOTER}}

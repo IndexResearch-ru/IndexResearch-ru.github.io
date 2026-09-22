@@ -61,69 +61,179 @@ try:
     topic_config = load_topic_config()
     for topic_error in topic_configuration_errors():
         errors.append("research-topics.json: " + topic_error)
+
+    topic_langs = {
+        "ru": {"dir": "", "html_lang": "ru", "schema_lang": "ru-RU", "hreflang": "ru"},
+        "en": {"dir": "en", "html_lang": "en", "schema_lang": "en", "hreflang": "en"},
+        "cn": {"dir": "cn", "html_lang": "zh-CN", "schema_lang": "zh-CN", "hreflang": "zh-CN"},
+    }
+
     for topic in topic_config.get("topics", []):
-        hub_path = ROOT / "topics" / f"{topic['slug']}.html"
-        if not hub_path.exists():
-            errors.append(f"Missing thematic hub: {hub_path.relative_to(ROOT).as_posix()}.")
-            continue
-        hub_text = hub_path.read_text(encoding="utf-8")
-        hub_ids = re.findall(
-            r'<article\b[^>]*\bdata-research-card=["\']true["\'][^>]*\bdata-research-id=["\']([^"\']+)["\']',
-            hub_text,
-            re.I,
-        )
         expected_ids = topic.get("research_ids") or []
         for research_id in expected_ids:
             topic_by_research_id[research_id] = topic
-        if hub_ids != expected_ids:
-            errors.append(
-                f"{hub_path.relative_to(ROOT).as_posix()}: research cards must match topic config order "
-                f"({len(expected_ids)} expected, {len(hub_ids)} found)."
-            )
-        if 'class="breadcrumbs"' not in hub_text:
-            errors.append(f"{hub_path.relative_to(ROOT).as_posix()}: visible breadcrumbs are required.")
 
-        jsonld_match = re.search(
-            r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>([\s\S]*?)</script>',
-            hub_text,
-            re.I,
-        )
-        if not jsonld_match:
-            errors.append(f"{hub_path.relative_to(ROOT).as_posix()}: missing JSON-LD.")
-        else:
+        hub_urls = {
+            lang: (
+                f"{BASE}/{cfg['dir']}/topics/{topic['slug']}.html"
+                if cfg["dir"]
+                else f"{BASE}/topics/{topic['slug']}.html"
+            )
+            for lang, cfg in topic_langs.items()
+        }
+
+        for lang, cfg in topic_langs.items():
+            hub_path = (
+                ROOT / cfg["dir"] / "topics" / f"{topic['slug']}.html"
+                if cfg["dir"]
+                else ROOT / "topics" / f"{topic['slug']}.html"
+            )
+            rel_label = hub_path.relative_to(ROOT).as_posix()
+            if not hub_path.exists():
+                errors.append(f"Missing thematic hub: {rel_label}.")
+                continue
+
+            hub_text = hub_path.read_text(encoding="utf-8")
+            hub_ids = re.findall(
+                r'<article\b[^>]*\bdata-research-card=["\']true["\'][^>]*\bdata-research-id=["\']([^"\']+)["\']',
+                hub_text,
+                re.I,
+            )
+            if hub_ids != expected_ids:
+                errors.append(
+                    f"{rel_label}: research cards must match topic config order "
+                    f"({len(expected_ids)} expected, {len(hub_ids)} found)."
+                )
+
+            if 'class="breadcrumbs"' not in hub_text:
+                errors.append(f"{rel_label}: visible breadcrumbs are required.")
+
+            canonical_match = re.search(
+                r'<link\s+rel=["\']canonical["\']\s+href=["\']([^"\']+)["\']',
+                hub_text,
+                re.I,
+            )
+            if not canonical_match or canonical_match.group(1) != hub_urls[lang]:
+                errors.append(f"{rel_label}: self-canonical must be {hub_urls[lang]}.")
+
+            for hreflang_lang, hreflang_cfg in topic_langs.items():
+                expected_href = hub_urls[hreflang_lang]
+                if not re.search(
+                    rf'<link\b(?=[^>]*\brel=["\']alternate["\'])(?=[^>]*\bhreflang=["\']{re.escape(hreflang_cfg["hreflang"])}["\'])(?=[^>]*\bhref=["\']{re.escape(expected_href)}["\'])[^>]*>',
+                    hub_text,
+                    re.I,
+                ):
+                    errors.append(
+                        f"{rel_label}: missing hreflang={hreflang_cfg['hreflang']} to {expected_href}."
+                    )
+            if not re.search(
+                rf'<link\b(?=[^>]*\brel=["\']alternate["\'])(?=[^>]*\bhreflang=["\']x-default["\'])(?=[^>]*\bhref=["\']{re.escape(hub_urls["ru"])}["\'])[^>]*>',
+                hub_text,
+                re.I,
+            ):
+                errors.append(f"{rel_label}: x-default must point to RU thematic hub.")
+
+            jsonld_match = re.search(
+                r'<script[^>]+type=["\']application/ld\+json["\'][^>]*>([\s\S]*?)</script>',
+                hub_text,
+                re.I,
+            )
+            if not jsonld_match:
+                errors.append(f"{rel_label}: missing JSON-LD.")
+                continue
+
             try:
                 parsed = json.loads(jsonld_match.group(1))
                 graph = parsed.get("@graph", []) if isinstance(parsed, dict) else []
                 collection = next(
-                    (
-                        node for node in graph
-                        if isinstance(node, dict) and node.get("@type") == "CollectionPage"
-                    ),
+                    (node for node in graph if isinstance(node, dict) and node.get("@type") == "CollectionPage"),
                     None,
                 )
+                item_list = next(
+                    (node for node in graph if isinstance(node, dict) and node.get("@type") == "ItemList"),
+                    None,
+                )
+                breadcrumb = next(
+                    (node for node in graph if isinstance(node, dict) and node.get("@type") == "BreadcrumbList"),
+                    None,
+                )
+
                 if not collection:
-                    errors.append(
-                        f"{hub_path.relative_to(ROOT).as_posix()}: missing CollectionPage in JSON-LD."
-                    )
+                    errors.append(f"{rel_label}: missing CollectionPage in JSON-LD.")
                 else:
-                    has_part = [
-                        item for item in (collection.get("hasPart") or [])
-                        if isinstance(item, dict)
-                    ]
+                    if collection.get("url") != hub_urls[lang]:
+                        errors.append(f"{rel_label}: CollectionPage.url must match self-canonical.")
+                    if collection.get("inLanguage") != cfg["schema_lang"]:
+                        errors.append(
+                            f"{rel_label}: CollectionPage.inLanguage must be {cfg['schema_lang']!r}."
+                        )
                     expected_part_ids = [
-                        f"{BASE}/{research_id}.html#article"
+                        (
+                            f"{BASE}/{cfg['dir']}/{research_id}.html#article"
+                            if cfg["dir"]
+                            else f"{BASE}/{research_id}.html#article"
+                        )
                         for research_id in expected_ids
                     ]
-                    actual_part_ids = [item.get("@id") for item in has_part]
+                    actual_part_ids = [
+                        item.get("@id")
+                        for item in (collection.get("hasPart") or [])
+                        if isinstance(item, dict)
+                    ]
                     if actual_part_ids != expected_part_ids:
                         errors.append(
-                            f"{hub_path.relative_to(ROOT).as_posix()}: CollectionPage.hasPart must match "
-                            f"topic research order/count ({len(expected_part_ids)} expected, {len(actual_part_ids)} found)."
+                            f"{rel_label}: CollectionPage.hasPart must match localized topic research order/count "
+                            f"({len(expected_part_ids)} expected, {len(actual_part_ids)} found)."
                         )
+
+                if not item_list:
+                    errors.append(f"{rel_label}: missing ItemList in JSON-LD.")
+                else:
+                    elements = [
+                        item for item in (item_list.get("itemListElement") or [])
+                        if isinstance(item, dict)
+                    ]
+                    expected_urls = [
+                        (
+                            f"{BASE}/{cfg['dir']}/{research_id}.html"
+                            if cfg["dir"]
+                            else f"{BASE}/{research_id}.html"
+                        )
+                        for research_id in expected_ids
+                    ]
+                    actual_urls = [item.get("url") for item in elements]
+                    if actual_urls != expected_urls:
+                        errors.append(f"{rel_label}: ItemList URLs must stay in the current language.")
+                    if item_list.get("itemListOrder") != "https://schema.org/ItemListUnordered":
+                        errors.append(f"{rel_label}: thematic ItemList must be unordered.")
+
+                if not breadcrumb:
+                    errors.append(f"{rel_label}: missing BreadcrumbList in JSON-LD.")
+                else:
+                    items = sorted(
+                        [
+                            item for item in (breadcrumb.get("itemListElement") or [])
+                            if isinstance(item, dict)
+                        ],
+                        key=lambda item: item.get("position", 0),
+                    )
+                    expected_home = (
+                        f"{BASE}/{cfg['dir']}/" if cfg["dir"] else f"{BASE}/"
+                    )
+                    expected_catalog = (
+                        f"{BASE}/{cfg['dir']}/ratings.html"
+                        if cfg["dir"]
+                        else f"{BASE}/ratings.html"
+                    )
+                    if (
+                        len(items) != 3
+                        or items[0].get("item") != expected_home
+                        or items[1].get("item") != expected_catalog
+                        or items[2].get("item") != hub_urls[lang]
+                    ):
+                        errors.append(f"{rel_label}: BreadcrumbList must stay in the current language.")
             except Exception as exc:
-                errors.append(
-                    f"{hub_path.relative_to(ROOT).as_posix()}: invalid thematic JSON-LD: {exc}"
-                )
+                errors.append(f"{rel_label}: invalid thematic JSON-LD: {exc}")
 except Exception as exc:
     errors.append(f"Thematic research configuration failed: {exc}")
 
