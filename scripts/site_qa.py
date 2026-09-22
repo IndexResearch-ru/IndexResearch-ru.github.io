@@ -56,6 +56,8 @@ chrome_partial_paths = [
     ROOT / "templates" / "partials" / "site-footer.html",
     ROOT / "templates" / "partials" / "site-header-en.html",
     ROOT / "templates" / "partials" / "site-footer-en.html",
+    ROOT / "templates" / "partials" / "site-header-cn.html",
+    ROOT / "templates" / "partials" / "site-footer-cn.html",
 ]
 for partial_path in chrome_partial_paths:
     if not partial_path.exists():
@@ -288,12 +290,12 @@ for path in html_paths:
         errors.append(f"{rel}: missing Schema.org JSON-LD.")
 
     html_lang = re.search(r'<html\b[^>]*\blang=["\']([^"\']+)["\']', text, re.I)
-    expected_lang = "en" if rel.startswith("en/") else "ru"
+    expected_lang = "zh-cn" if rel.startswith("cn/") else ("en" if rel.startswith("en/") else "ru")
     if not html_lang or html_lang.group(1).lower() != expected_lang:
         errors.append(f"{rel}: <html lang> must be {expected_lang}.")
 
     required_og = ["og:type", "og:site_name", "og:locale", "og:title", "og:description", "og:url", "og:image", "og:image:alt"]
-    expected_og_locale = "en_US" if expected_lang == "en" else "ru_RU"
+    expected_og_locale = "zh_CN" if expected_lang == "zh-cn" else ("en_US" if expected_lang == "en" else "ru_RU")
     locale_match = re.search(r'<meta\\b(?=[^>]*\\bproperty=["\\\']og:locale["\\\'])[^>]*\\bcontent=["\\\']([^"\\\']+)["\\\'][^>]*>', text, re.I)
     if locale_match and locale_match.group(1) != expected_og_locale:
         errors.append(f"{rel}: og:locale is {locale_match.group(1)!r}, expected {expected_og_locale!r}.")
