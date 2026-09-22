@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
+from urllib.parse import urljoin, urlparse
 
 from ensure_site_chrome import render_chrome
 
@@ -156,8 +157,15 @@ def has_hreflang(page_text: str, code: str, href: str) -> bool:
     ))
 
 
-def internal_href_target(href: str):
-    clean = href.split("#", 1)[0].split("?", 1)[0]
+def internal_href_target(href: str, source_url: str):
+    if href.startswith(("#", "mailto:", "tel:", "javascript:")):
+        return None
+    parsed = urlparse(urljoin(source_url, href))
+    if parsed.scheme not in {"http", "https"}:
+        return None
+    if parsed.netloc.lower() not in {"indexresearch.ru", "www.indexresearch.ru"}:
+        return None
+    clean = parsed.path or "/"
     if clean in {"/", "/en/", "/cn/"}:
         if clean == "/en/":
             return "en", "index.html"
@@ -539,7 +547,7 @@ for path in html_paths:
             href = anchor.group(2)
             if "lang-link" in attrs_text or re.search(r'\bhreflang\s*=', attrs_text, re.I):
                 continue
-            target_info = internal_href_target(href)
+            target_info = internal_href_target(href, expected_url)
             if not target_info:
                 continue
             target_lang, target_name = target_info
