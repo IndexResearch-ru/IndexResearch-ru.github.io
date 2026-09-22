@@ -35,7 +35,7 @@ HEADER_BLOCK_RE = re.compile(rf"{re.escape(HEADER_START)}[\s\S]*?{re.escape(HEAD
 FOOTER_BLOCK_RE = re.compile(rf"{re.escape(FOOTER_START)}[\s\S]*?{re.escape(FOOTER_END)}")
 LEGACY_HEADER_RE = re.compile(r'<header class="top">[\s\S]*?</header>', re.I)
 LEGACY_FOOTER_RE = re.compile(r'<footer>[\s\S]*?</footer>', re.I)
-STYLE_RE = re.compile(r'assets/style\.css(?:\?v=[^"\']*)?')
+STYLE_RE = re.compile(r'/?assets/style\.css(?:\?v=[^"\']*)?')
 HTML_LANG_RE = re.compile(r'<html\b[^>]*\blang=["\']([^"\']+)["\']', re.I)
 LINK_TAG_RE = re.compile(r"<link\b[^>]*>", re.I)
 ATTR_RE = re.compile(
@@ -188,7 +188,7 @@ def sync_file(path: Path, style_version: str) -> bool:
     if text.count(FOOTER_START) != 1 or text.count(FOOTER_END) != 1:
         raise SystemExit(f"{rel}: shared footer must appear exactly once")
 
-    text = STYLE_RE.sub(f"assets/style.css?v={style_version}", text)
+    text = STYLE_RE.sub(f"/assets/style.css?v={style_version}", text)
 
     if text != original:
         path.write_text(text, encoding="utf-8")
