@@ -54,6 +54,26 @@ jobs:
           git commit -m "Auto-maintain site navigation and sitemap"
           git push
 
+      - name: Verify HTTP to HTTPS redirects
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in "/" "/ratings/" "/en/" "/cn/"; do
+            headers="$(curl -sS -I --max-redirs 0 "http://indexresearch.ru${path}")"
+            status="$(printf '%s\n' "$headers" | awk 'NR==1 {print $2}')"
+            location="$(printf '%s\n' "$headers" | awk 'BEGIN{IGNORECASE=1} /^location:/ {sub(/\r$/, "", $0); sub(/^[^:]+:[[:space:]]*/, "", $0); print; exit}')"
+            expected="https://indexresearch.ru${path}"
+            echo "HTTP ${path}: status=${status}, location=${location}"
+            if [[ "$status" != "301" && "$status" != "308" ]]; then
+              echo "::error::http://indexresearch.ru${path} returned ${status}; expected 301 or 308"
+              exit 1
+            fi
+            if [[ "$location" != "$expected" ]]; then
+              echo "::error::http://indexresearch.ru${path} redirects to '${location}'; expected '${expected}'"
+              exit 1
+            fi
+          done
+
       - name: Run site QA
         run: python scripts/site_qa.py
 
