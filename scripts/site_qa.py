@@ -77,14 +77,14 @@ def github_repo_for_research_card(page_text: str, research_id: str) -> str | Non
     if not page_text:
         return None
     match = re.search(
-        rf'<article\\b(?=[^>]*\\bdata-research-id=["\\']{re.escape(research_id)}["\\'])[^>]*>[\\s\\S]*?</article>',
+        rf'<article\b(?=[^>]*\bdata-research-id=["\']{re.escape(research_id)}["\'])[^>]*>[\s\S]*?</article>',
         page_text,
         re.I,
     )
     if not match:
         return None
     repos = re.findall(
-        r'href=["\\'](https://github\\.com/IndexResearch-ru/[^"\\']+)["\\']',
+        r'href=["\'](https://github\.com/IndexResearch-ru/[^"\']+)["\']',
         match.group(0),
         re.I,
     )
@@ -547,7 +547,7 @@ for lang_key, label, page_text in (("en", "en/index.html", en_home), ("cn", "cn/
 for lang_key, label, page_text in (("en", "en/ratings/", en_ratings), ("cn", "cn/ratings/", cn_ratings)):
     if page_text:
         ids = re.findall(
-            r'<article\\b[^>]*\\bdata-research-card=["\\']true["\\'][^>]*\\bdata-research-id=["\\']([^"\\']+)["\\']',
+            r'<article\b[^>]*\bdata-research-card=["\']true["\'][^>]*\bdata-research-id=["\']([^"\']+)["\']',
             page_text,
             re.I,
         )
