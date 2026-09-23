@@ -56,6 +56,41 @@ en_home = (ROOT / "en" / "index.html").read_text(encoding="utf-8") if (ROOT / "e
 cn_home = (ROOT / "cn" / "index.html").read_text(encoding="utf-8") if (ROOT / "cn" / "index.html").exists() else ""
 non_research = {"index.html", "methodology.html", "404.html"}
 
+PRESENTATION_REPO_EXCEPTIONS = {
+    ("en", "thermoshrink-packaging-marketplaces-russia-2026"):
+        "-EN-thermoshrink-packaging-marketplaces-russia-2026-en",
+}
+
+
+def expected_presentation_github_repo(research_id: str, lang_key: str) -> str:
+    if lang_key == "ru":
+        repo_name = research_id
+    else:
+        repo_name = PRESENTATION_REPO_EXCEPTIONS.get(
+            (lang_key, research_id),
+            f"{research_id}-{lang_key}",
+        )
+    return f"https://github.com/IndexResearch-ru/{repo_name}"
+
+
+def github_repo_for_research_card(page_text: str, research_id: str) -> str | None:
+    if not page_text:
+        return None
+    match = re.search(
+        rf'<article\\b(?=[^>]*\\bdata-research-id=["\\']{re.escape(research_id)}["\\'])[^>]*>[\\s\\S]*?</article>',
+        page_text,
+        re.I,
+    )
+    if not match:
+        return None
+    repos = re.findall(
+        r'href=["\\'](https://github\\.com/IndexResearch-ru/[^"\\']+)["\\']',
+        match.group(0),
+        re.I,
+    )
+    return repos[-1] if repos else None
+
+
 # THEMATIC HUB QA
 topic_by_research_id = {}
 try:
@@ -105,6 +140,15 @@ try:
                     f"{rel_label}: research cards must match topic config order "
                     f"({len(expected_ids)} expected, {len(hub_ids)} found)."
                 )
+
+            for research_id in expected_ids:
+                actual_repo = github_repo_for_research_card(hub_text, research_id)
+                expected_repo = expected_presentation_github_repo(research_id, lang)
+                if actual_repo != expected_repo:
+                    errors.append(
+                        f"{rel_label}: {research_id} GitHub card target must be {expected_repo}; "
+                        f"found {actual_repo or 'none'}."
+                    )
 
             if 'class="breadcrumbs"' not in hub_text:
                 errors.append(f"{rel_label}: visible breadcrumbs are required.")
@@ -418,21 +462,7 @@ def internal_href_target(href: str, source_url: str):
 
 
 def catalog_github_repo_for_research(catalog_text: str, research_id: str) -> str | None:
-    if not catalog_text:
-        return None
-    match = re.search(
-        rf'<article\b(?=[^>]*\bdata-research-id=["\']{re.escape(research_id)}["\'])[^>]*>[\s\S]*?</article>',
-        catalog_text,
-        re.I,
-    )
-    if not match:
-        return None
-    repos = re.findall(
-        r'href=["\'](https://github\.com/IndexResearch-ru/[^"\']+)["\']',
-        match.group(0),
-        re.I,
-    )
-    return repos[-1] if repos else None
+    return github_repo_for_research_card(catalog_text, research_id)
 
 
 def itemlist_signature(item_list: dict) -> dict:
@@ -499,17 +529,25 @@ def home_feed_ids(page_text, label):
         errors.append(f"{label}: duplicate data-research-id in research feed.")
     return ids
 
-for label, page_text in (("en/index.html", en_home), ("cn/index.html", cn_home)):
+for lang_key, label, page_text in (("en", "en/index.html", en_home), ("cn", "cn/index.html", cn_home)):
     if page_text:
         ids = home_feed_ids(page_text, label)
         if ids != catalog_ids:
             errors.append(
                 f"{label}: research feed must match canonical RU catalog order/count ({len(catalog_ids)}); found {len(ids)}."
             )
-for label, page_text in (("en/ratings/", en_ratings), ("cn/ratings/", cn_ratings)):
+        for research_id in catalog_ids:
+            actual_repo = github_repo_for_research_card(page_text, research_id)
+            expected_repo = expected_presentation_github_repo(research_id, lang_key)
+            if actual_repo != expected_repo:
+                errors.append(
+                    f"{label}: {research_id} GitHub card target must be {expected_repo}; "
+                    f"found {actual_repo or 'none'}."
+                )
+for lang_key, label, page_text in (("en", "en/ratings/", en_ratings), ("cn", "cn/ratings/", cn_ratings)):
     if page_text:
         ids = re.findall(
-            r'<article\b[^>]*\bdata-research-card=["\']true["\'][^>]*\bdata-research-id=["\']([^"\']+)["\']',
+            r'<article\\b[^>]*\\bdata-research-card=["\\']true["\\'][^>]*\\bdata-research-id=["\\']([^"\\']+)["\\']',
             page_text,
             re.I,
         )
@@ -518,6 +556,14 @@ for label, page_text in (("en/ratings/", en_ratings), ("cn/ratings/", cn_ratings
                 f"{label}: localized catalog must match canonical RU catalog order/count "
                 f"({len(catalog_ids)}); found {len(ids)}."
             )
+        for research_id in catalog_ids:
+            actual_repo = github_repo_for_research_card(page_text, research_id)
+            expected_repo = expected_presentation_github_repo(research_id, lang_key)
+            if actual_repo != expected_repo:
+                errors.append(
+                    f"{label}: {research_id} GitHub card target must be {expected_repo}; "
+                    f"found {actual_repo or 'none'}."
+                )
 
 research_page_ids = sorted(
     path.stem for path in html_paths
@@ -889,14 +935,11 @@ for path in html_paths:
                     f"{rel}: localized catalog card in {catalog_label} must link to an IndexResearch GitHub repository."
                 )
             else:
-                repo_name = presentation_github_repo.rstrip("/").rsplit("/", 1)[-1]
-                if slug not in repo_name:
+                expected_presentation_repo = expected_presentation_github_repo(slug, lang_key)
+                if presentation_github_repo != expected_presentation_repo:
                     errors.append(
-                        f"{rel}: catalog GitHub repository {presentation_github_repo} does not match research slug {slug}."
-                    )
-                if lang_key == "ru" and presentation_github_repo != canonical_github_repo:
-                    errors.append(
-                        f"{rel}: RU catalog must link to canonical GitHub repository {canonical_github_repo}."
+                        f"{rel}: localized catalog GitHub repository must be {expected_presentation_repo}; "
+                        f"found {presentation_github_repo}."
                     )
 
         if presentation_github_repo:
