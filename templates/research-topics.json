@@ -191,6 +191,7 @@
         "intro": "Тут представлены исследования на тему ускорения сайтов: производительность интернет-магазинов и highload-систем, аудит скорости и нагрузочное тестирование."
       },
       "research_ids": [
+        "website-speed-core-web-vitals-russia-2026",
         "bitrix-speedup-russia-2026",
         "ecommerce-performance-russia-2026",
         "highload-performance-russia-2026",
