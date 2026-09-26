@@ -154,18 +154,22 @@ def render_topic_navigation(lang: str) -> tuple[str, str]:
         )
 
     topics_label = html_module.escape(labels["topics"])
+    catalog_href = f"{prefix}/ratings/" if prefix else "/ratings/"
+    open_topics_label = html_module.escape(labels["open_topics"], quote=True)
     desktop = (
         '<div class="nav-topics">'
-        f'<span class="nav-topics-label">{topics_label}</span>'
+        f'<a class="nav-topics-label" href="{catalog_href}">{topics_label}</a>'
         f'<div class="nav-topics-panel">{"".join(desktop_topics)}</div>'
         '</div>'
     )
     mobile = (
         '<div class="mobile-topics">'
+        '<div class="mobile-topics-row">'
+        f'<a class="mobile-topics-link" href="{catalog_href}">{topics_label}</a>'
         f'<button class="mobile-topics-toggle" type="button" data-menu-toggle="mobile-topics-panel" '
-        f'aria-expanded="false" aria-controls="mobile-topics-panel">'
-        f'<span>{topics_label}</span><span class="mobile-menu-chevron" aria-hidden="true"></span>'
-        '</button>'
+        f'aria-expanded="false" aria-controls="mobile-topics-panel" aria-label="{open_topics_label}">'
+        '<span class="mobile-menu-chevron" aria-hidden="true"></span>'
+        '</button></div>'
         f'<div class="mobile-topics-panel" id="mobile-topics-panel" hidden>{"".join(mobile_topics)}</div>'
         '</div>'
     )
