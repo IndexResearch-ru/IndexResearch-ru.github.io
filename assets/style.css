@@ -149,7 +149,7 @@ html[lang="ru"] .footer-lang .lang-ru,html[lang="en"] .footer-lang .lang-en,html
 .menu-desktop{align-items:center;gap:18px}
 .nav-topics,.mobile-topics,.mobile-research{border:0;padding:0;margin:0}
 .nav-topics{position:relative}
-.nav-topics-label{display:block;color:var(--muted);font-weight:400;cursor:default;white-space:nowrap}
+.nav-topics-label{display:block;color:var(--muted);font-weight:400;cursor:pointer;white-space:nowrap;text-decoration:none}.nav-topics-label:hover,.nav-topics-label:focus{color:var(--accent)}
 .mobile-topics>summary::-webkit-details-marker,.mobile-research>summary::-webkit-details-marker{display:none}
 .mobile-topics>summary::after{content:"";width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);transform-origin:center;transition:transform .16s ease}
 .mobile-topics[open]>summary::after{transform:rotate(225deg) translate(-1px,-1px)}
@@ -177,7 +177,10 @@ html[lang="ru"] .footer-lang .lang-ru,html[lang="en"] .footer-lang .lang-en,html
   .menu-mobile nav{position:absolute;right:0;top:44px;width:min(380px,calc(100vw - 28px));min-width:0;max-height:calc(100vh - 76px);overflow:auto;display:flex;flex-direction:column;gap:0;padding:7px;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 30px rgba(17,24,39,.12)}
   .menu-mobile nav>a{display:block;padding:10px 12px;border-radius:7px;font-size:17px;white-space:nowrap}
   .mobile-topics{border:0;padding:0;margin:0}
-  .mobile-topics-toggle{width:100%;border:0;background:transparent;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:7px;color:var(--muted);font:inherit;font-size:17px;text-align:left;cursor:pointer}
+  .mobile-topics-row{display:grid;grid-template-columns:minmax(0,1fr) 42px;align-items:stretch}
+  .menu-mobile nav .mobile-topics-link{display:block;padding:10px 8px 10px 12px;border-radius:7px;font-size:17px;line-height:1.35;white-space:normal}
+  .menu-mobile nav .mobile-topics-link:hover,.menu-mobile nav .mobile-topics-link:focus{background:var(--soft);color:var(--accent)}
+  .mobile-topics-toggle{width:42px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;border-radius:7px;color:var(--muted);cursor:pointer}
   .mobile-topics-toggle:hover,.mobile-topics-toggle:focus-visible,.mobile-submenu-toggle:hover,.mobile-submenu-toggle:focus-visible{background:var(--soft);color:var(--accent);outline:none}
   .mobile-menu-chevron{display:block;width:8px;height:8px;flex:0 0 8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px);transform-origin:center;transition:transform .16s ease}
   .mobile-topics-toggle[aria-expanded="true"] .mobile-menu-chevron{transform:rotate(225deg) translate(-1px,-1px)}
