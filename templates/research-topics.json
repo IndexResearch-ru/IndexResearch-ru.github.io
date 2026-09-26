@@ -1,16 +1,19 @@
 {
   "menu_labels": {
     "ru": {
-      "topics": "Тематики",
-      "open_topic": "Показать исследования по теме"
+      "topics": "Исследования",
+      "open_topic": "Показать исследования по теме",
+      "open_topics": "Показать тематики исследований"
     },
     "en": {
-      "topics": "Topics",
-      "open_topic": "Show research in topic"
+      "topics": "Research",
+      "open_topic": "Show research in topic",
+      "open_topics": "Show research topics"
     },
     "cn": {
-      "topics": "主题",
-      "open_topic": "显示该主题的研究"
+      "topics": "研究",
+      "open_topic": "显示该主题的研究",
+      "open_topics": "显示研究主题"
     }
   },
   "topics": [
