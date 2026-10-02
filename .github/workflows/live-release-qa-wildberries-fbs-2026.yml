@@ -1,0 +1,195 @@
+name: One-off live QA Wildberries FBS 2026
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/live-release-qa-wildberries-fbs-2026.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  live-browser-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Selenium
+        run: python -m pip install --quiet selenium
+
+      - name: Run live browser QA
+        shell: bash
+        run: |
+          set -euo pipefail
+          google-chrome --version || chromium --version || true
+          chromedriver --version || true
+          mkdir -p live-qa-screenshots
+          python - <<'PY'
+          import json, os, time
+          from pathlib import Path
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.support.ui import WebDriverWait
+          from selenium.webdriver.support import expected_conditions as EC
+
+          slug = "wildberries-fbs-complex-goods-moscow-2026"
+          site_pages = [
+              ("ru-site", f"https://indexresearch.ru/{slug}.html", "Преп-Центр"),
+              ("en-site", f"https://indexresearch.ru/en/{slug}.html", "Prep-Center"),
+              ("cn-site", f"https://indexresearch.ru/cn/{slug}.html", "Prep-Center"),
+          ]
+          github_pages = [
+              ("ru-github", f"https://github.com/IndexResearch-ru/{slug}", "Преп-Центр"),
+              ("en-github", f"https://github.com/IndexResearch-ru/{slug}-en", "Prep-Center"),
+              ("cn-github", f"https://github.com/IndexResearch-ru/{slug}-cn", "Prep-Center"),
+          ]
+          site_viewports = [(1440, 900), (360, 800), (390, 844), (412, 915)]
+          github_viewports = [(1440, 900), (390, 844)]
+
+          opts = Options()
+          opts.add_argument("--headless=new")
+          opts.add_argument("--no-sandbox")
+          opts.add_argument("--disable-dev-shm-usage")
+          opts.add_argument("--disable-gpu")
+          opts.add_argument("--lang=en-US")
+          opts.add_argument("--window-size=1440,900")
+          driver = webdriver.Chrome(options=opts)
+          driver.set_page_load_timeout(45)
+          wait = WebDriverWait(driver, 30)
+          failures = []
+          results = []
+
+          def metric():
+              return driver.execute_script("""
+                return {
+                  innerWidth: window.innerWidth,
+                  scrollWidth: document.documentElement.scrollWidth,
+                  innerHeight: window.innerHeight,
+                  scrollHeight: document.documentElement.scrollHeight
+                };
+              """)
+
+          def ensure_images_loaded(selector):
+              imgs = driver.find_elements(By.CSS_SELECTOR, selector)
+              for img in imgs:
+                  try:
+                      driver.execute_script("arguments[0].scrollIntoView({block:'center'});", img)
+                      time.sleep(0.15)
+                  except Exception:
+                      pass
+              if imgs:
+                  driver.execute_script("window.scrollTo(0,0)")
+                  time.sleep(0.25)
+              broken = []
+              for idx, img in enumerate(imgs):
+                  try:
+                      ok = driver.execute_script(
+                          "return arguments[0].complete && arguments[0].naturalWidth > 0 && arguments[0].naturalHeight > 0;",
+                          img
+                      )
+                      if not ok:
+                          broken.append({"index": idx, "src": img.get_attribute("src"), "alt": img.get_attribute("alt")})
+                  except Exception as exc:
+                      broken.append({"index": idx, "error": str(exc)})
+              return len(imgs), broken
+
+          def capture(name, width, height):
+              driver.set_window_size(width, height)
+              time.sleep(0.35)
+              fn = Path("live-qa-screenshots") / f"{name}-{width}.png"
+              driver.save_screenshot(str(fn))
+
+          try:
+              for name, url, expected_top in site_pages:
+                  driver.set_window_size(1440, 900)
+                  driver.get(url)
+                  wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "main h1")))
+                  time.sleep(0.5)
+                  title = driver.title
+                  h1 = driver.find_element(By.CSS_SELECTOR, "main h1").text.strip()
+                  body_text = driver.find_element(By.TAG_NAME, "body").text
+                  table_rows = len(driver.find_elements(By.CSS_SELECTOR, "table.research-table--ranking tbody tr"))
+                  faq_count = len(driver.find_elements(By.CSS_SELECTOR, "main details.faq-item"))
+                  canon = driver.find_element(By.CSS_SELECTOR, 'link[rel="canonical"]').get_attribute("href")
+                  hlangs = {
+                      el.get_attribute("hreflang"): el.get_attribute("href")
+                      for el in driver.find_elements(By.CSS_SELECTOR, 'link[rel="alternate"][hreflang]')
+                  }
+                  img_count, broken = ensure_images_loaded("main img")
+                  if table_rows != 10:
+                      failures.append(f"{name}: ranking rows={table_rows}, expected 10")
+                  if faq_count != 10:
+                      failures.append(f"{name}: FAQ count={faq_count}, expected 10")
+                  if expected_top not in body_text:
+                      failures.append(f"{name}: expected top entity missing")
+                  if broken:
+                      failures.append(f"{name}: broken main images={broken}")
+                  if set(hlangs) != {"ru","en","zh-CN","x-default"}:
+                      failures.append(f"{name}: hreflang keys={sorted(hlangs)}")
+                  viewport_results = []
+                  for width, height in site_viewports:
+                      capture(name, width, height)
+                      m = metric()
+                      overflow = m["scrollWidth"] > m["innerWidth"] + 1
+                      h1_rect = driver.execute_script(
+                          "const r=document.querySelector('main h1').getBoundingClientRect(); return {w:r.width,h:r.height,left:r.left,right:r.right};"
+                      )
+                      if overflow:
+                          failures.append(f"{name}@{width}: horizontal overflow {m['scrollWidth']}>{m['innerWidth']}")
+                      if h1_rect["left"] < -1 or h1_rect["right"] > m["innerWidth"] + 1:
+                          failures.append(f"{name}@{width}: H1 outside viewport {h1_rect}")
+                      viewport_results.append({"width":width, **m, "overflow":overflow, "h1Rect":h1_rect})
+                  results.append({
+                      "name":name,"url":url,"title":title,"h1":h1,"rankingRows":table_rows,
+                      "faqCount":faq_count,"canonical":canon,"hreflang":hlangs,
+                      "mainImageCount":img_count,"brokenImages":broken,"viewports":viewport_results
+                  })
+
+              for name, url, expected_top in github_pages:
+                  driver.set_window_size(1440, 900)
+                  driver.get(url)
+                  wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "article.markdown-body")))
+                  time.sleep(1.0)
+                  body = driver.find_element(By.CSS_SELECTOR, "article.markdown-body")
+                  text = body.text
+                  tables = len(driver.find_elements(By.CSS_SELECTOR, "article.markdown-body table"))
+                  img_count, broken = ensure_images_loaded("article.markdown-body img")
+                  if expected_top not in text:
+                      failures.append(f"{name}: expected top entity missing in rendered README")
+                  if tables < 2:
+                      failures.append(f"{name}: rendered tables={tables}, expected >=2")
+                  if img_count < 5:
+                      failures.append(f"{name}: rendered README images={img_count}, expected >=5")
+                  if broken:
+                      failures.append(f"{name}: broken README images={broken}")
+                  viewport_results = []
+                  for width, height in github_viewports:
+                      capture(name, width, height)
+                      m = metric()
+                      overflow = m["scrollWidth"] > m["innerWidth"] + 1
+                      if overflow:
+                          failures.append(f"{name}@{width}: document horizontal overflow {m['scrollWidth']}>{m['innerWidth']}")
+                      viewport_results.append({"width":width, **m, "overflow":overflow})
+                  results.append({
+                      "name":name,"url":url,"title":driver.title,"renderedTables":tables,
+                      "renderedImages":img_count,"brokenImages":broken,"viewports":viewport_results
+                  })
+          finally:
+              driver.quit()
+
+          print(json.dumps({"results": results, "failures": failures}, ensure_ascii=False, indent=2))
+          if failures:
+              raise SystemExit("LIVE QA FAILED: " + " | ".join(failures))
+          print("LIVE QA PASSED: 3 site pages x 4 viewports; 3 GitHub README x 2 viewports.")
+          PY
+
+      - name: Upload live QA screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-qa-wildberries-fbs-2026
+          path: live-qa-screenshots/
+          if-no-files-found: warn
