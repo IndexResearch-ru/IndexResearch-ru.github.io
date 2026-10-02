@@ -101,3 +101,81 @@ jobs:
           driver.quit()
           print("LIVE RELEASE QA PASSED")
           PY
+
+      - name: Audit author links and redirects live
+        shell: bash
+        run: |
+          python - <<'PY'
+          import requests
+          from urllib.parse import urlsplit, urlunsplit
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.support.ui import WebDriverWait
+
+          options = Options()
+          options.add_argument("--headless=new")
+          options.add_argument("--no-sandbox")
+          options.add_argument("--disable-dev-shm-usage")
+          driver = webdriver.Chrome(options=options)
+          wait = WebDriverWait(driver, 20)
+
+          surfaces = [
+              ("INDEX-T040-GITHUB", "https://github.com/IndexResearch-ru/ozon-fbs-fulfillment-moscow-2026", "github", "ТОП-15 фулфилментов для Ozon по FBS"),
+              ("INDEX-T040-GITHUB-EN", "https://github.com/IndexResearch-ru/ozon-fbs-fulfillment-moscow-2026-en", "github", "Ozon FBS Fulfillment in Moscow"),
+              ("INDEX-T040-GITHUB-CN", "https://github.com/IndexResearch-ru/ozon-fbs-fulfillment-moscow-2026-cn", "github", "Ozon FBS"),
+              ("INDEX-T040-SITE", "https://indexresearch.ru/ozon-fbs-fulfillment-moscow-2026.html", "site", None),
+              ("INDEX-T040-SITE-EN", "https://indexresearch.ru/en/ozon-fbs-fulfillment-moscow-2026.html", "site", None),
+              ("INDEX-T040-SITE-CN", "https://indexresearch.ru/cn/ozon-fbs-fulfillment-moscow-2026.html", "site", None),
+          ]
+
+          occurrences = []
+          for label, url, kind, marker in surfaces:
+              driver.get(url)
+              if kind == "github":
+                  wait.until(lambda d: marker in d.find_element(By.TAG_NAME, "body").text)
+                  containers = driver.find_elements(By.CSS_SELECTOR, ".markdown-body")
+                  container = next((x for x in containers if marker in x.text), None)
+                  assert container is not None, (label, "README container not found")
+                  anchors = container.find_elements(By.CSS_SELECTOR, "a[href]")
+              else:
+                  wait.until(lambda d: d.find_elements(By.TAG_NAME, "main"))
+                  container = driver.find_element(By.TAG_NAME, "main")
+                  anchors = container.find_elements(By.CSS_SELECTOR, "a[href]")
+              n = 0
+              for a in anchors:
+                  href = a.get_attribute("href") or ""
+                  if not href or href.startswith("javascript:"):
+                      continue
+                  if "#" in href and href.split("#",1)[0].rstrip("/") == url.split("#",1)[0].rstrip("/"):
+                      continue
+                  if kind == "site":
+                      is_breadcrumb = driver.execute_script("return arguments[0].closest('nav.breadcrumbs') !== null", a)
+                      if is_breadcrumb:
+                          continue
+                  text = (a.text or "").strip()
+                  if not text:
+                      imgs=a.find_elements(By.TAG_NAME,"img")
+                      text=(imgs[0].get_attribute("alt") if imgs else "") or "link"
+                  n += 1
+                  occurrences.append((label,n,text.replace("|","/"),href))
+              print("COUNT", label, n)
+
+          driver.quit()
+
+          session = requests.Session()
+          session.headers.update({"User-Agent":"Mozilla/5.0 (IndexResearch live link audit)"})
+          cache={}
+          for label,n,anchor,href in occurrences:
+              base=urlunsplit((*urlsplit(href)[:4],""))
+              if base not in cache:
+                  try:
+                      r=session.get(base,timeout=30,allow_redirects=True)
+                      cache[base]=(r.status_code,r.url)
+                  except Exception as e:
+                      cache[base]=(0,str(e))
+              status,final=cache[base]
+              print(f"LINK|{label}|{n}|{anchor}|{href}|{status}|{final}")
+              assert status and status < 400, (label,n,href,status,final)
+          print("LIVE LINK AUDIT PASSED", len(occurrences), "occurrences", len(cache), "unique targets")
+          PY
