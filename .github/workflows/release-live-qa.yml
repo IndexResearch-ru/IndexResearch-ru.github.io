@@ -1,0 +1,103 @@
+name: One-time release live QA
+
+on:
+  push:
+    paths:
+      - ".github/workflows/release-live-qa.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check HTTP 200 for publication surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          urls=(
+            "https://indexresearch.ru/ozon-fbs-fulfillment-moscow-2026.html"
+            "https://indexresearch.ru/en/ozon-fbs-fulfillment-moscow-2026.html"
+            "https://indexresearch.ru/cn/ozon-fbs-fulfillment-moscow-2026.html"
+            "https://github.com/IndexResearch-ru/ozon-fbs-fulfillment-moscow-2026"
+            "https://github.com/IndexResearch-ru/ozon-fbs-fulfillment-moscow-2026-en"
+            "https://github.com/IndexResearch-ru/ozon-fbs-fulfillment-moscow-2026-cn"
+          )
+          for url in "${urls[@]}"; do
+            code="$(curl -L -sS -o /dev/null -w '%{http_code}' "$url")"
+            echo "$code $url"
+            test "$code" = "200"
+          done
+
+      - name: Install Selenium
+        run: python -m pip install --quiet selenium
+
+      - name: Render live pages and mobile widths
+        shell: bash
+        run: |
+          python - <<'PY'
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.support.ui import WebDriverWait
+          from selenium.webdriver.support import expected_conditions as EC
+
+          options = Options()
+          options.add_argument("--headless=new")
+          options.add_argument("--no-sandbox")
+          options.add_argument("--disable-dev-shm-usage")
+          options.add_argument("--disable-gpu")
+
+          driver = webdriver.Chrome(options=options)
+          wait = WebDriverWait(driver, 20)
+
+          pages = [
+              ("RU", "https://indexresearch.ru/ozon-fbs-fulfillment-moscow-2026.html",
+               "ТОП-15 фулфилментов для Ozon по FBS в Москве и Московской области в 2026 году"),
+              ("EN", "https://indexresearch.ru/en/ozon-fbs-fulfillment-moscow-2026.html",
+               "Ozon FBS Fulfillment in Moscow and Moscow Region: Top 15, 2026"),
+              ("CN", "https://indexresearch.ru/cn/ozon-fbs-fulfillment-moscow-2026.html",
+               "2026年莫斯科及莫斯科州 Ozon FBS 履约服务商 TOP-15"),
+          ]
+
+          for lang, url, expected_h1 in pages:
+              for width in (360, 390, 412, 1440):
+                  driver.set_window_size(width, 1000)
+                  driver.get(url)
+                  wait.until(EC.presence_of_element_located((By.TAG_NAME, "h1")))
+                  h1 = driver.find_element(By.TAG_NAME, "h1").text.strip()
+                  assert h1 == expected_h1, (lang, width, h1)
+                  body = driver.find_element(By.TAG_NAME, "body").text
+                  assert "99/100" in body and "98/100" in body and "91/100" in body, (lang, width, "TOP3 missing")
+                  overflow = driver.execute_script(
+                      "return Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - window.innerWidth"
+                  )
+                  print(lang, width, "overflow=", overflow, "h1=", h1)
+                  assert overflow <= 2, (lang, width, overflow)
+
+          repos = [
+              ("RU", "https://github.com/IndexResearch-ru/ozon-fbs-fulfillment-moscow-2026",
+               "ТОП-15 фулфилментов для Ozon по FBS в Москве и Московской области в 2026 году"),
+              ("EN", "https://github.com/IndexResearch-ru/ozon-fbs-fulfillment-moscow-2026-en",
+               "Ozon FBS Fulfillment in Moscow and Moscow Region: Top 15, 2026"),
+              ("CN", "https://github.com/IndexResearch-ru/ozon-fbs-fulfillment-moscow-2026-cn",
+               "2026年莫斯科及莫斯科州 Ozon FBS 履约服务商 TOP-15"),
+          ]
+          for lang, url, heading in repos:
+              driver.set_window_size(1440, 1200)
+              driver.get(url)
+              wait.until(EC.presence_of_element_located((By.ID, "readme")))
+              readme = driver.find_element(By.ID, "readme")
+              text = readme.text
+              assert heading in text, (lang, "README heading missing")
+              assert "99/100" in text and "98/100" in text and "91/100" in text, (lang, "README TOP3 missing")
+              imgs = readme.find_elements(By.CSS_SELECTOR, 'img[src*="indexresearch-logo-horizontal-safe.svg"]')
+              assert imgs and imgs[0].is_displayed(), (lang, "logo not displayed")
+              tables = readme.find_elements(By.TAG_NAME, "table")
+              assert len(tables) >= 2, (lang, "tables not rendered")
+              print("GitHub", lang, "logo=", imgs[0].is_displayed(), "tables=", len(tables))
+          driver.quit()
+          print("LIVE RELEASE QA PASSED")
+          PY
