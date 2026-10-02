@@ -186,6 +186,135 @@ jobs:
           print("LIVE QA PASSED: 3 site pages x 4 viewports; 3 GitHub README x 2 viewports.")
           PY
 
+      - name: Audit published author links
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import html as html_lib, json, re
+          from pathlib import Path
+          from urllib.parse import urljoin, urlparse, parse_qsl
+          import requests
+          from selenium import webdriver
+          from selenium.webdriver.chrome.options import Options
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.support.ui import WebDriverWait
+          from selenium.webdriver.support import expected_conditions as EC
+
+          slug = "wildberries-fbs-complex-goods-moscow-2026"
+          surfaces = [
+              {"name":"ru-github","platform":"GitHub","url":f"https://github.com/IndexResearch-ru/{slug}",
+               "raw":f"https://raw.githubusercontent.com/IndexResearch-ru/{slug}/main/README.md"},
+              {"name":"en-github","platform":"GitHub","url":f"https://github.com/IndexResearch-ru/{slug}-en",
+               "raw":f"https://raw.githubusercontent.com/IndexResearch-ru/{slug}-en/main/README.md"},
+              {"name":"cn-github","platform":"GitHub","url":f"https://github.com/IndexResearch-ru/{slug}-cn",
+               "raw":f"https://raw.githubusercontent.com/IndexResearch-ru/{slug}-cn/main/README.md"},
+              {"name":"ru-site","platform":"IndexResearch.ru","url":f"https://indexresearch.ru/{slug}.html"},
+              {"name":"en-site","platform":"IndexResearch.ru","url":f"https://indexresearch.ru/en/{slug}.html"},
+              {"name":"cn-site","platform":"IndexResearch.ru","url":f"https://indexresearch.ru/cn/{slug}.html"},
+          ]
+          session=requests.Session()
+          session.headers.update({"User-Agent":"Mozilla/5.0 IndexResearch-live-link-audit/1.0"})
+
+          def resolve(url):
+              if url.startswith(("#","mailto:","tel:","javascript:")):
+                  return {"final_url":"","status_code":None,"error":"skipped non-web"}
+              try:
+                  resp=session.get(url,allow_redirects=True,timeout=25,stream=True)
+                  out={"final_url":resp.url,"status_code":resp.status_code,"error":""}
+                  resp.close()
+                  return out
+              except Exception as e:
+                  return {"final_url":"","status_code":None,"error":str(e)}
+
+          def md_context(src,pos):
+              heads=list(re.finditer(r"(?m)^(#{1,6})\s+(.+?)\s*$",src[:pos]))
+              return re.sub(r"[*_#]","",heads[-1].group(2)).strip() if heads else "first screen"
+
+          def parse_md(src, repo_url):
+              items=[]
+              for m in re.finditer(r'<a\b[^>]*\bhref=["\']([^"\']+)["\'][^>]*>([\s\S]*?)</a>',src,re.I):
+                  href=m.group(1).strip()
+                  inner=m.group(2)
+                  img=re.search(r'<img\b[^>]*\balt=["\']([^"\']*)["\']',inner,re.I)
+                  anchor=img.group(1).strip() if img else re.sub(r"<[^>]+>"," ",inner)
+                  anchor=re.sub(r"\s+"," ",html_lib.unescape(anchor)).strip() or "linked element"
+                  items.append((m.start(),anchor,href,md_context(src,m.start())))
+              for m in re.finditer(r'(?<!!)\[([^\]]+)\]\(([^)\s]+)(?:\s+["\'][^"\']*["\'])?\)',src):
+                  anchor=re.sub(r"[*_]","",m.group(1)).strip()
+                  href=m.group(2).strip()
+                  items.append((m.start(),anchor,href,md_context(src,m.start())))
+              items.sort(key=lambda x:x[0])
+              out=[]
+              for _,anchor,href,context in items:
+                  if href.startswith(("#","mailto:","tel:","javascript:")):
+                      continue
+                  if re.match(r"^https?://",href):
+                      abs_url=href
+                  elif href.startswith("/"):
+                      abs_url="https://github.com"+href
+                  else:
+                      abs_url=repo_url.rstrip("/")+"/blob/main/"+href.lstrip("./")
+                  out.append({"seq":len(out)+1,"context":context,"anchor":anchor,"href_published":href,
+                              "resolved_target":abs_url,**resolve(abs_url)})
+              return out
+
+          opts=Options()
+          opts.add_argument("--headless=new"); opts.add_argument("--no-sandbox"); opts.add_argument("--disable-dev-shm-usage")
+          opts.add_argument("--window-size=1440,900")
+          driver=webdriver.Chrome(options=opts)
+          wait=WebDriverWait(driver,30)
+          audit=[]
+          try:
+              for s in surfaces:
+                  if s["platform"]=="GitHub":
+                      resp=session.get(s["raw"],timeout=25)
+                      resp.raise_for_status()
+                      links=parse_md(resp.text,s["url"])
+                  else:
+                      driver.get(s["url"])
+                      wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,"main")))
+                      links=[]
+                      for el in driver.find_elements(By.CSS_SELECTOR,"main a[href]"):
+                          href=driver.execute_script("return arguments[0].getAttribute('href');",el) or ""
+                          if href.startswith(("#","mailto:","tel:","javascript:")):
+                              continue
+                          anchor=(el.text or el.get_attribute("aria-label") or "linked element").strip()
+                          ctx=driver.execute_script("""
+                            let e=arguments[0], s=e.closest('section'); if(!s) return 'main';
+                            let h=s.querySelector('h2,h3'); return h ? h.textContent.trim() : 'main';
+                          """,el)
+                          abs_url=urljoin(s["url"],href)
+                          links.append({"seq":len(links)+1,"context":ctx,"anchor":anchor,
+                                        "href_published":href,"resolved_target":abs_url,**resolve(abs_url)})
+                  for item in links:
+                      q=dict(parse_qsl(urlparse(item["resolved_target"]).query,keep_blank_values=True))
+                      item["utm"]="&".join(f"{k}={v}" for k,v in q.items() if k.startswith("utm_"))
+                  audit.append({**{k:v for k,v in s.items() if k!="raw"},"links":links})
+          finally:
+              driver.quit()
+
+          bad=[]
+          for s in audit:
+              for l in s["links"]:
+                  status=l["status_code"]
+                  if status is None or status >= 400:
+                      bad.append({"surface":s["name"],"seq":l["seq"],"href":l["href_published"],"status":status,"error":l["error"]})
+          Path("live-qa-links.json").write_text(json.dumps({"surfaces":audit,"bad":bad},ensure_ascii=False,indent=2),encoding="utf-8")
+          print(json.dumps({"counts":{s["name"]:len(s["links"]) for s in audit},"bad":bad},ensure_ascii=False,indent=2))
+          if bad:
+              raise SystemExit("AUTHOR LINK AUDIT FAILED")
+          print("AUTHOR LINK AUDIT PASSED")
+          PY
+
+      - name: Upload live link audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-link-audit-wildberries-fbs-2026
+          path: live-qa-links.json
+          if-no-files-found: error
+
       - name: Upload live QA screenshots
         if: always()
         uses: actions/upload-artifact@v4
