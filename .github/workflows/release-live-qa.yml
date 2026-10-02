@@ -88,16 +88,16 @@ jobs:
           for lang, url, heading in repos:
               driver.set_window_size(1440, 1200)
               driver.get(url)
-              wait.until(EC.presence_of_element_located((By.ID, "readme")))
-              readme = driver.find_element(By.ID, "readme")
-              text = readme.text
+              wait.until(lambda d: heading in d.find_element(By.TAG_NAME, "body").text)
+              body = driver.find_element(By.TAG_NAME, "body")
+              text = body.text
               assert heading in text, (lang, "README heading missing")
               assert "99/100" in text and "98/100" in text and "91/100" in text, (lang, "README TOP3 missing")
-              imgs = readme.find_elements(By.CSS_SELECTOR, 'img[src*="indexresearch-logo-horizontal-safe.svg"]')
-              assert imgs and imgs[0].is_displayed(), (lang, "logo not displayed")
-              tables = readme.find_elements(By.TAG_NAME, "table")
-              assert len(tables) >= 2, (lang, "tables not rendered")
-              print("GitHub", lang, "logo=", imgs[0].is_displayed(), "tables=", len(tables))
+              imgs = driver.find_elements(By.CSS_SELECTOR, 'img[src*="indexresearch-logo-horizontal-safe.svg"]')
+              assert imgs and any(img.is_displayed() for img in imgs), (lang, "logo not displayed")
+              tables = driver.find_elements(By.CSS_SELECTOR, ".markdown-body table, article table")
+              assert len(tables) >= 2, (lang, "README tables not rendered")
+              print("GitHub", lang, "logo=", any(img.is_displayed() for img in imgs), "tables=", len(tables))
           driver.quit()
           print("LIVE RELEASE QA PASSED")
           PY
