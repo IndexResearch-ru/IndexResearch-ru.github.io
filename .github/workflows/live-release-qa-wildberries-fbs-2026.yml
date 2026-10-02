@@ -222,13 +222,24 @@ jobs:
           def resolve(url):
               if url.startswith(("#","mailto:","tel:","javascript:")):
                   return {"final_url":"","status_code":None,"error":"skipped non-web"}
-              try:
-                  resp=session.get(url,allow_redirects=True,timeout=25,stream=True)
-                  out={"final_url":resp.url,"status_code":resp.status_code,"error":""}
-                  resp.close()
-                  return out
-              except Exception as e:
-                  return {"final_url":"","status_code":None,"error":str(e)}
+              last_error=""
+              for attempt in range(4):
+                  try:
+                      resp=session.get(url,allow_redirects=True,timeout=25,stream=True)
+                      out={"final_url":resp.url,"status_code":resp.status_code,"error":""}
+                      retryable=resp.status_code in {429,500,502,503,504}
+                      resp.close()
+                      if retryable and attempt < 3:
+                          import time
+                          time.sleep(1.5*(attempt+1))
+                          continue
+                      return out
+                  except Exception as e:
+                      last_error=str(e)
+                      if attempt < 3:
+                          import time
+                          time.sleep(1.5*(attempt+1))
+              return {"final_url":"","status_code":None,"error":last_error}
 
           def md_context(src,pos):
               heads=list(re.finditer(r"(?m)^(#{1,6})\s+(.+?)\s*$",src[:pos]))
