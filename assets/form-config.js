@@ -1,0 +1,1 @@
+// Public configuration only. Never place secrets in this file.\nwindow.INDEXRESEARCH_FORM_ENDPOINT = '';\n

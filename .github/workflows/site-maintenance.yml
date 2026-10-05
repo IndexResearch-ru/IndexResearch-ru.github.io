@@ -74,6 +74,12 @@ jobs:
             fi
           done
 
+      - name: Validate lead form JavaScript
+        run: node --check assets/lead-form.js
+
+      - name: Validate serverless form backend
+        run: python -m py_compile serverless/indexresearch-form/index.py
+
       - name: Run site QA
         run: python scripts/site_qa.py
 
