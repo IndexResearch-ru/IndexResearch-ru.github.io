@@ -541,7 +541,7 @@
     if(!href || href.charAt(0) === 'j') return false;
     try{
       const url = new URL(href,location.href);
-      return url.hash === '#contact' && (url.origin === location.origin || url.hostname === 'gaeo.ru' || url.hostname === 'www.gaeo.ru' || url.hostname === 'ir-ru.github.io');
+      return url.hash === '#contact' && (url.origin === location.origin || url.hostname === 'indexresearch.ru' || url.hostname === 'www.indexresearch.ru' || url.hostname === 'indexresearch-ru.github.io');
     }catch(e){
       return false;
     }
