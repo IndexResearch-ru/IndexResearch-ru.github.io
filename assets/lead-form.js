@@ -149,8 +149,20 @@
     return countryList().find(function(c){ return c.iso2 === iso; }) || countryList().find(function(c){ return c.iso2 === defaultIso; }) || countryList()[0];
   }
 
-  function flagUrl(iso, width){
+  function flagUrl(iso){
+    return 'https://flagcdn.com/' + iso + '.svg';
+  }
+
+  function flagPngUrl(iso, width){
     return 'https://flagcdn.com/' + width + 'x' + Math.round(width * .75) + '/' + iso + '.png';
+  }
+
+  function setFlagSource(img, iso, width){
+    img.onerror = function(){
+      img.onerror = null;
+      img.src = flagPngUrl(iso,width);
+    };
+    img.src = flagUrl(iso);
   }
 
   function createPhoneField(formId){
@@ -177,7 +189,7 @@
 
     function applyCountry(country, focusInput){
       selected = country;
-      flag.src = flagUrl(country.iso2,24);
+      setFlagSource(flag,country.iso2,24);
       code.textContent = country.dial;
       input.placeholder = phonePlaceholder(country);
       input.value = formatNational(input.value,country);
@@ -202,9 +214,10 @@
         option.setAttribute('role','option');
         option.dataset.iso2 = country.iso2;
         option.innerHTML =
-          '<img class="ir-country-flag" alt="" loading="lazy" width="24" height="18" src="' + flagUrl(country.iso2,24) + '">' +
+          '<img class="ir-country-flag" alt="" width="24" height="18">' +
           '<span>' + country.name + '</span>' +
           '<span class="ir-country-option-code">' + country.dial + '</span>';
+        setFlagSource(option.querySelector('.ir-country-flag'),country.iso2,24);
         option.addEventListener('click',function(){ applyCountry(country,true); });
         frag.appendChild(option);
       });
