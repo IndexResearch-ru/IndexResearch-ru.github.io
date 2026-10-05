@@ -9,6 +9,7 @@ import urllib.request
 from datetime import datetime, timezone
 from email.message import EmailMessage
 from email.policy import SMTP
+from email.utils import format_datetime, make_msgid
 from typing import Any
 
 POSTBOX_URL = "https://postbox.cloud.yandex.net/v2/email/outbound-emails"
@@ -165,6 +166,8 @@ def _send_postbox(payload: dict[str, Any], context: Any) -> str:
     message["From"] = POSTBOX_FROM
     message["To"] = POSTBOX_TO
     message["Subject"] = "Новая заявка с IndexResearch.ru"
+    message["Date"] = format_datetime(datetime.now(timezone.utc))
+    message["Message-ID"] = make_msgid(domain="indexresearch.ru")
     if payload["email"]:
         message["Reply-To"] = payload["email"]
     message.set_content(_email_text(payload), charset="utf-8")
