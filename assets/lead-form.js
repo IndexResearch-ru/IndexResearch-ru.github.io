@@ -567,16 +567,11 @@
   }
 
   const leadSection = ensureInlineShell();
-  if(leadSection && 'IntersectionObserver' in window){
-    const leadObserver = new IntersectionObserver(function(entries){
-      if(entries.some(function(entry){ return entry.isIntersecting; })){
-        ensureLeadUiReady();
-        leadObserver.disconnect();
-      }
-    }, {rootMargin:'700px 0px'});
-    leadObserver.observe(leadSection);
-  }else if(leadSection){
-    window.setTimeout(ensureLeadUiReady,1500);
+  if(leadSection){
+    // The inline form is lightweight: the country menu is still built lazily on first use.
+    // Mount immediately so the contact block is never rendered half-empty because of
+    // IntersectionObserver timing, browser throttling or cached page state.
+    ensureLeadUiReady();
   }
 
   document.addEventListener('pointerdown',function(e){
