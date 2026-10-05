@@ -228,7 +228,7 @@ html[lang="ru"] .footer-lang .lang-ru,html[lang="en"] .footer-lang .lang-en,html
 .ir-phone-input{border:0!important;box-shadow:none!important;height:52px!important;min-width:0;flex:1 1 auto;padding-left:13px!important;border-radius:0 9px 9px 0!important}
 .ir-country-menu{position:absolute;left:0;top:calc(100% + 7px);z-index:1200;width:min(430px,calc(100vw - 32px));max-height:310px;overflow:auto;background:#fff;border:1px solid #cfd5dd;border-radius:10px;box-shadow:0 16px 36px rgba(17,24,39,.16);display:none}
 .ir-country-menu.is-open{display:block}
-.ir-country-option{width:100%;display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:11px;align-items:center;padding:10px 12px;border:0;border-bottom:1px solid #edf0f2;background:#fff;color:var(--ink);text-align:left;font:500 13px/1.35 Inter,Arial,sans-serif;cursor:pointer}
+.ir-country-option{width:100%;display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:11px;align-items:center;padding:10px 12px;border:0;border-bottom:1px solid #edf0f2;background:#fff;color:var(--ink);text-align:left;font:500 13px/1.35 Inter,Arial,sans-serif;cursor:pointer}.ir-country-option>span:not(.ir-country-option-code){min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ir-country-option-code{justify-self:end;flex:0 0 auto}
 .ir-country-option:last-child{border-bottom:0}
 .ir-country-option:hover,.ir-country-option:focus{background:#f3f7fa;outline:none}
 .ir-country-option-code{color:var(--muted);font-weight:700;white-space:nowrap}
@@ -253,7 +253,7 @@ body.ir-modal-open{overflow:hidden!important}
 .ir-modal-head{padding-right:44px;margin-bottom:26px}
 .ir-modal-eyebrow{font-size:12px;line-height:1.4;font-weight:800;letter-spacing:.10em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
 .ir-modal-title{margin:0;color:var(--ink);font:800 34px/1.12 Inter,Arial,sans-serif;letter-spacing:-.035em}
-.ir-modal-lead{margin:12px 0 0;color:var(--muted);font-size:15px;line-height:1.6;max-width:610px}
+.ir-modal-lead{margin:12px 0 0;color:var(--muted);font-size:15px;line-height:1.6;max-width:610px}.ir-modal .ir-country-menu{left:auto;right:0;width:min(430px,calc(100vw - 64px));max-width:calc(100vw - 64px)}
 @keyframes irFadeIn{from{opacity:0}to{opacity:1}}
 @keyframes irModalIn{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:none}}
 @media(max-width:900px){.ir-contact-layout{grid-template-columns:1fr;gap:28px}.ir-contact-copy{max-width:720px}}
