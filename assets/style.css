@@ -244,7 +244,7 @@ html[lang="ru"] .footer-lang .lang-ru,html[lang="en"] .footer-lang .lang-en,html
 .ir-hp{position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important}
 body.ir-modal-open{overflow:hidden!important}
 .ir-modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(17,24,39,.68);display:flex;align-items:center;justify-content:center;padding:24px;animation:irFadeIn .14s ease-out}
-.ir-modal{position:relative;width:min(760px,100%);max-height:calc(100dvh - 48px);overflow:auto;background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:40px 42px 36px;box-shadow:0 28px 80px rgba(0,0,0,.25);animation:irModalIn .16s ease-out}
+.ir-modal{position:relative;width:min(760px,100%);max-height:calc(100dvh - 48px);overflow-y:auto;overflow-x:hidden;background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:40px 42px 36px;box-shadow:0 28px 80px rgba(0,0,0,.25);animation:irModalIn .16s ease-out}
 .ir-modal-close{position:absolute;right:16px;top:16px;width:42px;height:42px;border:0;background:transparent;color:var(--muted);cursor:pointer}
 .ir-modal-close:before,.ir-modal-close:after{content:"";position:absolute;left:10px;top:20px;width:22px;height:1.5px;background:currentColor}
 .ir-modal-close:before{transform:rotate(45deg)}
