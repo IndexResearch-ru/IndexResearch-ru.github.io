@@ -218,7 +218,10 @@
       toggle.setAttribute('aria-expanded',open ? 'true' : 'false');
       if(open){
         const selectedOption = menu.querySelector('[data-iso2="' + selected.iso2 + '"]');
-        if(selectedOption) setTimeout(function(){ selectedOption.scrollIntoView({block:'center'}); },0);
+        if(selectedOption) setTimeout(function(){
+          const targetTop = selectedOption.offsetTop - Math.max(0,(menu.clientHeight - selectedOption.offsetHeight) / 2);
+          menu.scrollTop = Math.max(0,targetTop);
+        },0);
       }
     });
 
