@@ -1,4 +1,4 @@
-/* ===== Lead form + modal v1.3 =====
+/* ===== Lead form + modal v1.4 =====
    Shared client-side UI for IndexResearch lead forms.
    Delivery endpoint is configured separately in /assets/form-config.js. */
 (function installIndexResearchLeadForms(){
@@ -110,7 +110,10 @@
   function maskParts(country){
     const full = country.mask || '';
     const rest = full.indexOf(country.dial) === 0 ? full.slice(country.dial.length) : full;
-    return {pattern:rest, digits:(rest.match(/9/g) || []).length};
+    // The dial code is rendered separately, so separators that belonged between
+    // it and the national number must not appear at the start of the input.
+    const pattern = rest.replace(/^[\s-]+/, '');
+    return {pattern:pattern, digits:(pattern.match(/9/g) || []).length};
   }
 
   function formatNational(value, country){
@@ -169,10 +172,30 @@
     return 'https://flagcdn.com/' + width + 'x' + Math.round(width * .75) + '/' + iso + '.png';
   }
 
+  function flagEmoji(iso){
+    const code = String(iso || '').toUpperCase();
+    if(!/^[A-Z]{2}$/.test(code)) return '🏳️';
+    return String.fromCodePoint(
+      127397 + code.charCodeAt(0),
+      127397 + code.charCodeAt(1)
+    );
+  }
+
   function setFlagSource(img, iso, width){
+    if(!img) return;
+    let triedPng = false;
     img.onerror = function(){
+      if(!triedPng){
+        triedPng = true;
+        img.src = flagPngUrl(iso,width);
+        return;
+      }
       img.onerror = null;
-      img.src = flagPngUrl(iso,width);
+      const fallback = document.createElement('span');
+      fallback.className = 'ir-country-flag ir-country-flag-fallback';
+      fallback.setAttribute('aria-hidden','true');
+      fallback.textContent = flagEmoji(iso);
+      img.replaceWith(fallback);
     };
     img.src = flagUrl(iso);
   }
@@ -194,6 +217,7 @@
     const wrap = field.querySelector('.ir-phone-wrap');
     const toggle = field.querySelector('.ir-country-toggle');
     const flag = field.querySelector('.ir-country-flag');
+    setFlagSource(flag,selected.iso2,24);
     const code = field.querySelector('.ir-country-code');
     const input = field.querySelector('.ir-phone-input');
     const menu = field.querySelector('.ir-country-menu');
@@ -201,7 +225,19 @@
 
     function applyCountry(country, focusInput){
       selected = country;
-      setFlagSource(flag,country.iso2,24);
+      let currentFlag = field.querySelector('.ir-country-flag');
+      if(currentFlag && currentFlag.tagName === 'IMG'){
+        setFlagSource(currentFlag,country.iso2,24);
+      }else if(currentFlag){
+        const replacement = document.createElement('img');
+        replacement.className = 'ir-country-flag';
+        replacement.alt = '';
+        replacement.width = 24;
+        replacement.height = 18;
+        currentFlag.replaceWith(replacement);
+        currentFlag = replacement;
+        setFlagSource(currentFlag,country.iso2,24);
+      }
       code.textContent = country.dial;
       input.placeholder = phonePlaceholder(country);
       input.value = formatNational(input.value,country);
@@ -604,7 +640,6 @@
       '<div class="ir-modal" role="dialog" aria-modal="true" aria-labelledby="ir-modal-title">' +
         '<button type="button" class="ir-modal-close" aria-label="' + copy.close + '"></button>' +
         '<div class="ir-modal-head">' +
-          '<div class="ir-modal-eyebrow">' + copy.eyebrow + '</div>' +
           '<h2 class="ir-modal-title" id="ir-modal-title">' + copy.modalTitle + '</h2>' +
           '<p class="ir-modal-lead">' + copy.modalLead + '</p>' +
         '</div>' +
