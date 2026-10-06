@@ -239,6 +239,7 @@ html[lang="ru"] .footer-lang .lang-ru,html[lang="en"] .footer-lang .lang-en,html
 .ir-form-status{grid-column:1/-1;min-height:20px;margin:0;color:var(--muted);font-size:13px;line-height:1.5}
 .ir-form-status.is-error{color:#b42318}
 .ir-form-status.is-success{color:#147a45}
+.ir-success-toast{position:fixed;left:50%;top:24px;z-index:1400;transform:translateX(-50%);max-width:min(560px,calc(100vw - 32px));padding:14px 18px;border:1px solid rgba(20,122,69,.28);border-radius:10px;background:#fff;color:#147a45;box-shadow:0 14px 32px rgba(17,24,39,.18);font:700 14px/1.4 Inter,Arial,sans-serif;text-align:center}
 .ir-form-consent{grid-column:1/-1;color:var(--muted);font-size:12px;line-height:1.55}
 .ir-form-consent a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 .ir-hp{position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important}
