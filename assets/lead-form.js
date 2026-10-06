@@ -1,4 +1,4 @@
-/* ===== Lead form + modal v1.0 =====
+/* ===== Lead form + modal v1.3 =====
    Shared client-side UI for IndexResearch lead forms.
    Delivery endpoint is configured separately in /assets/form-config.js. */
 (function installIndexResearchLeadForms(){
@@ -133,6 +133,18 @@
     return out;
   }
 
+  function caretAfterDigitCount(value,digitCount){
+    if(digitCount <= 0) return 0;
+    let seen = 0;
+    for(let i=0;i<value.length;i++){
+      if(/\d/.test(value[i])){
+        seen += 1;
+        if(seen === digitCount) return i + 1;
+      }
+    }
+    return value.length;
+  }
+
   function phonePlaceholder(country){
     return maskParts(country).pattern.replace(/9/g,'0').trim();
   }
@@ -238,9 +250,42 @@
       }
     });
 
+    input.addEventListener('keydown',function(e){
+      if(e.key !== 'Backspace') return;
+      const start = input.selectionStart == null ? 0 : input.selectionStart;
+      const end = input.selectionEnd == null ? start : input.selectionEnd;
+      if(start !== end || start <= 0) return;
+
+      // If the caret is after a mask separator, delete the previous digit too;
+      // otherwise the formatter immediately restores the separator.
+      if(/\d/.test(input.value.charAt(start - 1))) return;
+
+      let previousDigitPos = start - 1;
+      while(previousDigitPos >= 0 && !/\d/.test(input.value.charAt(previousDigitPos))){
+        previousDigitPos -= 1;
+      }
+      if(previousDigitPos < 0) return;
+
+      e.preventDefault();
+      const digitsBefore = (input.value.slice(0,previousDigitPos + 1).match(/\d/g) || []).length;
+      let digits = input.value.replace(/\D/g,'');
+      const removeAt = digitsBefore - 1;
+      digits = digits.slice(0,removeAt) + digits.slice(removeAt + 1);
+      const formatted = formatNational(digits,selected);
+      input.value = formatted;
+      const caret = caretAfterDigitCount(formatted,digitsBefore - 1);
+      input.setSelectionRange(caret,caret);
+      wrap.classList.remove('is-invalid');
+    });
+
     input.addEventListener('input',function(){
-      const formatted = formatNational(input.value,selected);
+      const raw = input.value;
+      const currentCaret = input.selectionStart == null ? raw.length : input.selectionStart;
+      const digitsBeforeCaret = (raw.slice(0,currentCaret).match(/\d/g) || []).length;
+      const formatted = formatNational(raw,selected);
       if(input.value !== formatted) input.value = formatted;
+      const nextCaret = caretAfterDigitCount(formatted,digitsBeforeCaret);
+      try{ input.setSelectionRange(nextCaret,nextCaret); }catch(_){}
       wrap.classList.remove('is-invalid');
     });
 
@@ -298,6 +343,20 @@
     }
   }
 
+  function showSuccessNotice(){
+    const old = document.querySelector('.ir-success-toast');
+    if(old) old.remove();
+    const notice = document.createElement('div');
+    notice.className = 'ir-success-toast';
+    notice.setAttribute('role','status');
+    notice.setAttribute('aria-live','polite');
+    notice.textContent = copy.success;
+    document.body.appendChild(notice);
+    setTimeout(function(){
+      if(notice.isConnected) notice.remove();
+    },3500);
+  }
+
   function buildForm(mode){
     const shell = document.createElement('div');
     shell.className = 'ir-form-shell ir-form-' + mode;
@@ -353,6 +412,18 @@
       status.classList.toggle('is-success',type === 'success');
     }
 
+    function finishSuccess(){
+      setStatus(copy.success,'success');
+      showSuccessNotice();
+      if(mode === 'modal'){
+        setTimeout(closeModal,650);
+      }else{
+        setTimeout(function(){
+          shell.hidden = true;
+        },650);
+      }
+    }
+
     function validate(){
       nameInput.setAttribute('aria-invalid','false');
       emailInput.setAttribute('aria-invalid','false');
@@ -401,8 +472,7 @@
       if(!validate()) return;
 
       if(hpInput.value){
-        setStatus(copy.success,'success');
-        form.reset();
+        finishSuccess();
         return;
       }
 
@@ -429,6 +499,7 @@
 
       submit.disabled = true;
       setStatus(copy.sending,null);
+      let sent = false;
       try{
         const response = await fetch(FORM_ENDPOINT,{
           method:'POST',
@@ -437,14 +508,13 @@
           body:JSON.stringify(payload)
         });
         if(!response.ok) throw new Error('HTTP ' + response.status);
-        setStatus(copy.success,'success');
+        sent = true;
         document.dispatchEvent(new CustomEvent('indexresearch:lead-success',{detail:{mode:mode,lang:lang}}));
-        form.reset();
-        phone.input.value = '';
+        finishSuccess();
       }catch(err){
         setStatus(copy.serverError,'error');
       }finally{
-        submit.disabled = false;
+        if(!sent) submit.disabled = false;
       }
     });
 
