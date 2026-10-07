@@ -577,11 +577,20 @@ if sorted(catalog_ids) != research_page_ids:
     if missing_pages:
         errors.append("ratings/: catalog cards without matching research pages: " + ", ".join(missing_pages))
 
-catalog_dates = re.findall(
-    r'<article\b[^>]*\bdata-research-card=["\']true["\'][^>]*\bdata-published=["\'](\d{4}-\d{2}-\d{2})["\']',
-    ratings,
-    re.I,
-)
+catalog_dates = []
+for research_id in catalog_ids:
+    research_path = ROOT / f"{research_id}.html"
+    if not research_path.exists():
+        continue
+    research_text = research_path.read_text(encoding="utf-8")
+    research_types = schema_objects_by_type(research_text, research_path.name)
+    datasets = research_types.get("Dataset", [])
+    if not datasets:
+        continue
+    dataset = datasets[0]
+    editorial_date = dataset.get("dateModified") or dataset.get("datePublished")
+    if editorial_date:
+        catalog_dates.append(str(editorial_date))
 latest_catalog_date = max(catalog_dates) if catalog_dates else None
 
 ratings_types = schema_objects_by_type(ratings, "ratings/index.html")
