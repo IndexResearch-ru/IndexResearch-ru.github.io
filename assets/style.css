@@ -233,6 +233,16 @@ html[lang="ru"] .footer-lang .lang-ru,html[lang="en"] .footer-lang .lang-en,html
 .ir-country-option:last-child{border-bottom:0}
 .ir-country-option:hover,.ir-country-option:focus{background:#f3f7fa;outline:none}
 .ir-country-option-code{color:var(--muted);font-weight:700;white-space:nowrap}
+.ir-contact-method{grid-column:1/-1;min-width:0;margin:0;padding:0;border:0}
+.ir-contact-method legend{margin:0 0 9px;padding:0;color:var(--muted);font:600 12px/1.4 Inter,Arial,sans-serif}
+.ir-contact-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.ir-contact-choice{position:relative;display:block;min-width:0}
+.ir-contact-choice input{position:absolute;opacity:0;pointer-events:none}
+.ir-contact-choice span{display:flex;align-items:center;justify-content:center;min-height:42px;padding:9px 6px;text-align:center;border:1px solid #cfd5dd;border-radius:8px;background:#fff;color:var(--ink);font:600 12px/1.2 Inter,Arial,sans-serif;cursor:pointer;transition:background-color .15s,border-color .15s,color .15s}
+.ir-contact-choice input:checked+span{background:#eaf3fb;color:var(--accent);border-color:var(--accent);box-shadow:0 0 0 1px rgba(14,52,85,.07)}
+.ir-contact-choice input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.ir-contact-choice input:disabled+span{background:#f2f4f5;color:#87919d;border-color:#e1e5ea;cursor:not-allowed;opacity:.65}
+@media(max-width:520px){.ir-contact-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .ir-form-actions{grid-column:1/-1;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .ir-form-submit{border:1px solid var(--accent);background:var(--accent);color:#fff;min-height:48px;padding:12px 19px;border-radius:8px;font:700 14px/1.2 Inter,Arial,sans-serif;cursor:pointer}
 .ir-form-submit:hover{background:#174C78;border-color:#174C78}
