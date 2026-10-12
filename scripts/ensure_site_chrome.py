@@ -105,6 +105,8 @@ def render_chrome(text: str) -> tuple[str, str]:
     header_path, footer_path = PARTIALS[lang]
     header = header_path.read_text(encoding="utf-8").strip()
     footer = footer_path.read_text(encoding="utf-8").strip()
+    form_version = hashlib.sha256(LEAD_FORM_PATH.read_bytes()).hexdigest()[:12]
+    header = LEAD_FORM_RE.sub(f"/assets/lead-form.js?v={form_version}", header)
 
     topics_desktop, topics_mobile = render_topic_navigation(lang)
     header = header.replace("{{TOPICS_DESKTOP}}", topics_desktop)
