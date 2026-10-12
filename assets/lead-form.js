@@ -29,6 +29,12 @@
       phone:'Телефон',
       email:'Email',
       comment:'Что нужно исследовать или обсудить',
+      contactMethod:'Как с вами связаться',
+      contactPhone:'Телефон',
+      contactWhatsApp:'WhatsApp',
+      contactTelegram:'Telegram',
+      contactEmail:'Email',
+      requiredMethod:'Выберите способ связи.',
       submit:'Отправить запрос',
       consentPrefix:'Нажимая кнопку, пользователь соглашается с ',
       privacy:'политикой конфиденциальности',
@@ -56,6 +62,12 @@
       phone:'Phone',
       email:'Email',
       comment:'What would you like to research or discuss?',
+      contactMethod:'How should we contact you?',
+      contactPhone:'Phone',
+      contactWhatsApp:'WhatsApp',
+      contactTelegram:'Telegram',
+      contactEmail:'Email',
+      requiredMethod:'Choose a contact method.',
       submit:'Send request',
       consentPrefix:'By clicking the button, you agree to the ',
       privacy:'Privacy Policy',
@@ -83,6 +95,12 @@
       phone:'电话',
       email:'电子邮箱',
       comment:'您希望研究或讨论什么？',
+      contactMethod:'您希望我们如何联系您？',
+      contactPhone:'电话',
+      contactWhatsApp:'WhatsApp',
+      contactTelegram:'Telegram',
+      contactEmail:'电子邮箱',
+      requiredMethod:'请选择联系方式。',
       submit:'提交请求',
       consentPrefix:'点击按钮即表示您同意',
       privacy:'隐私政策',
@@ -393,6 +411,45 @@
     },3500);
   }
 
+  function pageContext(){
+    const canonicalLink = document.querySelector('link[rel="canonical"][href]');
+    const canonical = canonicalLink ? canonicalLink.href : location.origin + location.pathname;
+    const explicitId = document.querySelector('meta[name="entity_id"],meta[name="entity-id"],[data-lead-entity-id]');
+    let entityId = explicitId ? (explicitId.getAttribute('content') || explicitId.getAttribute('data-lead-entity-id') || '').trim() : '';
+    if(!entityId){
+      try { entityId = 'indexresearch:page:' + new URL(canonical).pathname; } catch(e) { entityId = ''; }
+    }
+    return {canonical_url:canonical,entity_id:entityId.length <= 220 ? entityId : ''};
+  }
+
+  function createContactMethodField(phoneInput,emailInput){
+    const field = document.createElement('fieldset');
+    field.className = 'ir-contact-method';
+    field.innerHTML =
+      '<legend>' + copy.contactMethod + '</legend>' +
+      '<div class="ir-contact-options">' +
+      '<label class="ir-contact-choice"><input type="radio" name="contact_method" value="phone" disabled><span>' + copy.contactPhone + '</span></label>' +
+      '<label class="ir-contact-choice"><input type="radio" name="contact_method" value="whatsapp" disabled><span>' + copy.contactWhatsApp + '</span></label>' +
+      '<label class="ir-contact-choice"><input type="radio" name="contact_method" value="telegram" disabled><span>' + copy.contactTelegram + '</span></label>' +
+      '<label class="ir-contact-choice"><input type="radio" name="contact_method" value="email" disabled><span>' + copy.contactEmail + '</span></label>' +
+      '</div>';
+    const radios = Array.from(field.querySelectorAll('input[name="contact_method"]'));
+    function update(){
+      const hasPhone = !!phoneInput.value.trim();
+      const hasEmail = !!emailInput.value.trim();
+      radios.forEach(function(input){
+        input.disabled = input.value === 'email' ? !hasEmail : !hasPhone;
+        if(input.disabled) input.checked = false;
+      });
+    }
+    return {
+      field:field,
+      update:update,
+      focus:function(){ const first = radios.find(function(input){return !input.disabled;}); if(first) first.focus(); },
+      value:function(){ const selected = radios.find(function(input){return input.checked && !input.disabled;}); return selected ? selected.value : ''; }
+    };
+  }
+
   function buildForm(mode){
     const shell = document.createElement('div');
     shell.className = 'ir-form-shell ir-form-' + mode;
@@ -410,6 +467,8 @@
     const emailField = document.createElement('div');
     emailField.className = 'ir-form-field ir-form-field--wide';
     emailField.innerHTML = '<label class="ir-hp" for="' + formId + '-email">' + copy.email + '</label><input id="' + formId + '-email" class="ir-form-input" name="email" type="email" inputmode="email" autocomplete="email" placeholder="' + copy.email + '" maxlength="254">';
+
+    const contactMethod = createContactMethodField(phone.input,emailField.querySelector('input'));
 
     const commentField = document.createElement('div');
     commentField.className = 'ir-form-field ir-form-field--wide';
@@ -433,7 +492,7 @@
     status.setAttribute('role','status');
     status.setAttribute('aria-live','polite');
 
-    form.append(nameField,phone.field,emailField,commentField,hp,actions,status,createConsent());
+    form.append(nameField,phone.field,emailField,contactMethod.field,commentField,hp,actions,status,createConsent());
     shell.appendChild(form);
 
     const nameInput = form.elements.full_name;
@@ -497,11 +556,19 @@
         return false;
       }
 
+      if(!contactMethod.value()){
+        contactMethod.focus();
+        setStatus(copy.requiredMethod,'error');
+        return false;
+      }
       return true;
     }
 
     nameInput.addEventListener('input',function(){ nameInput.setAttribute('aria-invalid','false'); });
-    emailInput.addEventListener('input',function(){ emailInput.setAttribute('aria-invalid','false'); });
+    phone.input.addEventListener('input',contactMethod.update);
+    emailInput.addEventListener('input',function(){ emailInput.setAttribute('aria-invalid','false'); contactMethod.update(); });
+    contactMethod.update();
+    window.addEventListener('pageshow',contactMethod.update);
 
     form.addEventListener('submit',async function(e){
       e.preventDefault();
@@ -524,7 +591,10 @@
         phone:phone.normalized(),
         phone_country:phone.getCountry().iso2,
         email:emailInput.value.trim(),
+        contact_method:contactMethod.value(),
         comment:commentInput.value.trim(),
+        entity_id:pageContext().entity_id,
+        canonical_url:pageContext().canonical_url,
         company_website:hpInput.value,
         page_url:location.href,
         referrer:document.referrer || '',
