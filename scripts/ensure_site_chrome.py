@@ -11,6 +11,7 @@ from research_topics import render_topic_navigation
 ROOT = Path(__file__).resolve().parents[1]
 STYLE_PATH = ROOT / "assets" / "style.css"
 LEAD_FORM_PATH = ROOT / "assets" / "lead-form.js"
+FORM_CONFIG_PATH = ROOT / "assets" / "form-config.js"
 
 PARTIALS = {
     "ru": (
@@ -38,6 +39,7 @@ LEGACY_HEADER_RE = re.compile(r'<header class="top">[\s\S]*?</header>', re.I)
 LEGACY_FOOTER_RE = re.compile(r'<footer>[\s\S]*?</footer>', re.I)
 STYLE_RE = re.compile(r'/?assets/style\.css(?:\?v=[^"\']*)?')
 LEAD_FORM_RE = re.compile(r'/?assets/lead-form\.js(?:\?v=[^"\']*)?')
+FORM_CONFIG_RE = re.compile(r'/?assets/form-config\.js(?:\?v=[^"\']*)?')
 HTML_LANG_RE = re.compile(r'<html\b[^>]*\blang=["\']([^"\']+)["\']', re.I)
 LINK_TAG_RE = re.compile(r"<link\b[^>]*>", re.I)
 ATTR_RE = re.compile(
@@ -107,6 +109,8 @@ def render_chrome(text: str) -> tuple[str, str]:
     footer = footer_path.read_text(encoding="utf-8").strip()
     form_version = hashlib.sha256(LEAD_FORM_PATH.read_bytes()).hexdigest()[:12]
     header = LEAD_FORM_RE.sub(f"/assets/lead-form.js?v={form_version}", header)
+    config_version = hashlib.sha256(FORM_CONFIG_PATH.read_bytes()).hexdigest()[:12]
+    header = FORM_CONFIG_RE.sub(f"/assets/form-config.js?v={config_version}", header)
 
     topics_desktop, topics_mobile = render_topic_navigation(lang)
     header = header.replace("{{TOPICS_DESKTOP}}", topics_desktop)
@@ -156,7 +160,7 @@ def ensure_no_translate(text: str) -> str:
 
     return text
 
-def sync_file(path: Path, style_version: str, form_version: str) -> bool:
+def sync_file(path: Path, style_version: str, form_version: str, config_version: str) -> bool:
     text = path.read_text(encoding="utf-8")
     original = text
     text = ensure_no_translate(text)
@@ -194,6 +198,7 @@ def sync_file(path: Path, style_version: str, form_version: str) -> bool:
 
     text = STYLE_RE.sub(f"/assets/style.css?v={style_version}", text)
     text = LEAD_FORM_RE.sub(f"/assets/lead-form.js?v={form_version}", text)
+    text = FORM_CONFIG_RE.sub(f"/assets/form-config.js?v={config_version}", text)
 
     if text != original:
         path.write_text(text, encoding="utf-8")
@@ -213,15 +218,18 @@ def main() -> None:
         raise SystemExit("Missing assets/lead-form.js")
     style_version = hashlib.sha256(STYLE_PATH.read_bytes()).hexdigest()[:12]
     form_version = hashlib.sha256(LEAD_FORM_PATH.read_bytes()).hexdigest()[:12]
+    if not FORM_CONFIG_PATH.is_file():
+        raise SystemExit("Missing assets/form-config.js")
+    config_version = hashlib.sha256(FORM_CONFIG_PATH.read_bytes()).hexdigest()[:12]
     changed = []
 
     for path in sorted(ROOT.rglob("*.html")):
         if any(part in {"templates", ".git", ".github"} for part in path.parts):
             continue
-        if sync_file(path, style_version, form_version):
+        if sync_file(path, style_version, form_version, config_version):
             changed.append(path.relative_to(ROOT).as_posix())
 
-    print(f"Shared IndexResearch RU/EN/CN chrome synchronized; CSS {style_version}, form JS {form_version}.")
+    print(f"Shared IndexResearch RU/EN/CN chrome synchronized; CSS {style_version}, form JS {form_version}, config {config_version}.")
     if changed:
         print("Updated:", ", ".join(changed))
     else:
