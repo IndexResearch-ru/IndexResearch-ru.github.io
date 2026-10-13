@@ -286,3 +286,14 @@ body.ir-modal-open{overflow:hidden!important}
   .ir-contact-lead{font-size:17px}
 }
 @media(max-width:400px){.ir-modal-overlay{padding:8px}.ir-modal{border-radius:12px;padding:30px 16px 24px}.ir-modal-title{font-size:26px}.ir-country-toggle{max-width:132px;padding:0 9px}}
+
+/* Native page sharing in the mobile header. */
+.mobile-share{display:none;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:0 12px;background:#fff;color:var(--brand);border:1px solid var(--line);border-radius:8px;white-space:nowrap;font:600 14px/1.2 Inter,Arial,sans-serif;cursor:pointer}
+.mobile-share svg{display:block;flex:0 0 20px}
+.mobile-share:hover{background:var(--soft);border-color:var(--brand)}
+.mobile-share:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.ir-share-notice{position:fixed;top:80px;right:16px;z-index:2000;max-width:calc(100vw - 32px);padding:10px 14px;background:var(--brand);color:#fff;border-radius:8px;box-shadow:0 8px 24px rgba(17,24,39,.2);font:600 14px/1.35 Inter,Arial,sans-serif;pointer-events:none}
+@media(max-width:900px){.mobile-share{display:inline-flex;margin-left:auto}.menu-mobile{margin-left:0}}
+@media(max-width:720px){.ir-share-notice{top:68px}}
+@media(max-width:520px){.mobile-share{width:40px;height:40px;padding:0;flex:0 0 40px}.mobile-share__label{display:none}}
+@media(max-width:360px){.nav{gap:7px}.brand{font-size:17px}.brand::before{width:30px;height:30px;flex-basis:30px}}
