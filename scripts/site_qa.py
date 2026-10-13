@@ -914,16 +914,16 @@ for path in html_paths:
         )
         if len(tags) != 1 or f'content="{expected}"' not in tags[0]:
             errors.append(f"{rel}: {prop} must be unique and equal {expected}.")
-    for name, expected in {
+    for meta_name, expected in {
         "twitter:card": "summary",
         "twitter:image": "https://indexresearch.ru/android-chrome-512x512.png",
     }.items():
         tags = re.findall(
-            rf'<meta\b(?=[^>]*\bname="{re.escape(name)}")[^>]*>',
+            rf'<meta\b(?=[^>]*\bname="{re.escape(meta_name)}")[^>]*>',
             text, re.I,
         )
         if len(tags) != 1 or f'content="{expected}"' not in tags[0]:
-            errors.append(f"{rel}: {name} must be unique and equal {expected}.")
+            errors.append(f"{rel}: {meta_name} must be unique and equal {expected}.")
 
     if "indexresearch-ru.github.io" in text:
         errors.append(f"{rel}: contains staging GitHub Pages hostname indexresearch-ru.github.io.")
