@@ -310,6 +310,13 @@ expected_style_version = (
     else None
 )
 
+navigation_file_for_hash = ROOT / "assets" / "navigation.js"
+expected_navigation_version = (
+    hashlib.sha256(navigation_file_for_hash.read_bytes()).hexdigest()[:12]
+    if navigation_file_for_hash.exists()
+    else None
+)
+
 def visible_text(fragment):
     fragment = re.sub(r"<[^>]+>", " ", fragment or "")
     return re.sub(r"\s+", " ", html_module.unescape(fragment)).strip()
@@ -733,6 +740,20 @@ for path in html_paths:
             errors.append(
                 f"{rel}: stylesheet cache version {style_href.group(1)!r} does not match {expected_style_version!r}."
             )
+
+    # A cached old navigation.js left mobile share buttons inert after deployment.
+    nav_includes = re.findall(
+        r'<script src="/assets/navigation\\.js\\?v=([^"]+)" defer></script>',
+        text,
+    )
+    if len(nav_includes) != 1:
+        errors.append(f"{rel}: exactly one versioned navigation.js script is required.")
+    elif expected_navigation_version and nav_includes[0] != expected_navigation_version:
+        errors.append(
+            f"{rel}: navigation.js cache version {nav_includes[0]!r} differs from {expected_navigation_version!r}."
+        )
+    if len(re.findall(r'\\bdata-share-page\\b', text)) != 1:
+        errors.append(f"{rel}: exactly one mobile share button is required.")
 
     if len(re.findall(r'<script src="/assets/analytics\.js" defer></script>', text)) != 1:
         errors.append(f"{rel}: must contain exactly one shared analytics.js include.")

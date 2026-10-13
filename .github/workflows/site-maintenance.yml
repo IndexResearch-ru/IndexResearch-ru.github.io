@@ -74,6 +74,9 @@ jobs:
             fi
           done
 
+      - name: Validate navigation JavaScript
+        run: node --check assets/navigation.js
+
       - name: Validate lead form JavaScript
         run: node --check assets/lead-form.js
 

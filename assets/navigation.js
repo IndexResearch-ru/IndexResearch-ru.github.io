@@ -42,12 +42,15 @@
     }
   };
 
+  // A direct click handler cannot be blocked by another element's bubbling listener.
+  document.querySelectorAll("[data-share-page]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      sharePage(button);
+    });
+  });
+
   document.addEventListener("click", (event) => {
-    const shareButton = event.target.closest("[data-share-page]");
-    if (shareButton) {
-      sharePage(shareButton);
-      return;
-    }
     const button = event.target.closest("[data-menu-toggle]");
     if (!button) return;
     const expanded = button.getAttribute("aria-expanded") === "true";

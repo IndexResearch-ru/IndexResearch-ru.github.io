@@ -10,6 +10,7 @@ from research_topics import render_topic_navigation
 
 ROOT = Path(__file__).resolve().parents[1]
 STYLE_PATH = ROOT / "assets" / "style.css"
+NAVIGATION_PATH = ROOT / "assets" / "navigation.js"
 LEAD_FORM_PATH = ROOT / "assets" / "lead-form.js"
 FORM_CONFIG_PATH = ROOT / "assets" / "form-config.js"
 
@@ -38,6 +39,7 @@ FOOTER_BLOCK_RE = re.compile(rf"{re.escape(FOOTER_START)}[\s\S]*?{re.escape(FOOT
 LEGACY_HEADER_RE = re.compile(r'<header class="top">[\s\S]*?</header>', re.I)
 LEGACY_FOOTER_RE = re.compile(r'<footer>[\s\S]*?</footer>', re.I)
 STYLE_RE = re.compile(r'/?assets/style\.css(?:\?v=[^"\']*)?')
+NAVIGATION_RE = re.compile(r'/?assets/navigation\.js(?:\?v=[^"\']*)?')
 LEAD_FORM_RE = re.compile(r'/?assets/lead-form\.js(?:\?v=[^"\']*)?')
 FORM_CONFIG_RE = re.compile(r'/?assets/form-config\.js(?:\?v=[^"\']*)?')
 HTML_LANG_RE = re.compile(r'<html\b[^>]*\blang=["\']([^"\']+)["\']', re.I)
@@ -107,6 +109,8 @@ def render_chrome(text: str) -> tuple[str, str]:
     header_path, footer_path = PARTIALS[lang]
     header = header_path.read_text(encoding="utf-8").strip()
     footer = footer_path.read_text(encoding="utf-8").strip()
+    navigation_version = hashlib.sha256(NAVIGATION_PATH.read_bytes()).hexdigest()[:12]
+    header = NAVIGATION_RE.sub(f"/assets/navigation.js?v={navigation_version}", header)
     form_version = hashlib.sha256(LEAD_FORM_PATH.read_bytes()).hexdigest()[:12]
     header = LEAD_FORM_RE.sub(f"/assets/lead-form.js?v={form_version}", header)
     config_version = hashlib.sha256(FORM_CONFIG_PATH.read_bytes()).hexdigest()[:12]
@@ -160,7 +164,7 @@ def ensure_no_translate(text: str) -> str:
 
     return text
 
-def sync_file(path: Path, style_version: str, form_version: str, config_version: str) -> bool:
+def sync_file(path: Path, style_version: str, navigation_version: str, form_version: str, config_version: str) -> bool:
     text = path.read_text(encoding="utf-8")
     original = text
     text = ensure_no_translate(text)
@@ -197,6 +201,7 @@ def sync_file(path: Path, style_version: str, form_version: str, config_version:
         raise SystemExit(f"{rel}: shared footer must appear exactly once")
 
     text = STYLE_RE.sub(f"/assets/style.css?v={style_version}", text)
+    text = NAVIGATION_RE.sub(f"/assets/navigation.js?v={navigation_version}", text)
     text = LEAD_FORM_RE.sub(f"/assets/lead-form.js?v={form_version}", text)
     text = FORM_CONFIG_RE.sub(f"/assets/form-config.js?v={config_version}", text)
 
@@ -213,10 +218,13 @@ def main() -> None:
                 raise SystemExit(f"Missing {lang} chrome partial: {path.relative_to(ROOT)}")
     if not STYLE_PATH.exists():
         raise SystemExit("Missing assets/style.css")
+    if not NAVIGATION_PATH.is_file():
+        raise SystemExit("Missing assets/navigation.js")
 
     if not LEAD_FORM_PATH.is_file():
         raise SystemExit("Missing assets/lead-form.js")
     style_version = hashlib.sha256(STYLE_PATH.read_bytes()).hexdigest()[:12]
+    navigation_version = hashlib.sha256(NAVIGATION_PATH.read_bytes()).hexdigest()[:12]
     form_version = hashlib.sha256(LEAD_FORM_PATH.read_bytes()).hexdigest()[:12]
     if not FORM_CONFIG_PATH.is_file():
         raise SystemExit("Missing assets/form-config.js")
@@ -226,10 +234,10 @@ def main() -> None:
     for path in sorted(ROOT.rglob("*.html")):
         if any(part in {"templates", ".git", ".github"} for part in path.parts):
             continue
-        if sync_file(path, style_version, form_version, config_version):
+        if sync_file(path, style_version, navigation_version, form_version, config_version):
             changed.append(path.relative_to(ROOT).as_posix())
 
-    print(f"Shared IndexResearch RU/EN/CN chrome synchronized; CSS {style_version}, form JS {form_version}, config {config_version}.")
+    print(f"Shared IndexResearch RU/EN/CN chrome synchronized; CSS {style_version}, navigation JS {navigation_version}, form JS {form_version}, config {config_version}.")
     if changed:
         print("Updated:", ", ".join(changed))
     else:
