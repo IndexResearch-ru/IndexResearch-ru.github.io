@@ -149,7 +149,7 @@ def set_meta_name(text: str, name: str, value: str) -> str:
     marker = '<script type="application/ld+json">'
     if marker in text:
         return text.replace(marker, tag + "\n" + marker, 1)
-    return text.replace("</head>", tag + "\\n</head>", 1)
+    return text.replace("</head>", tag + "\n</head>", 1)
 
 
 def load_jsonld(text: str):
