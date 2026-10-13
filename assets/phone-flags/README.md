@@ -1,0 +1,1 @@
+Local phone flags, downloaded from https://flagcdn.com/48x36/{iso2}.png on 2026-10-13. Displayed at 24 x 18 px. Only the default country and its eight neighbours each way load initially; remaining flags load on menu scroll. Legacy Mexico mobile code mb uses mx.png.

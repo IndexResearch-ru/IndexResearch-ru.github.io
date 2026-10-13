@@ -182,40 +182,33 @@
     return countryList().find(function(c){ return c.iso2 === iso; }) || countryList().find(function(c){ return c.iso2 === defaultIso; }) || countryList()[0];
   }
 
+  // Preload only the default country and its eight neighbours in each direction.
+  const preloadedFlags = new Map();
   function flagUrl(iso){
-    return 'https://flagcdn.com/' + iso + '.svg';
+    return '/assets/phone-flags/' + (iso === 'mb' ? 'mx' : iso) + '.png';
+  }
+  function defaultFlagCountries(){
+    const countries = countryList();
+    const index = countries.findIndex(function(country){ return country.iso2 === defaultIso; });
+    return countries.slice(Math.max(0,index - 8),index + 9);
+  }
+  function preloadDefaultFlags(){
+    defaultFlagCountries().forEach(function(country){
+      if(preloadedFlags.has(country.iso2)) return;
+      const image = new Image(24,18);
+      image.src = flagUrl(country.iso2);
+      preloadedFlags.set(country.iso2,image);
+    });
+  }
+  function loadFlag(image){
+    const source = image.dataset.flagSrc;
+    if(!source) return;
+    image.src = source;
+    delete image.dataset.flagSrc;
   }
 
-  function flagPngUrl(iso, width){
-    return 'https://flagcdn.com/' + width + 'x' + Math.round(width * .75) + '/' + iso + '.png';
-  }
-
-  function flagEmoji(iso){
-    const code = String(iso || '').toUpperCase();
-    if(!/^[A-Z]{2}$/.test(code)) return '🏳️';
-    return String.fromCodePoint(
-      127397 + code.charCodeAt(0),
-      127397 + code.charCodeAt(1)
-    );
-  }
-
-  function setFlagSource(img, iso, width){
-    if(!img) return;
-    let triedPng = false;
-    img.onerror = function(){
-      if(!triedPng){
-        triedPng = true;
-        img.src = flagPngUrl(iso,width);
-        return;
-      }
-      img.onerror = null;
-      const fallback = document.createElement('span');
-      fallback.className = 'ir-country-flag ir-country-flag-fallback';
-      fallback.setAttribute('aria-hidden','true');
-      fallback.textContent = flagEmoji(iso);
-      img.replaceWith(fallback);
-    };
-    img.src = flagUrl(iso);
+  function setFlagSource(image,iso){
+    if(image) image.src = flagUrl(iso);
   }
 
   function createPhoneField(formId){
@@ -240,6 +233,7 @@
     const input = field.querySelector('.ir-phone-input');
     const menu = field.querySelector('.ir-country-menu');
     let menuBuilt = false;
+    let flagObserver = null;
 
     function applyCountry(country, focusInput){
       selected = country;
@@ -280,15 +274,44 @@
         option.setAttribute('role','option');
         option.dataset.iso2 = country.iso2;
         option.innerHTML =
-          '<img class="ir-country-flag" alt="" width="24" height="18">' +
+          '<img class="ir-country-flag" alt="" width="24" height="18" data-flag-src="' + flagUrl(country.iso2) + '">' +
           '<span>' + country.name + '</span>' +
           '<span class="ir-country-option-code">' + country.dial + '</span>';
-        setFlagSource(option.querySelector('.ir-country-flag'),country.iso2,24);
+        if(preloadedFlags.has(country.iso2)) loadFlag(option.querySelector('.ir-country-flag'));
         option.addEventListener('click',function(){ applyCountry(country,true); });
         frag.appendChild(option);
       });
       menu.appendChild(frag);
     }
+
+    function observeMenuFlags(){
+      if(!menu.classList.contains('is-open')) return;
+      if(flagObserver) flagObserver.disconnect();
+      const pending = menu.querySelectorAll('img[data-flag-src]');
+      if('IntersectionObserver' in window){
+        flagObserver = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(!entry.isIntersecting || !menu.classList.contains('is-open')) return;
+            loadFlag(entry.target);
+            flagObserver.unobserve(entry.target);
+          });
+        },{root:menu,rootMargin:'320px 0px'});
+        pending.forEach(function(image){ flagObserver.observe(image); });
+      }else{
+        loadNearbyFlags();
+      }
+    }
+
+    // Old browsers use the same bounded loading window on scroll.
+    function loadNearbyFlags(){
+      if(!menu.classList.contains('is-open') || 'IntersectionObserver' in window) return;
+      const bounds = menu.getBoundingClientRect();
+      menu.querySelectorAll('img[data-flag-src]').forEach(function(image){
+        const rect = image.getBoundingClientRect();
+        if(rect.bottom >= bounds.top - 320 && rect.top <= bounds.bottom + 320) loadFlag(image);
+      });
+    }
+    menu.addEventListener('scroll',loadNearbyFlags,{passive:true});
 
     toggle.addEventListener('click',function(){
       buildMenu();
@@ -298,8 +321,10 @@
       if(open){
         const selectedOption = menu.querySelector('[data-iso2="' + selected.iso2 + '"]');
         if(selectedOption) setTimeout(function(){
+          if(!menu.classList.contains('is-open')) return;
           const targetTop = selectedOption.offsetTop - Math.max(0,(menu.clientHeight - selectedOption.offsetHeight) / 2);
           menu.scrollTop = Math.max(0,targetTop);
+          observeMenuFlags();
         },0);
       }
     });
@@ -757,6 +782,7 @@
     upgradeInlineForm();
   }
 
+  preloadDefaultFlags();
   const leadSection = ensureInlineShell();
   if(leadSection){
     // The inline form is lightweight: the country menu is still built lazily on first use.
