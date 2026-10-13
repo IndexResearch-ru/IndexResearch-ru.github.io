@@ -14,7 +14,11 @@ CATALOG_URL = f"{BASE}/ratings/"
 CATALOG_ID = f"{CATALOG_URL}#catalog"
 CATALOG_PATH = ROOT / "ratings" / "index.html"
 ORG_ID = f"{BASE}/#organization"
-LOGO_IMAGE = f"{BASE}/assets/indexresearch-logo-horizontal.png"
+# Shared Open Graph image: existing official 512x512 IR shield PNG.
+# The previous horizontal logo was 480x133, too short for reliable link thumbnails.
+LOGO_IMAGE = f"{BASE}/android-chrome-512x512.png"
+LOGO_WIDTH = "512"
+LOGO_HEIGHT = "512"
 NON_RESEARCH = {"index.html", "methodology.html", "404.html"}
 TOPIC_CONFIG = load_topic_config()
 TOPIC_BY_RESEARCH_ID = {
@@ -131,6 +135,21 @@ def set_meta_property(text: str, prop: str, value: str) -> str:
     if marker in text:
         return text.replace(marker, tag + "\n" + marker, 1)
     return text.replace("</head>", tag + "\n</head>", 1)
+
+
+
+def set_meta_name(text: str, name: str, value: str) -> str:
+    tag = f'<meta name="{name}" content="{html_module.escape(value, quote=True)}">'
+    pattern = re.compile(
+        rf'<meta\\b(?=[^>]*\\bname=["\\']{re.escape(name)}["\\'])[^>]*>',
+        re.I,
+    )
+    if pattern.search(text):
+        return pattern.sub(tag, text, count=1)
+    marker = '<script type="application/ld+json">'
+    if marker in text:
+        return text.replace(marker, tag + "\\n" + marker, 1)
+    return text.replace("</head>", tag + "\\n</head>", 1)
 
 
 def load_jsonld(text: str):
@@ -638,6 +657,36 @@ def normalize_localized_research_breadcrumbs(path: Path, lang: str) -> bool:
     return False
 
 
+
+def ensure_social_preview(path: Path) -> bool:
+    """Use the official IR emblem as a readable image when sharing any site page."""
+    text = path.read_text(encoding="utf-8")
+    original = text
+    lang = path.relative_to(ROOT).parts[0]
+    alt = (
+        "IndexResearch logo" if lang == "en"
+        else "IndexResearch 标志" if lang == "cn"
+        else "Логотип IndexResearch"
+    )
+    for prop, value in (
+        ("og:image", LOGO_IMAGE),
+        ("og:image:secure_url", LOGO_IMAGE),
+        ("og:image:type", "image/png"),
+        ("og:image:width", LOGO_WIDTH),
+        ("og:image:height", LOGO_HEIGHT),
+        ("og:image:alt", alt),
+    ):
+        text = set_meta_property(text, prop, value)
+    text = set_meta_name(text, "twitter:card", "summary")
+    text = set_meta_name(text, "twitter:image", LOGO_IMAGE)
+    text = set_meta_name(text, "twitter:image:alt", alt)
+
+    if text != original:
+        path.write_text(text, encoding="utf-8")
+        return True
+    return False
+
+
 def main() -> None:
     ratings_path = CATALOG_PATH
     if not ratings_path.exists():
@@ -655,6 +704,16 @@ def main() -> None:
         for path in sorted(language_root.glob("*.html")):
             if normalize_localized_research_breadcrumbs(path, lang):
                 changed.append(path.relative_to(ROOT).as_posix())
+
+    if not (ROOT / "android-chrome-512x512.png").is_file():
+        raise SystemExit("Official IR emblem for Open Graph is missing.")
+    for path in sorted(ROOT.rglob("*.html")):
+        if any(part in {".git", ".github", "templates"} for part in path.relative_to(ROOT).parts):
+            continue
+        if ensure_social_preview(path):
+            rel = path.relative_to(ROOT).as_posix()
+            if rel not in changed:
+                changed.append(rel)
 
     print(f"Site metadata normalized for {len(catalog_datasets)} catalog research pages.")
     print("Updated:", ", ".join(changed) if changed else "none")

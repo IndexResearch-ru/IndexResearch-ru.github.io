@@ -897,6 +897,34 @@ for path in html_paths:
         if count != 1:
             errors.append(f"{rel}: Open Graph property {prop} must appear exactly once; found {count}.")
 
+
+    # Share previews must use the actual high-resolution IR emblem, not
+    # the 480x133 horizontal logo, and must remain valid on all 3 languages.
+    preview_meta = {
+        "og:image": "https://indexresearch.ru/android-chrome-512x512.png",
+        "og:image:secure_url": "https://indexresearch.ru/android-chrome-512x512.png",
+        "og:image:type": "image/png",
+        "og:image:width": "512",
+        "og:image:height": "512",
+    }
+    for prop, expected in preview_meta.items():
+        tags = re.findall(
+            rf'<meta\\b(?=[^>]*\\bproperty=["\\']{re.escape(prop)}["\\'])[^>]*>',
+            text, re.I,
+        )
+        if len(tags) != 1 or f'content="{expected}"' not in tags[0]:
+            errors.append(f"{rel}: {prop} must be unique and equal {expected}.")
+    for name, expected in {
+        "twitter:card": "summary",
+        "twitter:image": "https://indexresearch.ru/android-chrome-512x512.png",
+    }.items():
+        tags = re.findall(
+            rf'<meta\\b(?=[^>]*\\bname=["\\']{re.escape(name)}["\\'])[^>]*>',
+            text, re.I,
+        )
+        if len(tags) != 1 or f'content="{expected}"' not in tags[0]:
+            errors.append(f"{rel}: {name} must be unique and equal {expected}.")
+
     if "indexresearch-ru.github.io" in text:
         errors.append(f"{rel}: contains staging GitHub Pages hostname indexresearch-ru.github.io.")
 
