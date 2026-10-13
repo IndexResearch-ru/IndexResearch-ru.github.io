@@ -909,7 +909,7 @@ for path in html_paths:
     }
     for prop, expected in preview_meta.items():
         tags = re.findall(
-            rf'<meta\\b(?=[^>]*\\bproperty=["\\']{re.escape(prop)}["\\'])[^>]*>',
+            rf'<meta\b(?=[^>]*\bproperty="{re.escape(prop)}")[^>]*>',
             text, re.I,
         )
         if len(tags) != 1 or f'content="{expected}"' not in tags[0]:
@@ -919,7 +919,7 @@ for path in html_paths:
         "twitter:image": "https://indexresearch.ru/android-chrome-512x512.png",
     }.items():
         tags = re.findall(
-            rf'<meta\\b(?=[^>]*\\bname=["\\']{re.escape(name)}["\\'])[^>]*>',
+            rf'<meta\b(?=[^>]*\bname="{re.escape(name)}")[^>]*>',
             text, re.I,
         )
         if len(tags) != 1 or f'content="{expected}"' not in tags[0]:

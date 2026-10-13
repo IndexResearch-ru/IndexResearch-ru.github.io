@@ -141,14 +141,14 @@ def set_meta_property(text: str, prop: str, value: str) -> str:
 def set_meta_name(text: str, name: str, value: str) -> str:
     tag = f'<meta name="{name}" content="{html_module.escape(value, quote=True)}">'
     pattern = re.compile(
-        rf'<meta\\b(?=[^>]*\\bname=["\\']{re.escape(name)}["\\'])[^>]*>',
+        rf'<meta\b(?=[^>]*\bname="{re.escape(name)}")[^>]*>',
         re.I,
     )
     if pattern.search(text):
         return pattern.sub(tag, text, count=1)
     marker = '<script type="application/ld+json">'
     if marker in text:
-        return text.replace(marker, tag + "\\n" + marker, 1)
+        return text.replace(marker, tag + "\n" + marker, 1)
     return text.replace("</head>", tag + "\\n</head>", 1)
 
 
