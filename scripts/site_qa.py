@@ -743,7 +743,7 @@ for path in html_paths:
 
     # A cached old navigation.js left mobile share buttons inert after deployment.
     nav_includes = re.findall(
-        r'<script src="/assets/navigation\\.js\\?v=([^"]+)" defer></script>',
+        r'<script src="/assets/navigation\.js\?v=([^"]+)" defer></script>',
         text,
     )
     if len(nav_includes) != 1:
@@ -752,7 +752,7 @@ for path in html_paths:
         errors.append(
             f"{rel}: navigation.js cache version {nav_includes[0]!r} differs from {expected_navigation_version!r}."
         )
-    if len(re.findall(r'\\bdata-share-page\\b', text)) != 1:
+    if len(re.findall(r'\bdata-share-page\b', text)) != 1:
         errors.append(f"{rel}: exactly one mobile share button is required.")
 
     if len(re.findall(r'<script src="/assets/analytics\.js" defer></script>', text)) != 1:
