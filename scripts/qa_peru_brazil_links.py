@@ -46,9 +46,10 @@ with sync_playwright() as p:
     info=a.evaluate("""a=>({raw:a.getAttribute('href'),abs:a.href,
        text:(a.textContent||a.querySelector('img')?.getAttribute('alt')||'').trim(),
        inCrumbs:!!a.closest('nav.breadcrumbs'),
-       isHeading:!!a.closest('h1,h2,h3,h4,h5,h6')&&!!a.classList.contains('anchor')})""")
+       isHeading:!!a.closest('h1,h2,h3,h4,h5,h6')&&!!a.classList.contains('anchor'),
+       isAutoImageZoom:!!a.querySelector('img')&&/\\/blob\\/main\\/assets\\/.+\\.(svg|png|jpg|webp)$/i.test(a.getAttribute('href')||'')})""")
     target=info["abs"] or ""
-    if not target.startswith(("http://","https://")) or info["raw"].startswith(("#","mailto:","tel:")) or info["inCrumbs"] or info["isHeading"]:
+    if not target.startswith(("http://","https://")) or info["raw"].startswith(("#","mailto:","tel:")) or info["inCrumbs"] or info["isHeading"] or info["isAutoImageZoom"]:
      continue
     normalized=urldefrag(target).url
     rows.append({"surface":name,"seq":k+1,"text":info["text"][:300],
@@ -71,11 +72,26 @@ with sync_playwright() as p:
    final=resp.url
    outcome="OK" if status<400 else ("UNKNOWN_ACCESS" if status in (401,403,406,408,429,451,503) else "BROKEN")
    statuses[target]={"status":status,"final_url":final,"result":outcome}
+   if outcome=="UNKNOWN_ACCESS" and status==429 and target.startswith("https://github.com/IndexResearch-ru/") and "/blob/main/" in target:
+    # GitHub occasionally throttles dozens of automated blob-page GETs.
+    # Verify the same Git blob through its public raw content, but do not call
+    # this a verification of the GitHub HTML redirect.
+    raw=target.replace("https://github.com/","https://raw.githubusercontent.com/",1).replace("/blob/main/","/main/",1)
+    try:
+     fallback=req.get(raw,timeout=15000,max_redirects=7,fail_on_status_code=False)
+     if fallback.status==200:
+      outcome="OK_RAW_FALLBACK"
+      statuses[target]={"status":429,"final_url":None,"result":outcome,
+                         "fallback_http":200,"raw_file":raw}
+    except Exception:
+     pass
    if outcome=="BROKEN":
     if host in internal_hosts:errors.append(f"Internal link failed: {status} {target} -> {final}")
     else:warn.append(f"External link returned {status}: {target}")
    elif outcome=="UNKNOWN_ACCESS":
     warn.append(f"Access restriction {status}: {target}")
+   elif outcome=="OK_RAW_FALLBACK":
+    warn.append(f"GitHub page rate-limited but raw Git blob verified: {target}")
   except Exception as exc:
    statuses[target]={"status":None,"final_url":None,"result":"UNKNOWN_TRANSPORT",
                      "error":str(exc)[:180]}
