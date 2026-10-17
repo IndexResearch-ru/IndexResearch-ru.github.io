@@ -1,0 +1,39 @@
+name: Peru Brazil research live QA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/peru-brazil-live-qa.yml"
+      - "scripts/qa_peru_brazil_public.py"
+      - "peru-brazil-private-tours-russian-agencies-2026.html"
+      - "en/peru-brazil-private-tours-russian-agencies-2026.html"
+      - "cn/peru-brazil-private-tours-russian-agencies-2026.html"
+
+permissions:
+  contents: read
+
+jobs:
+  public-render-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Chromium renderer
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Test public pages and GitHub READMEs at desktop and mobile widths
+        run: python scripts/qa_peru_brazil_public.py
+      - name: Save screenshots and structured QA report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: peru-brazil-live-qa
+          path: qa_artifacts/peru_brazil/
+          if-no-files-found: warn
+          retention-days: 7
