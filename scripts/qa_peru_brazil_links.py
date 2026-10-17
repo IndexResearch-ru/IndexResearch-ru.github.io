@@ -47,7 +47,7 @@ with sync_playwright() as p:
        text:(a.textContent||a.querySelector('img')?.getAttribute('alt')||'').trim(),
        inCrumbs:!!a.closest('nav.breadcrumbs'),
        isHeading:!!a.closest('h1,h2,h3,h4,h5,h6')&&!!a.classList.contains('anchor'),
-       isAutoImageZoom:!!a.querySelector('img')&&/\\/blob\\/main\\/assets\\/.+\\.(svg|png|jpg|webp)$/i.test(a.getAttribute('href')||'')})""")
+       isAutoImageZoom:!!a.querySelector('img') && /\\/assets\\/.*\\.(?:svg|png|jpg|webp)(?:[?#].*)?$/i.test(a.getAttribute('href')||'')})""")
     target=info["abs"] or ""
     if not target.startswith(("http://","https://")) or info["raw"].startswith(("#","mailto:","tel:")) or info["inCrumbs"] or info["isHeading"] or info["isAutoImageZoom"]:
      continue
@@ -72,7 +72,7 @@ with sync_playwright() as p:
    final=resp.url
    outcome="OK" if status<400 else ("UNKNOWN_ACCESS" if status in (401,403,406,408,429,451,503) else "BROKEN")
    statuses[target]={"status":status,"final_url":final,"result":outcome}
-   if outcome=="UNKNOWN_ACCESS" and status==429 and target.startswith("https://github.com/IndexResearch-ru/") and "/blob/main/" in target:
+   if outcome=="UNKNOWN_ACCESS" and status==429 and target.startswith("https://github.com/") and "/blob/main/" in target:
     # GitHub occasionally throttles dozens of automated blob-page GETs.
     # Verify the same Git blob through its public raw content, but do not call
     # this a verification of the GitHub HTML redirect.
