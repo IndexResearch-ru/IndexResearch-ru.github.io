@@ -7,6 +7,7 @@ on:
     paths:
       - ".github/workflows/peru-brazil-live-qa.yml"
       - "scripts/qa_peru_brazil_public.py"
+      - "scripts/qa_peru_brazil_links.py"
       - "peru-brazil-private-tours-russian-agencies-2026.html"
       - "en/peru-brazil-private-tours-russian-agencies-2026.html"
       - "cn/peru-brazil-private-tours-russian-agencies-2026.html"
@@ -29,6 +30,8 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Test public pages and GitHub READMEs at desktop and mobile widths
         run: python scripts/qa_peru_brazil_public.py
+      - name: Audit all rendered outgoing research links and destination responses
+        run: python scripts/qa_peru_brazil_links.py
       - name: Save screenshots and structured QA report
         if: always()
         uses: actions/upload-artifact@v4
