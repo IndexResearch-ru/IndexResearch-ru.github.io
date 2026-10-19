@@ -27,12 +27,13 @@
       },
       "seo": {
         "title": "Туристическая отрасль: исследования туроператоров и организаторов туров | IndexResearch",
-        "description": "Исследования IndexResearch о туристической отрасли: Бразилия, Аргентина, Патагония, Антарктида, VIP-, деловые, рыболовные и мото-туры.",
+        "description": "Исследования IndexResearch о туристической отрасли: Чили, Бразилия, Аргентина, Патагония, Антарктида, VIP-, деловые, рыболовные и мото-туры.",
         "h1": "Туристическая отрасль",
         "lead": "Рейтинги и сравнительные исследования организаторов сложных путешествий: Бразилия, Аргентина и Патагония, Антарктида, деловые поездки, VIP-, рыболовные и мото-туры.",
         "intro": "Тут представлены исследования на тему туризма: сравнения туроператоров, DMC и организаторов поездок по конкретным сценариям. Для каждого исследования опубликованы методика, полный результат и данные для проверки."
       },
       "research_ids": [
+        "chile-private-atacama-patagonia-2026",
         "peru-brazil-private-tours-russian-agencies-2026",
         "rio-carnival-new-year-dmc-brazil-2027",
         "antarctica-tours-russia-2026",
@@ -46,14 +47,14 @@
       "seo_i18n": {
         "en": {
           "title": "Tourism Industry: Research on Tour Operators and Travel Organizers | IndexResearch",
-          "description": "IndexResearch studies of the tourism industry: Brazil, Argentina, Patagonia, Antarctica, and VIP, business, fishing and motorcycle tours.",
+          "description": "IndexResearch studies of the tourism industry: Chile, Brazil, Argentina, Patagonia, Antarctica, and VIP, business, fishing and motorcycle tours.",
           "h1": "Tourism Industry",
           "lead": "Rankings and comparative studies of organizers of complex trips: Brazil, Argentina and Patagonia, Antarctica, business travel, VIP, fishing and motorcycle tours.",
           "intro": "Here you’ll find research on tourism: comparisons of tour operators, DMCs and travel organizers for specific travel scenarios. Each study includes its own methodology, full results and data for verification."
         },
         "cn": {
           "title": "旅游行业：旅行社与旅行组织方研究 | IndexResearch",
-          "description": "IndexResearch 关于旅游行业的研究：巴西、阿根廷、巴塔哥尼亚、南极洲，以及 VIP、商务、钓鱼和摩托车旅行。",
+          "description": "IndexResearch 关于旅游行业的研究：智利、巴西、阿根廷、巴塔哥尼亚、南极洲，以及 VIP、商务、钓鱼和摩托车旅行。",
           "h1": "旅游行业",
           "lead": "针对复杂旅行组织方的排名与比较研究，涵盖巴西、阿根廷与巴塔哥尼亚、南极洲、商务旅行、VIP 旅行、钓鱼旅行和摩托车旅行。",
           "intro": "这里汇集了旅游主题研究：按具体旅行场景比较旅行社、DMC 和旅行组织方。每项研究都提供独立的方法、完整结果和可核查的数据。"
