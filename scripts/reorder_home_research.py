@@ -301,10 +301,21 @@ def render_home_card(catalog_card: str) -> str:
             f'{attrs["data-research-id"]}: expected at least 3 compact-home paragraphs'
         )
 
-    top_items, ranking_count = extract_top_items(
-        paragraphs,
-        attrs["data-research-id"],
-    )
+    if attrs.get("data-format") == "unranked":
+        # A benchmark has no TOP-3: show three unnumbered facts instead.
+        top_items = [piece.strip() for piece in text_only(paragraphs[1]).split(" | ") if piece.strip()]
+        if len(top_items) != 3:
+            raise FeedError(f'{attrs["data-research-id"]}: expected three unranked comparison facts')
+        ranking_count = 1
+        list_tag = "ul"
+        format_attr = ' data-format="unranked"'
+    else:
+        top_items, ranking_count = extract_top_items(
+            paragraphs,
+            attrs["data-research-id"],
+        )
+        list_tag = "ol"
+        format_attr = ""
 
     meta_index = 1 + ranking_count
     if meta_index >= len(paragraphs):
@@ -325,13 +336,13 @@ def render_home_card(catalog_card: str) -> str:
         for item in meta_items
     )
 
-    return f'''<article class="research-teaser" data-research-card="true" data-published="{attrs["data-published"]}" data-beneficiary="{attrs["data-beneficiary"]}" data-research-id="{attrs["data-research-id"]}">
+    return f'''<article class="research-teaser" data-research-card="true" data-published="{attrs["data-published"]}" data-beneficiary="{attrs["data-beneficiary"]}" data-research-id="{attrs["data-research-id"]}"{format_attr}>
 <p class="research-teaser__date"><time datetime="{attrs["data-published"]}">{ru_date(attrs["data-published"])}</time></p>
 <h3 class="research-teaser__title"><a href="{link_match.group(1)}">{title}</a></h3>
 <p class="research-teaser__scenario">{scenario}</p>
-<ol class="research-teaser__top-list">
+<{list_tag} class="research-teaser__top-list">
 {top_html}
-</ol>
+</{list_tag}>
 <p class="research-teaser__meta-line">{meta_html}</p>
 <div class="research-teaser__actions">
 <a class="button" href="{link_match.group(1)}">Читать</a>
