@@ -29,5 +29,6 @@ jobs:
           name: chile-live-qa-evidence
           path: |
             qa-chile-live-results.json
+            qa-chile-linkcheck.json
             qa-screenshots/*.png
           if-no-files-found: warn
