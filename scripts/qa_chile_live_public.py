@@ -147,6 +147,53 @@ def verify_browser():
         check(False,'Playwright browser QA error: '+str(exc))
 
 
+
+
+def verify_github_browser():
+    from playwright.sync_api import sync_playwright
+    with sync_playwright() as pw:
+        browser=pw.chromium.launch(headless=True,args=['--no-sandbox'])
+        for lang,url in PUBLISHED_REPOS.items():
+            page=browser.new_page(viewport={'width':1366,'height':900})
+            response=page.goto(url,wait_until='domcontentloaded',timeout=45000)
+            page.wait_for_timeout(600)
+            report=page.evaluate("""() => ({tables: document.querySelectorAll('article.markdown-body table, .markdown-body table').length, images: document.querySelectorAll('article.markdown-body img, .markdown-body img').length, h1: [...document.querySelectorAll('article.markdown-body h1, .markdown-body h1')].map(el=>el.innerText).slice(0,2), bodyHasDisclosure: document.body.innerText.includes('GAEO')})""")
+            print(f'GITHUB_BROWSER {lang}: HTTP {response.status if response else 0}; {json.dumps(report,ensure_ascii=False)}',flush=True)
+            check(response is not None and response.status==200,f'GitHub {lang} visual HTTP')
+            check(report['tables']>=5,f'GitHub {lang}: rendered tables missing')
+            check(report['images']>=2 and report['bodyHasDisclosure'],f'GitHub {lang}: images or disclosure absent')
+            page.screenshot(path=f'qa-screenshots/github-{lang}.png',full_page=True)
+            page.close()
+        browser.close()
+
+
+def verify_author_links():
+    from urllib.parse import urljoin
+    link_groups={}
+    for lang,site in LANGS.items():
+        raw=fetch(f'https://raw.githubusercontent.com/IndexResearch-ru/chile-private-atacama-patagonia-2026'+('' if lang=='ru' else '-'+lang)+'/main/README.md', lang+' README source')
+        html=fetch(site,lang+' content link audit')
+        main=re.search(r'<main\b[\s\S]*?</main>',html,re.I)
+        block=main.group(0) if main else ''
+        html_links=[]
+        for match in re.finditer(r'<a\b[^>]*\bhref=["\']([^"\']+)["\'][^>]*>([\s\S]*?)</a>',block,re.I):
+            href=match.group(1)
+            if href in ['/', '/ratings/', '/ratings/tourism/', '/en/', '/en/ratings/', '/en/ratings/tourism/', '/cn/', '/cn/ratings/', '/cn/ratings/tourism/']:continue
+            if href.startswith('#') or href.startswith('mailto:'):continue
+            html_links.append(urljoin(site,href))
+        md_links=[]
+        for match in re.finditer(r'<a\b[^>]*\bhref=["\']([^"\']+)["\'][^>]*>',raw,re.I):md_links.append(match.group(1))
+        for match in re.finditer(r'(?<!!)\[([^\]\n]+)\]\(([^)\s]+)(?:\s+["\'][^"\']+["\'])?\)',raw):md_links.append(match.group(2))
+        bare=[]
+        for line in raw.splitlines():
+            if 'http' not in line or ('[' in line and '](' in line) or '<a ' in line or '<img ' in line:continue
+            for match in re.finditer(r'https?://[^\s<>]+',line):bare.append(match.group(0).rstrip('.,;'))
+        targets=html_links+md_links+bare
+        link_groups[lang]={'html':len(html_links),'readme':len(md_links)+len(bare),'unique':len(set(targets))}
+        check(len(targets)>=25,f'{lang} author links unexpectedly few')
+    print('AUTHOR_LINK_COUNTS '+json.dumps(link_groups,ensure_ascii=False),flush=True)
+    return link_groups
+
 def main():
     for lang,url in LANGS.items():verify_document(lang,url,fetch(url,lang+' research'))
     verify_lists()
@@ -154,6 +201,8 @@ def main():
     for lang,url in PUBLISHED_REPOS.items():fetch(url,lang+' GitHub repo')
     fetch(ROOT+'/robots.txt','robots.txt')
     verify_browser()
+    verify_github_browser()
+    verify_author_links()
     Path('qa-chile-live-results.json').write_text(json.dumps({'results':RESULTS,'errors':ERRORS},ensure_ascii=False,indent=2),encoding='utf-8')
     print('CHILE LIVE QA '+('FAILED: '+str(len(ERRORS)) if ERRORS else 'PASSED'),flush=True)
     return 1 if ERRORS else 0
