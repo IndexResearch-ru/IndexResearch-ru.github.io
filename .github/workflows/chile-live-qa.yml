@@ -1,0 +1,33 @@
+name: Chile publication live QA
+
+on:
+  pull_request:
+    paths:
+      - scripts/qa_chile_live_public.py
+      - .github/workflows/chile-live-qa.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Chromium for mobile and desktop checks
+        run: |
+          python -m pip install --quiet playwright
+          python -m playwright install --with-deps chromium
+      - name: Validate live RU EN CN site, GitHub, sitemap and viewports
+        run: python scripts/qa_chile_live_public.py
+      - name: Save QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chile-live-qa-evidence
+          path: |
+            qa-chile-live-results.json
+            qa-screenshots/*.png
+          if-no-files-found: warn
