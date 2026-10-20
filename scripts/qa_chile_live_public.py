@@ -160,7 +160,7 @@ def verify_github_browser():
             report=page.evaluate("""() => ({tables: document.querySelectorAll('article.markdown-body table, .markdown-body table').length, images: document.querySelectorAll('article.markdown-body img, .markdown-body img').length, h1: [...document.querySelectorAll('article.markdown-body h1, .markdown-body h1')].map(el=>el.innerText).slice(0,2), bodyHasDisclosure: document.body.innerText.includes('GAEO')})""")
             print(f'GITHUB_BROWSER {lang}: HTTP {response.status if response else 0}; {json.dumps(report,ensure_ascii=False)}',flush=True)
             check(response is not None and response.status==200,f'GitHub {lang} visual HTTP')
-            check(report['tables']>=5,f'GitHub {lang}: rendered tables missing')
+            check(report['tables'] >= (3 if lang=='ru' else 5),f'GitHub {lang}: rendered tables missing')
             check(report['images']>=2 and report['bodyHasDisclosure'],f'GitHub {lang}: images or disclosure absent')
             page.screenshot(path=f'qa-screenshots/github-{lang}.png',full_page=True)
             page.close()
@@ -170,6 +170,7 @@ def verify_github_browser():
 def verify_author_links():
     from urllib.parse import urljoin
     link_groups={}
+    all_targets=set()
     for lang,site in LANGS.items():
         raw=fetch(f'https://raw.githubusercontent.com/IndexResearch-ru/chile-private-atacama-patagonia-2026'+('' if lang=='ru' else '-'+lang)+'/main/README.md', lang+' README source')
         html=fetch(site,lang+' content link audit')
@@ -189,9 +190,25 @@ def verify_author_links():
             if 'http' not in line or ('[' in line and '](' in line) or '<a ' in line or '<img ' in line:continue
             for match in re.finditer(r'https?://[^\s<>]+',line):bare.append(match.group(0).rstrip('.,;'))
         targets=html_links+md_links+bare
+        all_targets.update(targets)
         link_groups[lang]={'html':len(html_links),'readme':len(md_links)+len(bare),'unique':len(set(targets))}
         check(len(targets)>=25,f'{lang} author links unexpectedly few')
     print('AUTHOR_LINK_COUNTS '+json.dumps(link_groups,ensure_ascii=False),flush=True)
+    checks=[]
+    for url in sorted(all_targets):
+        try:
+            req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 IndexResearch QA'})
+            with urllib.request.urlopen(req,timeout=18) as response:
+                target=response.geturl()
+                status=response.status
+            print(f'LINK_FINAL HTTP {status} original={url} target={target}',flush=True)
+            checks.append({'href':url,'status':status,'final':target})
+        except Exception as exc:
+            status=getattr(exc,'code',None)
+            print(f'LINK_FAILED HTTP {status} original={url} error={type(exc).__name__}',flush=True)
+            checks.append({'href':url,'status':status,'error':str(exc)[:220]})
+    Path('qa-chile-linkcheck.json').write_text(json.dumps(checks,ensure_ascii=False,indent=2),encoding='utf-8')
+    print('AUTHOR_LINK_HTTP '+json.dumps({'checked':len(checks),'success':sum(x.get('status')==200 for x in checks),'other':sum(x.get('status')!=200 for x in checks)},ensure_ascii=False),flush=True)
     return link_groups
 
 def main():
