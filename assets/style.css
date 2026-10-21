@@ -285,3 +285,41 @@ body.ir-modal-open{overflow:hidden!important}
 @media(max-width:720px){.ir-share-notice{top:68px}}
 @media(max-width:520px){.mobile-share{width:40px;height:40px;padding:0;flex:0 0 40px}.mobile-share__label{display:none}}
 @media(max-width:360px){.nav{gap:7px}.brand{font-size:17px}.brand::before{width:30px;height:30px;flex-basis:30px}}
+
+/* Pantanal-only: the 4 columns are ID, organizer, river days and private format.
+   Do not use the generic ranking card's score column on this unranked benchmark. */
+html[lang="zh-CN"] body{font-family:Inter,"Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei","PingFang SC",Arial,sans-serif}
+@media(max-width:720px){
+  .research-table--comparison-pantanal tr{
+    grid-template-columns:44px minmax(0,1fr);
+    grid-template-areas:"id operator" "river river" "private private";
+    gap:0 12px;
+    padding:15px 12px;
+  }
+  .research-table--comparison-pantanal td:nth-child(1){
+    grid-area:id;white-space:nowrap;align-self:start;padding:0;color:var(--muted);
+  }
+  .research-table--comparison-pantanal td:nth-child(2){
+    grid-area:operator;min-width:0;max-width:100%;padding:0;
+    font-weight:700;overflow-wrap:break-word;word-break:normal;text-align:left;
+  }
+  .research-table--comparison-pantanal td:nth-child(3){
+    grid-area:river;min-width:0;max-width:100%;
+    padding:12px 0 0;font-weight:400;color:var(--ink);text-align:left;white-space:normal;
+  }
+  .research-table--comparison-pantanal td:nth-child(4){
+    grid-area:private;min-width:0;max-width:100%;
+    padding:8px 0 0;font-weight:400;color:var(--muted);text-align:left;white-space:normal;
+  }
+  .research-table--comparison-pantanal td:nth-child(3)::before,
+  .research-table--comparison-pantanal td:nth-child(4)::before{
+    display:block;font-size:11px;font-weight:700;letter-spacing:.045em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:3px;
+  }
+  html[lang="ru"] .research-table--comparison-pantanal td:nth-child(3)::before{content:"Речные дни";}
+  html[lang="ru"] .research-table--comparison-pantanal td:nth-child(4)::before{content:"Частный формат";}
+  html[lang="en"] .research-table--comparison-pantanal td:nth-child(3)::before{content:"River days";}
+  html[lang="en"] .research-table--comparison-pantanal td:nth-child(4)::before{content:"Private format";}
+  html[lang="zh-CN"] .research-table--comparison-pantanal td:nth-child(3)::before{content:"河上天数";}
+  html[lang="zh-CN"] .research-table--comparison-pantanal td:nth-child(4)::before{content:"私人船只安排";}
+}
