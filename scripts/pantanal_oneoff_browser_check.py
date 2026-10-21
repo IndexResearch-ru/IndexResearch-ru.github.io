@@ -39,6 +39,7 @@ def evaluate_site(page):
       documentWidth: document.documentElement.scrollWidth,
       h1: document.querySelectorAll('main h1').length,
       rows: document.querySelectorAll('.research-table--ranking tbody tr').length,
+      operatorWidths: [...document.querySelectorAll('.research-table--ranking tbody tr td:nth-child(2)')].map(el => Math.round(el.getBoundingClientRect().width)),
       faq: document.querySelectorAll('main details summary').length,
       tableWrappers: [...document.querySelectorAll('.research-table-wrap')].map(el => ({
         clientWidth: el.clientWidth, scrollWidth: el.scrollWidth
@@ -63,7 +64,9 @@ with sync_playwright() as p:
                 rec.update(evaluate_site(page))
                 rec["overflow"] = rec["documentWidth"] > rec["pageWidth"]+2
                 rec["tableOverflow"] = any(x["scrollWidth"]>x["clientWidth"]+2 for x in rec["tableWrappers"])
-                checks=[rec["http"]==200,rec["h1"]==1,rec["rows"]==15,rec["faq"]==9,rec["lang"]==lang,not rec["overflow"],not rec["tableOverflow"],not rec["brokenImages"]]
+                rec["minOperatorWidth"] = min(rec["operatorWidths"]) if rec["operatorWidths"] else 0
+                rec["operatorWidthsReadable"] = width>412 or rec["minOperatorWidth"]>=160
+                checks=[rec["http"]==200,rec["h1"]==1,rec["rows"]==15,rec["faq"]==9,rec["lang"]==lang,not rec["overflow"],not rec["tableOverflow"],rec["operatorWidthsReadable"],not rec["brokenImages"]]
                 rec["pass"] = all(checks)
                 if width == 390:
                     rec["topScreenshotBytes"] = screenshot_jpg(page,label+"-top-390")
