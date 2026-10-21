@@ -3,6 +3,7 @@
 import base64
 import json
 import os
+import shutil
 from pathlib import Path
 from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeout
 
@@ -48,7 +49,7 @@ def evaluate_site(page):
     })""")
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+    browser = p.chromium.launch(headless=True, executable_path=(shutil.which("google-chrome") or shutil.which("chromium")), args=["--no-sandbox", "--disable-dev-shm-usage"])
     for label,url,lang in SITES:
         for width in [360,390,412,1440]:
             page = browser.new_page(viewport={"width":width,"height":950}, device_scale_factor=1)
