@@ -604,5 +604,157 @@
     ],
     "desktop_width": 1440
   },
+  "linkAudit": [
+    {
+      "url": "https://adatours.com/pantanal-wildlife-photography-trip-2026",
+      "status": 200,
+      "finalUrl": "https://adatours.com/pantanal-wildlife-photography-trip-2026",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026-cn",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026-cn",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026-en",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026-en",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/CONFLICT_OF_INTEREST.md",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/CONFLICT_OF_INTEREST.md",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/FACT_CLAIM_MAP.csv",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/FACT_CLAIM_MAP.csv",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/FAQ_DATA.json",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/FAQ_DATA.json",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/LIMITATIONS.md",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/LIMITATIONS.md",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/METHODOLOGY.md",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/METHODOLOGY.md",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/OBSERVATION_MATRIX.csv",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/OBSERVATION_MATRIX.csv",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/QUESTION_TO_METRIC_MAP.csv",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/QUESTION_TO_METRIC_MAP.csv",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/RESULTS.json",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/RESULTS.json",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/SOURCE_REGISTER.csv",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/SOURCE_REGISTER.csv",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/SPONSORSHIP_DISCLOSURE.md",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/SPONSORSHIP_DISCLOSURE.md",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/verify_data.py",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/verify_data.py",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/rating-methodology",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/rating-methodology",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/chile-private-atacama-patagonia-2026.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/chile-private-atacama-patagonia-2026.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/cn/methodology.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/cn/methodology.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/cn/pantanal-jaguar-safari-2026.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/cn/pantanal-jaguar-safari-2026.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/en/methodology.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/en/methodology.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/en/pantanal-jaguar-safari-2026.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/en/pantanal-jaguar-safari-2026.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/methodology.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/methodology.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/pantanal-jaguar-safari-2026.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/pantanal-jaguar-safari-2026.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/peru-brazil-private-tours-russian-agencies-2026.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/peru-brazil-private-tours-russian-agencies-2026.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://www.nature.com/articles/s41598-024-72906-x",
+      "status": 200,
+      "finalUrl": "https://www.nature.com/articles/s41598-024-72906-x?error=cookies_not_supported&code=e602e219-eb75-44d6-b8ae-72e424682b83",
+      "method": "HTTP GET with redirects"
+    }
+  ],
   "passed": true
 }
