@@ -109,6 +109,25 @@ with sync_playwright() as p:
             rec["pass"]=False;rec["error"]=str(ex)[:600];result["errors"].append("GitHub navigation: "+label+": "+str(ex)[:160])
         result["readmes"].append(rec);page.close()
     browser.close()
+
+# Follow each distinct published authored target once. Do not conflate HTTP errors with absent links.
+from concurrent.futures import ThreadPoolExecutor
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError
+TARGET_URLS = json.loads("[\"https://adatours.com/pantanal-wildlife-photography-trip-2026\",\"https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026\",\"https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026-cn\",\"https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026-en\",\"https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/CONFLICT_OF_INTEREST.md\",\"https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/FACT_CLAIM_MAP.csv\",\"https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/FAQ_DATA.json\",\"https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/LIMITATIONS.md\",\"https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/METHODOLOGY.md\",\"https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/OBSERVATION_MATRIX.csv\",\"https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/QUESTION_TO_METRIC_MAP.csv\",\"https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/RESULTS.json\",\"https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/SOURCE_REGISTER.csv\",\"https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/SPONSORSHIP_DISCLOSURE.md\",\"https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/verify_data.py\",\"https://github.com/IndexResearch-ru/rating-methodology\",\"https://indexresearch.ru/chile-private-atacama-patagonia-2026.html\",\"https://indexresearch.ru/cn/methodology.html\",\"https://indexresearch.ru/cn/pantanal-jaguar-safari-2026.html\",\"https://indexresearch.ru/en/methodology.html\",\"https://indexresearch.ru/en/pantanal-jaguar-safari-2026.html\",\"https://indexresearch.ru/methodology.html\",\"https://indexresearch.ru/pantanal-jaguar-safari-2026.html\",\"https://indexresearch.ru/peru-brazil-private-tours-russian-agencies-2026.html\",\"https://www.nature.com/articles/s41598-024-72906-x\"]")
+def check_authored_target(url):
+    req=Request(url,headers={"User-Agent":"Mozilla/5.0 (compatible; IndexResearchQA/1.0)"},method="GET")
+    try:
+        with urlopen(req,timeout=18) as response:
+            return {"url":url,"status":response.getcode(),"finalUrl":response.geturl(),"method":"HTTP GET with redirects"}
+    except HTTPError as e:
+        return {"url":url,"status":e.code,"finalUrl":e.geturl(),"method":"HTTP GET; HTTPError","error":str(e)[:200]}
+    except Exception as e:
+        return {"url":url,"status":None,"finalUrl":None,"method":"HTTP GET","error":str(e)[:220]}
+with ThreadPoolExecutor(max_workers=5) as executor:
+    result["linkAudit"]=list(executor.map(check_authored_target,TARGET_URLS))
+print("Link audit results:",len(result["linkAudit"]),"targets, statuses:",[(v["status"]) for v in result["linkAudit"]])
+
 result["passed"]=not result["errors"]
 (OUT/"results.json").write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding="utf-8")
 print(json.dumps({"passed":result["passed"],"siteTests":len(result["sites"]),"readmeTests":len(result["readmes"]),"errors":result["errors"][:12]},ensure_ascii=False))
