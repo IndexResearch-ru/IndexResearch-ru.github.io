@@ -1,0 +1,760 @@
+{
+  "sites": [
+    {
+      "page": "ru-site",
+      "url": "https://indexresearch.ru/pantanal-jaguar-safari-2026.html",
+      "viewport": 360,
+      "http": 200,
+      "pageWidth": 360,
+      "documentWidth": 360,
+      "h1": 1,
+      "rows": 15,
+      "operatorWidths": [
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252
+      ],
+      "faq": 9,
+      "tableWrappers": [
+        {
+          "clientWidth": 332,
+          "scrollWidth": 332
+        },
+        {
+          "clientWidth": 332,
+          "scrollWidth": 332
+        }
+      ],
+      "brokenImages": [],
+      "canonical": "https://indexresearch.ru/pantanal-jaguar-safari-2026.html",
+      "lang": "ru",
+      "overflow": false,
+      "tableOverflow": false,
+      "minOperatorWidth": 252,
+      "operatorWidthsReadable": true,
+      "pass": true
+    },
+    {
+      "page": "ru-site",
+      "url": "https://indexresearch.ru/pantanal-jaguar-safari-2026.html",
+      "viewport": 390,
+      "http": 200,
+      "pageWidth": 390,
+      "documentWidth": 390,
+      "h1": 1,
+      "rows": 15,
+      "operatorWidths": [
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282
+      ],
+      "faq": 9,
+      "tableWrappers": [
+        {
+          "clientWidth": 362,
+          "scrollWidth": 362
+        },
+        {
+          "clientWidth": 362,
+          "scrollWidth": 362
+        }
+      ],
+      "brokenImages": [],
+      "canonical": "https://indexresearch.ru/pantanal-jaguar-safari-2026.html",
+      "lang": "ru",
+      "overflow": false,
+      "tableOverflow": false,
+      "minOperatorWidth": 282,
+      "operatorWidthsReadable": true,
+      "pass": true,
+      "topScreenshotBytes": 45404,
+      "tableScreenshotBytes": 45664
+    },
+    {
+      "page": "ru-site",
+      "url": "https://indexresearch.ru/pantanal-jaguar-safari-2026.html",
+      "viewport": 412,
+      "http": 200,
+      "pageWidth": 412,
+      "documentWidth": 412,
+      "h1": 1,
+      "rows": 15,
+      "operatorWidths": [
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304
+      ],
+      "faq": 9,
+      "tableWrappers": [
+        {
+          "clientWidth": 384,
+          "scrollWidth": 384
+        },
+        {
+          "clientWidth": 384,
+          "scrollWidth": 384
+        }
+      ],
+      "brokenImages": [],
+      "canonical": "https://indexresearch.ru/pantanal-jaguar-safari-2026.html",
+      "lang": "ru",
+      "overflow": false,
+      "tableOverflow": false,
+      "minOperatorWidth": 304,
+      "operatorWidthsReadable": true,
+      "pass": true
+    },
+    {
+      "page": "ru-site",
+      "url": "https://indexresearch.ru/pantanal-jaguar-safari-2026.html",
+      "viewport": 1440,
+      "http": 200,
+      "pageWidth": 1440,
+      "documentWidth": 1440,
+      "h1": 1,
+      "rows": 15,
+      "operatorWidths": [
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161,
+        161
+      ],
+      "faq": 9,
+      "tableWrappers": [
+        {
+          "clientWidth": 1120,
+          "scrollWidth": 1120
+        },
+        {
+          "clientWidth": 1120,
+          "scrollWidth": 1120
+        }
+      ],
+      "brokenImages": [],
+      "canonical": "https://indexresearch.ru/pantanal-jaguar-safari-2026.html",
+      "lang": "ru",
+      "overflow": false,
+      "tableOverflow": false,
+      "minOperatorWidth": 161,
+      "operatorWidthsReadable": true,
+      "pass": true
+    },
+    {
+      "page": "en-site",
+      "url": "https://indexresearch.ru/en/pantanal-jaguar-safari-2026.html",
+      "viewport": 360,
+      "http": 200,
+      "pageWidth": 360,
+      "documentWidth": 360,
+      "h1": 1,
+      "rows": 15,
+      "operatorWidths": [
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252
+      ],
+      "faq": 9,
+      "tableWrappers": [
+        {
+          "clientWidth": 332,
+          "scrollWidth": 332
+        },
+        {
+          "clientWidth": 332,
+          "scrollWidth": 332
+        }
+      ],
+      "brokenImages": [],
+      "canonical": "https://indexresearch.ru/en/pantanal-jaguar-safari-2026.html",
+      "lang": "en",
+      "overflow": false,
+      "tableOverflow": false,
+      "minOperatorWidth": 252,
+      "operatorWidthsReadable": true,
+      "pass": true
+    },
+    {
+      "page": "en-site",
+      "url": "https://indexresearch.ru/en/pantanal-jaguar-safari-2026.html",
+      "viewport": 390,
+      "http": 200,
+      "pageWidth": 390,
+      "documentWidth": 390,
+      "h1": 1,
+      "rows": 15,
+      "operatorWidths": [
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282
+      ],
+      "faq": 9,
+      "tableWrappers": [
+        {
+          "clientWidth": 362,
+          "scrollWidth": 362
+        },
+        {
+          "clientWidth": 362,
+          "scrollWidth": 362
+        }
+      ],
+      "brokenImages": [],
+      "canonical": "https://indexresearch.ru/en/pantanal-jaguar-safari-2026.html",
+      "lang": "en",
+      "overflow": false,
+      "tableOverflow": false,
+      "minOperatorWidth": 282,
+      "operatorWidthsReadable": true,
+      "pass": true,
+      "topScreenshotBytes": 46249,
+      "tableScreenshotBytes": 46961
+    },
+    {
+      "page": "en-site",
+      "url": "https://indexresearch.ru/en/pantanal-jaguar-safari-2026.html",
+      "viewport": 412,
+      "http": 200,
+      "pageWidth": 412,
+      "documentWidth": 412,
+      "h1": 1,
+      "rows": 15,
+      "operatorWidths": [
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304
+      ],
+      "faq": 9,
+      "tableWrappers": [
+        {
+          "clientWidth": 384,
+          "scrollWidth": 384
+        },
+        {
+          "clientWidth": 384,
+          "scrollWidth": 384
+        }
+      ],
+      "brokenImages": [],
+      "canonical": "https://indexresearch.ru/en/pantanal-jaguar-safari-2026.html",
+      "lang": "en",
+      "overflow": false,
+      "tableOverflow": false,
+      "minOperatorWidth": 304,
+      "operatorWidthsReadable": true,
+      "pass": true
+    },
+    {
+      "page": "en-site",
+      "url": "https://indexresearch.ru/en/pantanal-jaguar-safari-2026.html",
+      "viewport": 1440,
+      "http": 200,
+      "pageWidth": 1440,
+      "documentWidth": 1440,
+      "h1": 1,
+      "rows": 15,
+      "operatorWidths": [
+        166,
+        166,
+        166,
+        166,
+        166,
+        166,
+        166,
+        166,
+        166,
+        166,
+        166,
+        166,
+        166,
+        166,
+        166
+      ],
+      "faq": 9,
+      "tableWrappers": [
+        {
+          "clientWidth": 1120,
+          "scrollWidth": 1120
+        },
+        {
+          "clientWidth": 1120,
+          "scrollWidth": 1120
+        }
+      ],
+      "brokenImages": [],
+      "canonical": "https://indexresearch.ru/en/pantanal-jaguar-safari-2026.html",
+      "lang": "en",
+      "overflow": false,
+      "tableOverflow": false,
+      "minOperatorWidth": 166,
+      "operatorWidthsReadable": true,
+      "pass": true
+    },
+    {
+      "page": "cn-site",
+      "url": "https://indexresearch.ru/cn/pantanal-jaguar-safari-2026.html",
+      "viewport": 360,
+      "http": 200,
+      "pageWidth": 360,
+      "documentWidth": 360,
+      "h1": 1,
+      "rows": 15,
+      "operatorWidths": [
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252
+      ],
+      "faq": 9,
+      "tableWrappers": [
+        {
+          "clientWidth": 332,
+          "scrollWidth": 332
+        },
+        {
+          "clientWidth": 332,
+          "scrollWidth": 332
+        }
+      ],
+      "brokenImages": [],
+      "canonical": "https://indexresearch.ru/cn/pantanal-jaguar-safari-2026.html",
+      "lang": "zh-CN",
+      "overflow": false,
+      "tableOverflow": false,
+      "minOperatorWidth": 252,
+      "operatorWidthsReadable": true,
+      "pass": true
+    },
+    {
+      "page": "cn-site",
+      "url": "https://indexresearch.ru/cn/pantanal-jaguar-safari-2026.html",
+      "viewport": 390,
+      "http": 200,
+      "pageWidth": 390,
+      "documentWidth": 390,
+      "h1": 1,
+      "rows": 15,
+      "operatorWidths": [
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282,
+        282
+      ],
+      "faq": 9,
+      "tableWrappers": [
+        {
+          "clientWidth": 362,
+          "scrollWidth": 362
+        },
+        {
+          "clientWidth": 362,
+          "scrollWidth": 362
+        }
+      ],
+      "brokenImages": [],
+      "canonical": "https://indexresearch.ru/cn/pantanal-jaguar-safari-2026.html",
+      "lang": "zh-CN",
+      "overflow": false,
+      "tableOverflow": false,
+      "minOperatorWidth": 282,
+      "operatorWidthsReadable": true,
+      "pass": true,
+      "topScreenshotBytes": 52598,
+      "tableScreenshotBytes": 43787
+    },
+    {
+      "page": "cn-site",
+      "url": "https://indexresearch.ru/cn/pantanal-jaguar-safari-2026.html",
+      "viewport": 412,
+      "http": 200,
+      "pageWidth": 412,
+      "documentWidth": 412,
+      "h1": 1,
+      "rows": 15,
+      "operatorWidths": [
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304,
+        304
+      ],
+      "faq": 9,
+      "tableWrappers": [
+        {
+          "clientWidth": 384,
+          "scrollWidth": 384
+        },
+        {
+          "clientWidth": 384,
+          "scrollWidth": 384
+        }
+      ],
+      "brokenImages": [],
+      "canonical": "https://indexresearch.ru/cn/pantanal-jaguar-safari-2026.html",
+      "lang": "zh-CN",
+      "overflow": false,
+      "tableOverflow": false,
+      "minOperatorWidth": 304,
+      "operatorWidthsReadable": true,
+      "pass": true
+    },
+    {
+      "page": "cn-site",
+      "url": "https://indexresearch.ru/cn/pantanal-jaguar-safari-2026.html",
+      "viewport": 1440,
+      "http": 200,
+      "pageWidth": 1440,
+      "documentWidth": 1440,
+      "h1": 1,
+      "rows": 15,
+      "operatorWidths": [
+        199,
+        199,
+        199,
+        199,
+        199,
+        199,
+        199,
+        199,
+        199,
+        199,
+        199,
+        199,
+        199,
+        199,
+        199
+      ],
+      "faq": 9,
+      "tableWrappers": [
+        {
+          "clientWidth": 1120,
+          "scrollWidth": 1120
+        },
+        {
+          "clientWidth": 1120,
+          "scrollWidth": 1120
+        }
+      ],
+      "brokenImages": [],
+      "canonical": "https://indexresearch.ru/cn/pantanal-jaguar-safari-2026.html",
+      "lang": "zh-CN",
+      "overflow": false,
+      "tableOverflow": false,
+      "minOperatorWidth": 199,
+      "operatorWidthsReadable": true,
+      "pass": true
+    }
+  ],
+  "readmes": [
+    {
+      "page": "ru-gh",
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026",
+      "http": 200,
+      "markdownFound": true,
+      "imgCount": 4,
+      "brokenImages": [],
+      "sections": 25,
+      "pass": true,
+      "topScreenshotBytes": 62670
+    },
+    {
+      "page": "en-gh",
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026-en",
+      "http": 200,
+      "markdownFound": true,
+      "imgCount": 4,
+      "brokenImages": [],
+      "sections": 31,
+      "pass": true,
+      "topScreenshotBytes": 0
+    },
+    {
+      "page": "cn-gh",
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026-cn",
+      "http": 200,
+      "markdownFound": true,
+      "imgCount": 4,
+      "brokenImages": [],
+      "sections": 31,
+      "pass": true,
+      "topScreenshotBytes": 0
+    }
+  ],
+  "errors": [],
+  "notes": [],
+  "checks": {
+    "mobile_widths": [
+      360,
+      390,
+      412
+    ],
+    "desktop_width": 1440
+  },
+  "linkAudit": [
+    {
+      "url": "https://adatours.com/pantanal-wildlife-photography-trip-2026",
+      "status": 200,
+      "finalUrl": "https://adatours.com/pantanal-wildlife-photography-trip-2026",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026-cn",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026-cn",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026-en",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026-en",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/CONFLICT_OF_INTEREST.md",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/CONFLICT_OF_INTEREST.md",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/FACT_CLAIM_MAP.csv",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/FACT_CLAIM_MAP.csv",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/FAQ_DATA.json",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/FAQ_DATA.json",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/LIMITATIONS.md",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/LIMITATIONS.md",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/METHODOLOGY.md",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/METHODOLOGY.md",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/OBSERVATION_MATRIX.csv",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/OBSERVATION_MATRIX.csv",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/QUESTION_TO_METRIC_MAP.csv",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/QUESTION_TO_METRIC_MAP.csv",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/RESULTS.json",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/RESULTS.json",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/SOURCE_REGISTER.csv",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/SOURCE_REGISTER.csv",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/SPONSORSHIP_DISCLOSURE.md",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/SPONSORSHIP_DISCLOSURE.md",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/verify_data.py",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/pantanal-jaguar-safari-2026/blob/main/verify_data.py",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://github.com/IndexResearch-ru/rating-methodology",
+      "status": 200,
+      "finalUrl": "https://github.com/IndexResearch-ru/rating-methodology",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/chile-private-atacama-patagonia-2026.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/chile-private-atacama-patagonia-2026.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/cn/methodology.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/cn/methodology.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/cn/pantanal-jaguar-safari-2026.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/cn/pantanal-jaguar-safari-2026.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/en/methodology.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/en/methodology.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/en/pantanal-jaguar-safari-2026.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/en/pantanal-jaguar-safari-2026.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/methodology.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/methodology.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/pantanal-jaguar-safari-2026.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/pantanal-jaguar-safari-2026.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://indexresearch.ru/peru-brazil-private-tours-russian-agencies-2026.html",
+      "status": 200,
+      "finalUrl": "https://indexresearch.ru/peru-brazil-private-tours-russian-agencies-2026.html",
+      "method": "HTTP GET with redirects"
+    },
+    {
+      "url": "https://www.nature.com/articles/s41598-024-72906-x",
+      "status": 200,
+      "finalUrl": "https://www.nature.com/articles/s41598-024-72906-x?error=cookies_not_supported&code=e602e219-eb75-44d6-b8ae-72e424682b83",
+      "method": "HTTP GET with redirects"
+    }
+  ],
+  "passed": true
+}
