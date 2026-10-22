@@ -1,0 +1,122 @@
+name: IndexResearch email delivery verification
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/indexresearch-email-route-check.yml
+      - assets/form-config.js
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-cloud-mail:
+    if: github.event_name == 'push' && github.event.head_commit.message == 'Check original IndexResearch Postbox handler before restoring email' && github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify original Yandex Cloud endpoint and send one labelled test lead
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime, timedelta, timezone
+          from urllib.request import Request, urlopen
+          from urllib.error import HTTPError
+
+          endpoint = "https://functions.yandexcloud.net/d4eaafpp43sdjkas0nn9"
+          origin = "https://indexresearch.ru"
+
+          def call(request):
+              try:
+                  with urlopen(request, timeout=20) as response:
+                      return response.status, dict(response.headers), response.read().decode("utf-8")
+              except HTTPError as exc:
+                  print("Cloud Function returned HTTP", exc.code)
+                  raise
+
+          status, headers, _ = call(Request(
+              endpoint,
+              method="OPTIONS",
+              headers={
+                "Origin": origin,
+                "Access-Control-Request-Method": "POST",
+                "Access-Control-Request-Headers": "Content-Type"
+              }
+          ))
+          print("CORS preflight status:", status)
+          assert status == 204
+          assert headers.get("Access-Control-Allow-Origin") == origin
+
+          now = datetime.now(timezone.utc)
+          iso = lambda x: x.isoformat().replace("+00:00", "Z")
+          payload = {
+              "site": "indexresearch",
+              "lang": "ru",
+              "full_name": "AUTOTEST INDEXRESEARCH EMAIL 2026-10-22",
+              "phone": "",
+              "phone_country": "",
+              "email": "research@indexresearch.ru",
+              "contact_method": "email",
+              "comment": "Тест восстановления доставки заявок IndexResearch на почту. Это не клиентская заявка.",
+              "entity_id": "email-restore-qa-20261022",
+              "canonical_url": "https://indexresearch.ru/",
+              "company_website": "",
+              "page_url": "https://indexresearch.ru/",
+              "referrer": "",
+              "utm": {},
+              "form_started_at": iso(now - timedelta(seconds=30)),
+              "submitted_at": iso(now)
+          }
+          status, _, body = call(Request(
+              endpoint,
+              data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+              method="POST",
+              headers={"Origin": origin, "Content-Type": "application/json"}
+          ))
+          print("Submission status:", status)
+          assert status == 200 and json.loads(body).get("ok") is True
+          print("POSTBOX_SUBMISSION_ACCEPTED: Yandex Cloud Function accepted the test lead and reported email dispatch.")
+          PY
+  verify-live-route:
+    if: github.event_name == 'push' && github.event.head_commit.message == 'Restore IndexResearch form email delivery via Yandex Cloud'
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Verify RU EN CN production pages load the restored endpoint
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re
+          import time
+          from urllib.request import Request, urlopen
+          from urllib.parse import urljoin
+
+          expected = "https://functions.yandexcloud.net/d4eaafpp43sdjkas0nn9"
+          paths = ["/", "/en/", "/cn/"]
+
+          def download(url):
+              with urlopen(Request(url, headers={"Cache-Control":"no-cache"}), timeout=20) as response:
+                  assert response.status == 200
+                  return response.read().decode("utf-8")
+
+          for attempt in range(18):
+              try:
+                  config_urls = set()
+                  for path in paths:
+                      html = download("https://indexresearch.ru" + path)
+                      assert "/assets/lead-form.js" in html, path + ": no lead form script"
+                      match = re.search(r"/assets/form-config[.]js[?]v=[a-f0-9]+", html)
+                      assert match, path + ": no versioned config"
+                      config_urls.add(urljoin("https://indexresearch.ru", match.group()))
+                  assert len(config_urls) == 1, "RU/EN/CN are not serving one common form configuration"
+                  config = download(config_urls.pop())
+                  assert expected in config, "Old backup endpoint is still in production"
+                  assert "forms-backup.indexresearch.ru" not in config
+                  print("LIVE_EMAIL_ROUTE_PASS: RU, EN and CN IndexResearch pages use Yandex Cloud Postbox.")
+                  break
+              except Exception as exc:
+                  print("Attempt", attempt + 1, "pending:", type(exc).__name__, str(exc)[:180])
+                  if attempt == 17:
+                      raise
+                  time.sleep(12)
+          PY
