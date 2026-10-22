@@ -96,3 +96,22 @@ jobs:
       - name: Submit all URLs to IndexNow manually
         if: github.event_name == 'workflow_dispatch'
         run: python scripts/indexnow_submit.py --all
+
+  costa-rica-live-qa-temporary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Chromium
+        run: |
+          python -m pip install --quiet playwright
+          python -m playwright install --with-deps chromium
+      - name: Check live RU EN CN and Github READMEs
+        run: python scripts/qa_costa_rica_public_20261022.py
+      - name: Upload Costa Rica screenshots and QA summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: costa-rica-temp-live-qa
+          path: qa_artifacts/costa_rica/
+          if-no-files-found: warn
