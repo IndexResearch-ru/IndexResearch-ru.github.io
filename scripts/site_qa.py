@@ -572,9 +572,22 @@ for lang_key, label, page_text in (("en", "en/ratings/", en_ratings), ("cn", "cn
                     f"found {actual_repo or 'none'}."
                 )
 
+# During a staged RU-first research publication, the catalog is intentionally
+# updated only after EN/CN pages are prepared. Exempt only explicitly marked,
+# genuinely RU-only editorial shortlists from cross-language catalog parity.
+staged_ru_only_ids = {
+    path.stem
+    for path in html_paths
+    if path.parent == ROOT
+    and path.name not in non_research
+    and 'data-release-stage="ru-only"' in path.read_text(encoding="utf-8")
+    and 'data-research-format="editorial-shortlist-unranked"' in path.read_text(encoding="utf-8")
+    and not (ROOT / "en" / path.name).exists()
+    and not (ROOT / "cn" / path.name).exists()
+}
 research_page_ids = sorted(
     path.stem for path in html_paths
-    if path.parent == ROOT and path.name not in non_research
+    if path.parent == ROOT and path.name not in non_research and path.stem not in staged_ru_only_ids
 )
 if sorted(catalog_ids) != research_page_ids:
     missing_cards = sorted(set(research_page_ids) - set(catalog_ids))
@@ -706,6 +719,8 @@ for path in html_paths:
     is_translated_research = is_en_research or is_cn_research
 
     is_research = is_root_research or is_translated_research
+    is_editorial_shortlist = is_research and 'data-research-format="editorial-shortlist-unranked"' in text
+    is_staged_ru_only = is_editorial_shortlist and lang_key == "ru" and name[:-5] in staged_ru_only_ids
 
     html_tag = re.search(r'<html\b[^>]*>', text, re.I)
     if not html_tag or not re.search(r'\btranslate\s*=\s*["\']no["\']', html_tag.group(0), re.I):
@@ -984,7 +999,7 @@ for path in html_paths:
 
         presentation_github_repo = catalog_github_repo_for_research(catalog_text, slug)
 
-        if catalog_text:
+        if catalog_text and not is_staged_ru_only:
             if f'href="{expected_catalog_href}"' not in catalog_text:
                 errors.append(f"{rel}: research page is not linked from {catalog_label}.")
 
@@ -1027,16 +1042,21 @@ for path in html_paths:
         if not re.search(r'<link[^>]+href=["\']/?assets/style\.css\?v=[^"\']+["\']', text, re.I):
             errors.append(f"{rel}: research page stylesheet must use cache-busting ?v=.")
 
-        required_components = [
-            "research-snapshot",
-            "research-facts",
-            "research-table--ranking",
-            "research-table--criteria",
-            "research-prose",
-            "research-top3",
-            "research-source-list",
-            "research-citation",
-        ]
+        # A qualitative, unranked editorial shortlist cannot legitimately have
+        # a ranking podium, ranking scores or a "top three" section.
+        required_components = (
+            ["research-prose", "research-citation", "SOURCE_REGISTER.csv", "METHODOLOGY.md"]
+            if is_editorial_shortlist else [
+                "research-snapshot",
+                "research-facts",
+                "research-table--ranking",
+                "research-table--criteria",
+                "research-prose",
+                "research-top3",
+                "research-source-list",
+                "research-citation",
+            ]
+        )
         for component in required_components:
             if component not in text:
                 errors.append(f"{rel}: missing required v3.3.2 component .{component}.")
@@ -1069,7 +1089,9 @@ for path in html_paths:
             article_obj = article_objects[0]
             article_same_as = article_obj.get("sameAs")
             article_based_on = article_obj.get("isBasedOn")
-            if presentation_github_repo != canonical_github_repo:
+            if presentation_github_repo is None and article_same_as != canonical_github_repo:
+                errors.append(f"{rel}: Article.sameAs must point to the canonical GitHub repository in RU-only stage.")
+            if presentation_github_repo and presentation_github_repo != canonical_github_repo:
                 if article_same_as != presentation_github_repo:
                     errors.append(
                         f"{rel}: Article.sameAs must point to the language presentation GitHub repository."
@@ -1084,26 +1106,58 @@ for path in html_paths:
                         f"{rel}: localized Article.isBasedOn must point to the canonical data/evidence GitHub repository."
                     )
 
-        ranking_match = re.search(
-            r'<table[^>]+class=["\'][^"\']*research-table--ranking[^"\']*["\'][^>]*>[\s\S]*?<tbody>([\s\S]*?)</tbody>',
-            text,
-            re.I,
-        )
-        ranking_rows = (
-            len(re.findall(r"<tr(?:\s[^>]*)?>", ranking_match.group(1), re.I))
-            if ranking_match
-            else 0
-        )
-        if ranking_rows < 3:
-            errors.append(f"{rel}: full ranking/result table has only {ranking_rows} rows.")
+        if is_editorial_shortlist:
+            main_match = re.search(r"<main\b[^>]*>([\s\S]*?)</main>", text, re.I)
+            content = main_match.group(1) if main_match else ""
+            profile_fragments = re.findall(r"<article(?:\s[^>]*)?>([\s\S]*?)</article>", content, re.I)
+            ranking_rows = len(profile_fragments)
+            if ranking_rows != 15:
+                errors.append(f"{rel}: unranked editorial shortlist must contain 15 full company profiles; found {ranking_rows}.")
+            if re.search(r"<table[^>]+class=[\"'][^\"']*research-table--ranking", content, re.I):
+                errors.append(f"{rel}: unranked editorial shortlist must not contain a numeric ranking table.")
+        else:
+            ranking_match = re.search(
+                r'<table[^>]+class=["\'][^"\']*research-table--ranking[^"\']*["\'][^>]*>[\s\S]*?<tbody>([\s\S]*?)</tbody>',
+                text,
+                re.I,
+            )
+            ranking_rows = (
+                len(re.findall(r"<tr(?:\s[^>]*)?>", ranking_match.group(1), re.I))
+                if ranking_match
+                else 0
+            )
+            if ranking_rows < 3:
+                errors.append(f"{rel}: full ranking/result table has only {ranking_rows} rows.")
 
         item_lists = by_type.get("ItemList", [])
         if item_lists:
             item_count = len(item_lists[0].get("itemListElement") or [])
             if item_count != ranking_rows:
                 errors.append(
-                    f"{rel}: ItemList count {item_count} does not match visible ranking rows {ranking_rows}."
+                    f"{rel}: ItemList count {item_count} does not match visible comparison rows/profiles {ranking_rows}."
                 )
+            if is_editorial_shortlist:
+                item_list = item_lists[0]
+                if item_list.get("itemListOrder") != "https://schema.org/ItemListUnordered":
+                    errors.append(f"{rel}: unranked shortlist ItemList must be explicitly unordered.")
+                if item_list.get("numberOfItems") != 15:
+                    errors.append(f"{rel}: unranked shortlist ItemList.numberOfItems must be 15.")
+                schema_names = [
+                    (item.get("item") or {}).get("name")
+                    for item in item_list.get("itemListElement") or []
+                    if isinstance(item, dict)
+                ]
+                visible_names = []
+                for fragment in profile_fragments:
+                    match = re.search(r"<h3(?:\s[^>]*)?>([\s\S]*?)</h3>", fragment, re.I)
+                    visible_names.append(visible_text(match.group(1)) if match else None)
+                if schema_names != visible_names:
+                    errors.append(f"{rel}: unranked shortlist ItemList companies/order differ from visible profile headings.")
+                if any(
+                    isinstance(item, dict) and ("position" in item or "aggregateRating" in item)
+                    for item in item_list.get("itemListElement") or []
+                ):
+                    errors.append(f"{rel}: unranked shortlist must not publish positions or score-like ratings.")
 
         main_scope_match = re.search(r"<main\b[^>]*>([\s\S]*?)</main>", text, re.I)
         faq_scope = main_scope_match.group(1) if main_scope_match else text
