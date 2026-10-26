@@ -992,6 +992,21 @@ for path in html_paths:
     if is_research:
         slug = name[:-5]
         canonical_github_repo = f"https://github.com/IndexResearch-ru/{slug}"
+        # Staged RU-only editorial guides may keep their auditable evidence
+        # in the site repository until a dedicated research repository exists.
+        # This exception requires real, published evidence files and never
+        # applies to completed multilingual releases or numeric rankings.
+        staged_evidence = ROOT / "research-data" / slug
+        if (
+            is_staged_ru_only
+            and (staged_evidence / "RESULTS.json").is_file()
+            and (staged_evidence / "SOURCE_REGISTER.csv").is_file()
+            and (staged_evidence / "EDITORIAL_COMPARISON.csv").is_file()
+        ):
+            canonical_github_repo = (
+                f"https://github.com/IndexResearch-ru/IndexResearch-ru.github.io"
+                f"/tree/main/research-data/{slug}"
+            )
 
         catalog_text = LOCALIZED_RATINGS[lang_key]
         expected_catalog_href = localized_href(name, lang_key)
@@ -1192,7 +1207,7 @@ for path in html_paths:
                 errors.append(f"{rel}: Dataset.distribution must expose SOURCE_REGISTER.csv.")
             if not any(
                 candidate in dataset_dump
-                for candidate in ["SCORE_MATRIX.csv", "OBSERVATION_MATRIX.csv", "CURRENT_RECHECK.csv"]
+                for candidate in ["SCORE_MATRIX.csv", "OBSERVATION_MATRIX.csv", "CURRENT_RECHECK.csv"] + (["EDITORIAL_COMPARISON.csv"] if is_editorial_shortlist else [])
             ):
                 errors.append(f"{rel}: Dataset.distribution must expose SCORE_MATRIX.csv or an equivalent matrix.")
 
