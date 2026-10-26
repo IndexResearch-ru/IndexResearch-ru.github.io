@@ -1230,15 +1230,22 @@ for path in html_paths:
                     f"{rel}: {translated_label} ranking scores differ from the RU canonical research page."
                 )
 
-            ru_ranking_match = re.search(
-                r'<table[^>]+class=["\'][^"\']*research-table--ranking[^"\']*["\'][^>]*>[\s\S]*?<tbody>([\s\S]*?)</tbody>',
-                ru_text,
-                re.I,
-            )
-            ru_ranking_rows = (
-                len(re.findall(r"<tr(?:\s[^>]*)?>", ru_ranking_match.group(1), re.I))
-                if ru_ranking_match else 0
-            )
+            if is_editorial_shortlist:
+                ru_main_match = re.search(r"<main\b[^>]*>([\s\S]*?)</main>", ru_text, re.I)
+                ru_main = ru_main_match.group(1) if ru_main_match else ""
+                ru_ranking_rows = len(
+                    re.findall(r"<article(?:\s[^>]*)?>[\s\S]*?</article>", ru_main, re.I)
+                )
+            else:
+                ru_ranking_match = re.search(
+                    r'<table[^>]+class=["\'][^"\']*research-table--ranking[^"\']*["\'][^>]*>[\s\S]*?<tbody>([\s\S]*?)</tbody>',
+                    ru_text,
+                    re.I,
+                )
+                ru_ranking_rows = (
+                    len(re.findall(r"<tr(?:\s[^>]*)?>", ru_ranking_match.group(1), re.I))
+                    if ru_ranking_match else 0
+                )
             if ranking_rows != ru_ranking_rows:
                 errors.append(
                     f"{rel}: visible ranking row count {ranking_rows} differs from RU canonical {ru_ranking_rows}."
