@@ -1,6 +1,8 @@
 # 15 принимающих компаний Рио для индивидуальных туров на Карнавал и Новый год: гид по выбору, 2026–2027
 
-[![IndexResearch](https://indexresearch.ru/assets/indexresearch-logo-horizontal-safe.svg)](https://indexresearch.ru/rio-private-carnival-new-year-dmc-guide-2027.html)
+<p align="left"><a href="https://indexresearch.ru/rio-private-carnival-new-year-dmc-guide-2027.html" title="15 принимающих компаний Рио для индивидуальных туров на Карнавал и Новый год: гид по выбору, 2026–2027"><img src="https://raw.githubusercontent.com/IndexResearch-ru/IndexResearch-ru.github.io/main/assets/indexresearch-logo-horizontal-safe.svg" width="240" alt="IndexResearch"></a></p>
+
+**Языковые версии:** RU · [English](https://github.com/IndexResearch-ru/IndexResearch-ru.github.io/blob/main/research-data/rio-private-carnival-new-year-dmc-guide-2027/en/README.md) · [简体中文](https://github.com/IndexResearch-ru/IndexResearch-ru.github.io/blob/main/research-data/rio-private-carnival-new-year-dmc-guide-2027/cn/README.md). **Исходные данные и доказательства:** [единый каталог материалов](https://github.com/IndexResearch-ru/IndexResearch-ru.github.io/tree/main/research-data/rio-private-carnival-new-year-dmc-guide-2027).
 
 **Публичная русская страница:** https://indexresearch.ru/rio-private-carnival-new-year-dmc-guide-2027.html  
 **Методика:** [METHODOLOGY.md](METHODOLOGY.md) · **Источники:** [SOURCE_REGISTER.csv](SOURCE_REGISTER.csv) · **Связи утверждений:** [FACT_CLAIM_MAP.csv](FACT_CLAIM_MAP.csv) · **Сравнение:** [EDITORIAL_COMPARISON.csv](EDITORIAL_COMPARISON.csv)
@@ -322,7 +324,7 @@
 
 Ada Tours — клиент GAEO; GAEO связана с одним из основателей IndexResearch. Информация об источнике финансирования конкретно этого выпуска отсутствует. Оценка основана на опубликованных описаниях, а не на независимых поездках, договорах, контрольных закупках или аудитах исполнения. Исторические и информационные публикации о праздниках не равны подтвержденному предложению на сезон 2026/27.
 
-Ранее опубликованный [рейтинг операторов праздничного Рио](https://github.com/IndexResearch-ru/rio-carnival-new-year-dmc-brazil-2027) посвящен другому исследовательскому вопросу и использует собственную методику. Его оценки не использованы в этом редакционном гиде. Публикации Sostav и TenChat по теме ADA-T015 также не рассматриваются как независимое подтверждение рекомендаций.
+Ранее опубликованный [рейтинг операторов праздничного Рио](https://indexresearch.ru/rio-carnival-new-year-dmc-brazil-2027.html) посвящен другому исследовательскому вопросу и использует собственную методику. Его оценки не использованы в этом редакционном гиде. Публикации Sostav и TenChat по теме ADA-T015 также не рассматриваются как независимое подтверждение рекомендаций.
 
 ## Частые вопросы
 

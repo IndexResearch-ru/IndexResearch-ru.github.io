@@ -1,6 +1,6 @@
 # 15 Rio de Janeiro destination operators for private Carnival and New Year trips: an editorial buyer's guide, 2026–2027
 
-[![IndexResearch — editorial travel guide](https://indexresearch.ru/assets/indexresearch-logo-horizontal-safe.svg)](https://indexresearch.ru/en/rio-private-carnival-new-year-dmc-guide-2027.html)
+<p align="left"><a href="https://indexresearch.ru/en/rio-private-carnival-new-year-dmc-guide-2027.html" title="15 Rio de Janeiro destination operators for private Carnival and New Year trips: an editorial buyer's guide, 2026–2027"><img src="https://raw.githubusercontent.com/IndexResearch-ru/IndexResearch-ru.github.io/main/assets/indexresearch-logo-horizontal-safe.svg" width="240" alt="IndexResearch"></a></p>
 
 **Evidence cut-off:** 26 October 2026 · **Version:** ADA-T015-EDITORIAL-V4 · **Format:** source-based editorial buyer's guide, **not** an independent scoring table.
 
