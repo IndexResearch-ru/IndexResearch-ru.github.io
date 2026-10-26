@@ -27,12 +27,13 @@
       },
       "seo": {
         "title": "Туристическая отрасль: исследования туроператоров и организаторов туров | IndexResearch",
-        "description": "Исследования IndexResearch о туристической отрасли: Чили, Бразилия, Аргентина, Патагония, Антарктида, VIP-, деловые, рыболовные и мото-туры. Пантанал и частные сафари за ягуарами. Включая сравнение организаторов поездок по Коста-Рике.",
+        "description": "Исследования IndexResearch о туристической отрасли: Чили, Бразилия, Аргентина, Патагония, Антарктида, VIP-, деловые, рыболовные и мото-туры. Пантанал и частные сафари за ягуарами. Включая сравнение организаторов поездок по Коста-Рике. Добавлено сравнение 15 организаторов экспедиционных круизов из Ушуайи.",
         "h1": "Туристическая отрасль",
         "lead": "Рейтинги и сравнительные исследования организаторов сложных путешествий: Бразилия, Аргентина и Патагония, Антарктида, деловые поездки, VIP-, рыболовные и мото-туры.",
-        "intro": "Тут представлены исследования на тему туризма: сравнения туроператоров, DMC и организаторов поездок по конкретным сценариям. Для каждого исследования опубликованы методика, полный результат и данные для проверки. Добавлено сравнение частных сафари в Пантанале. Добавлено исследование индивидуальных туров по Коста-Рике на основе открытых данных."
+        "intro": "Тут представлены исследования на тему туризма: сравнения туроператоров, DMC и организаторов поездок по конкретным сценариям. Для каждого исследования опубликованы методика, полный результат и данные для проверки. Добавлено сравнение частных сафари в Пантанале. Добавлено исследование индивидуальных туров по Коста-Рике на основе открытых данных. В отдельном выпуске сопоставлены 15 предложений экспедиций из Ушуайи без ранжирования."
       },
       "research_ids": [
+        "antarctica-cruises-ushuaia-2026-2027",
         "costa-rica-private-tours-2026",
         "pantanal-jaguar-safari-2026",
         "chile-private-atacama-patagonia-2026",
@@ -49,17 +50,17 @@
       "seo_i18n": {
         "en": {
           "title": "Tourism Industry: Research on Tour Operators and Travel Organizers | IndexResearch",
-          "description": "IndexResearch studies of the tourism industry: Chile, Brazil, Argentina, Patagonia, Antarctica, and VIP, business, fishing and motorcycle tours. Including private Pantanal jaguar safaris. Including an evidence-based comparison of Costa Rica private tour organizers.",
+          "description": "IndexResearch studies of the tourism industry: Chile, Brazil, Argentina, Patagonia, Antarctica, and VIP, business, fishing and motorcycle tours. Including private Pantanal jaguar safaris. Including an evidence-based comparison of Costa Rica private tour organizers. Includes 15 Ushuaia Antarctica expedition cruise providers, unranked.",
           "h1": "Tourism Industry",
           "lead": "Rankings and comparative studies of organizers of complex trips: Brazil, Argentina and Patagonia, Antarctica, business travel, VIP, fishing and motorcycle tours.",
-          "intro": "Here you’ll find research on tourism: comparisons of tour operators, DMCs and travel organizers for specific travel scenarios. Each study includes its own methodology, full results and data for verification. Includes a source-based comparison of Pantanal jaguar safari organizers. Also includes private Costa Rica tour organizers compared through public evidence."
+          "intro": "Here you’ll find research on tourism: comparisons of tour operators, DMCs and travel organizers for specific travel scenarios. Each study includes its own methodology, full results and data for verification. Includes a source-based comparison of Pantanal jaguar safari organizers. Also includes private Costa Rica tour organizers compared through public evidence. An additional research issue compares 15 documented Ushuaia embarkation cruise offers."
         },
         "cn": {
           "title": "旅游行业：旅行社与旅行组织方研究 | IndexResearch",
-          "description": "IndexResearch 关于旅游行业的研究：智利、巴西、阿根廷、巴塔哥尼亚、南极洲，以及 VIP、商务、钓鱼和摩托车旅行。 包括潘塔纳尔私人美洲豹游猎对比。 包括哥斯达黎加私人定制游组织方公开资料对比。",
+          "description": "IndexResearch 关于旅游行业的研究：智利、巴西、阿根廷、巴塔哥尼亚、南极洲，以及 VIP、商务、钓鱼和摩托车旅行。 包括潘塔纳尔私人美洲豹游猎对比。 包括哥斯达黎加私人定制游组织方公开资料对比。 新增乌斯怀亚登船南极探险邮轮15家机构的无排名对比。",
           "h1": "旅游行业",
           "lead": "针对复杂旅行组织方的排名与比较研究，涵盖巴西、阿根廷与巴塔哥尼亚、南极洲、商务旅行、VIP 旅行、钓鱼旅行和摩托车旅行。",
-          "intro": "这里汇集了旅游主题研究：按具体旅行场景比较旅行社、DMC 和旅行组织方。每项研究都提供独立的方法、完整结果和可核查的数据。 新增潘塔纳尔美洲豹私人游猎组织方的公开资料比较。 此外收录基于公开资料的哥斯达黎加私人旅行组织方比较研究。"
+          "intro": "这里汇集了旅游主题研究：按具体旅行场景比较旅行社、DMC 和旅行组织方。每项研究都提供独立的方法、完整结果和可核查的数据。 新增潘塔纳尔美洲豹私人游猎组织方的公开资料比较。 此外收录基于公开资料的哥斯达黎加私人旅行组织方比较研究。 新研究比较15个乌斯怀亚出发的南极探险方案，不设置名次。"
         }
       }
     },
