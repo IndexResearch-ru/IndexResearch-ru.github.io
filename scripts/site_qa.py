@@ -62,34 +62,7 @@ PRESENTATION_REPO_EXCEPTIONS = {
 }
 
 
-STAGED_MULTILINGUAL_EDITORIAL_ID = "rio-private-carnival-new-year-dmc-guide-2027"
-
-
-def staged_multilingual_editorial_evidence_exists(research_id: str) -> bool:
-    """A narrow, temporary exception while the ADA-T015 repositories are being created."""
-    if research_id != STAGED_MULTILINGUAL_EDITORIAL_ID:
-        return False
-    folder = ROOT / "research-data" / research_id
-    required = (
-        "README.md", "en/README.md", "cn/README.md",
-        "RESULTS.json", "SOURCE_REGISTER.csv", "EDITORIAL_COMPARISON.csv",
-    )
-    if not all((folder / name).is_file() for name in required):
-        return False
-    for prefix in ("", "en/", "cn/"):
-        page = ROOT / prefix / f"{research_id}.html"
-        if not page.is_file() or 'data-research-format="editorial-shortlist-unranked"' not in page.read_text(encoding="utf-8"):
-            return False
-    return True
-
-
 def expected_presentation_github_repo(research_id: str, lang_key: str) -> str:
-    if staged_multilingual_editorial_evidence_exists(research_id):
-        prefix = "" if lang_key == "ru" else f"{lang_key}/"
-        return (
-            "https://github.com/IndexResearch-ru/IndexResearch-ru.github.io"
-            f"/blob/main/research-data/{research_id}/{prefix}README.md"
-        )
     if lang_key == "ru":
         repo_name = research_id
     else:
@@ -1019,13 +992,11 @@ for path in html_paths:
     if is_research:
         slug = name[:-5]
         canonical_github_repo = f"https://github.com/IndexResearch-ru/{slug}"
-        # Temporary staging: the original RU-only release or the specifically
-        # verified ADA-T015 multilingual editorial release may use a shared
-        # evidence directory until dedicated GitHub repositories exist.
-        # This does not exempt other multilingual releases or numeric rankings.
+        # Only explicitly RU-only staged editorial studies can use a shared
+        # evidence directory before dedicated repositories exist.
         staged_evidence = ROOT / "research-data" / slug
         if (
-            (is_staged_ru_only or staged_multilingual_editorial_evidence_exists(slug))
+            is_staged_ru_only
             and (staged_evidence / "RESULTS.json").is_file()
             and (staged_evidence / "SOURCE_REGISTER.csv").is_file()
             and (staged_evidence / "EDITORIAL_COMPARISON.csv").is_file()
