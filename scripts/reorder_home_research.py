@@ -301,14 +301,14 @@ def render_home_card(catalog_card: str) -> str:
             f'{attrs["data-research-id"]}: expected at least 3 compact-home paragraphs'
         )
 
-    if attrs.get("data-format") == "unranked":
+    if attrs.get("data-format") in ("unranked", "editorial"):
         # A benchmark has no TOP-3: show three unnumbered facts instead.
         top_items = [piece.strip() for piece in text_only(paragraphs[1]).split(" | ") if piece.strip()]
         if len(top_items) != 3:
             raise FeedError(f'{attrs["data-research-id"]}: expected three unranked comparison facts')
         ranking_count = 1
         list_tag = "ul"
-        format_attr = ' data-format="unranked"'
+        format_attr = f' data-format="{attrs["data-format"]}"'
     else:
         top_items, ranking_count = extract_top_items(
             paragraphs,
