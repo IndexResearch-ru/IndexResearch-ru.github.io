@@ -46,9 +46,10 @@ with sync_playwright() as p:
        info=anchors.nth(i).evaluate("""a=>({raw:a.getAttribute('href'),abs:a.href,
        text:(a.textContent||a.querySelector('img')?.getAttribute('alt')||'').trim(),
        inCrumbs:!!a.closest('nav.breadcrumbs'),
-       autoAnchor:!!a.classList.contains('anchor')})""")
+       autoAnchor:!!a.classList.contains('anchor'),
+       imageZoom:!!a.querySelector('img') && /\\/assets\\/.*\\.(?:svg|png|jpg|webp)(?:[?#].*)?$/i.test(a.getAttribute('href')||'')})""")
        raw=info["raw"] or "";target=info["abs"] or ""
-       if not target.startswith(("http://","https://")) or raw.startswith(("#","mailto:","tel:")) or info["inCrumbs"] or info["autoAnchor"]:continue
+       if not target.startswith(("http://","https://")) or raw.startswith(("#","mailto:","tel:")) or info["inCrumbs"] or info["autoAnchor"] or info["imageZoom"]:continue
        links.append({"surface":kind+"/"+lang,"seq":len([x for x in links if x["surface"]==kind+"/"+lang])+1,
                      "anchor":info["text"][:250],"href_as_rendered":raw,"target":urldefrag(target).url})
      results.append({"surface":label,"status":status,"title":page.title(),"content_chars":len(content)})
