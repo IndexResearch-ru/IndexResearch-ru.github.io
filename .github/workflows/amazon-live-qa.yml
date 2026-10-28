@@ -1,0 +1,36 @@
+name: Amazon private tours live QA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/amazon-live-qa.yml"
+      - "scripts/qa_amazon_live.py"
+
+permissions:
+  contents: read
+
+jobs:
+  live-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Chromium
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Check six public surfaces, mobile widths and all author links
+        run: python scripts/qa_amazon_live.py
+      - name: Save public QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amazon-trilingual-live-qa
+          path: qa_artifacts/amazon/
+          if-no-files-found: warn
+          retention-days: 7
