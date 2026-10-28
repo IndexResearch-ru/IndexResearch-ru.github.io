@@ -97,9 +97,12 @@ def topic_configuration_errors() -> list[str]:
     if len(slugs) != len(set(slugs)):
         errors.append("Duplicate topic slug in research-topics.json.")
 
+    pending = set(config.get("pending_localizations") or [])
+    if pending - set(canonical):
+        errors.append("Pending localizations reference unknown research IDs: " + ", ".join(sorted(pending - set(canonical))))
     for lang in ("en", "cn"):
         localized = catalog_cards(lang)
-        absent = [item for item in canonical if item not in localized]
+        absent = [item for item in canonical if item not in localized and item not in pending]
         if absent:
             errors.append(f"{lang}/ratings/ is missing research IDs used by topic navigation: " + ", ".join(absent))
     return errors
@@ -126,6 +129,8 @@ def render_topic_navigation(lang: str) -> tuple[str, str]:
         hub_hreflang = LANG_HREFLANG[lang]
         research_links = []
         for research_id in topic["research_ids"]:
+            if research_id not in cards and research_id in set(config.get("pending_localizations") or []):
+                continue
             card = cards[research_id]
             href = f"{prefix}/{research_id}.html" if prefix else f"/{research_id}.html"
             research_links.append(f'<a href="{href}">{html_module.escape(card["title"])}</a>')
