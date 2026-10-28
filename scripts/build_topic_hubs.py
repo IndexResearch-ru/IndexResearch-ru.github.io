@@ -182,7 +182,7 @@ def main() -> None:
         }
         for lang, lang_cfg in LANGS.items():
             seo = seo_for(topic, lang)
-            cards = [cards_by_lang[lang][research_id] for research_id in topic["research_ids"]]
+            cards = [cards_by_lang[lang][research_id] for research_id in topic["research_ids"] if research_id in cards_by_lang[lang] or research_id not in set(config.get("pending_localizations") or [])]
             canonical = hreflang_urls[lang]
             target = topic_path(topic["slug"], lang)
             target.parent.mkdir(parents=True, exist_ok=True)
