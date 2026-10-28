@@ -119,6 +119,15 @@ try:
         }
 
         for lang, cfg in topic_langs.items():
+            # During a documented RU-first release, compare each hub against
+            # research pages that actually exist in its language. This exception
+            # is limited to IDs listed in pending_localizations.
+            pending_localizations = set(topic_config.get("pending_localizations") or [])
+            expected_ids_lang = [
+                rid for rid in expected_ids
+                if lang == "ru" or rid not in pending_localizations
+                or (ROOT / lang / f"{rid}.html").exists()
+            ]
             hub_path = (
                 ROOT / cfg["dir"] / "ratings" / topic["slug"] / "index.html"
                 if cfg["dir"]
@@ -135,13 +144,13 @@ try:
                 hub_text,
                 re.I,
             )
-            if hub_ids != expected_ids:
+            if hub_ids != expected_ids_lang:
                 errors.append(
                     f"{rel_label}: research cards must match topic config order "
-                    f"({len(expected_ids)} expected, {len(hub_ids)} found)."
+                    f"({len(expected_ids_lang)} expected, {len(hub_ids)} found)."
                 )
 
-            for research_id in expected_ids:
+            for research_id in expected_ids_lang:
                 actual_repo = github_repo_for_research_card(hub_text, research_id)
                 expected_repo = expected_presentation_github_repo(research_id, lang)
                 if actual_repo != expected_repo:
@@ -218,7 +227,7 @@ try:
                             if cfg["dir"]
                             else f"{BASE}/{research_id}.html#article"
                         )
-                        for research_id in expected_ids
+                        for research_id in expected_ids_lang
                     ]
                     actual_part_ids = [
                         item.get("@id")
@@ -244,7 +253,7 @@ try:
                             if cfg["dir"]
                             else f"{BASE}/{research_id}.html"
                         )
-                        for research_id in expected_ids
+                        for research_id in expected_ids_lang
                     ]
                     actual_urls = [item.get("url") for item in elements]
                     if actual_urls != expected_urls:
