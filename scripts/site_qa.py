@@ -513,6 +513,16 @@ def catalog_card_ids(page_text):
 
 catalog_ids = catalog_card_ids(ratings)
 
+# Phased language release: the RU research is public, while EN/CN pages
+# are not yet published. Only explicitly registered pending IDs may be
+# absent from localized catalogs and feeds; all other parity remains strict.
+pending_localizations = set(load_topic_config().get("pending_localizations") or [])
+def expected_localized_catalog_ids(lang):
+    return [
+        rid for rid in catalog_ids
+        if rid not in pending_localizations or (ROOT / lang / f"{rid}.html").exists()
+    ]
+
 cn_catalog_ids = []
 if cn_ratings:
     if cn_ratings.count("<!-- RESEARCH_CATALOG_CN_START -->") != 1 or cn_ratings.count("<!-- RESEARCH_CATALOG_CN_END -->") != 1:
@@ -524,9 +534,9 @@ if cn_ratings:
             cn_block,
             re.I,
         )
-        if cn_catalog_ids != catalog_ids:
+        if cn_catalog_ids != expected_localized_catalog_ids('cn'):
             errors.append(
-                f"cn/ratings/: catalog must match canonical RU catalog order/count ({len(catalog_ids)}); found {len(cn_catalog_ids)}."
+                f"cn/ratings/: catalog must match canonical RU catalog order/count ({len(expected_localized_catalog_ids("cn"))}); found {len(cn_catalog_ids)}."
             )
 
 def home_feed_ids(page_text, label):
@@ -548,11 +558,11 @@ def home_feed_ids(page_text, label):
 for lang_key, label, page_text in (("en", "en/index.html", en_home), ("cn", "cn/index.html", cn_home)):
     if page_text:
         ids = home_feed_ids(page_text, label)
-        if ids != catalog_ids:
+        if ids != expected_localized_catalog_ids(lang_key):
             errors.append(
-                f"{label}: research feed must match canonical RU catalog order/count ({len(catalog_ids)}); found {len(ids)}."
+                f"{label}: research feed must match available RU catalog order/count ({len(expected_localized_catalog_ids(lang_key))}); found {len(ids)}."
             )
-        for research_id in catalog_ids:
+        for research_id in expected_localized_catalog_ids(lang_key):
             actual_repo = github_repo_for_research_card(page_text, research_id)
             expected_repo = expected_presentation_github_repo(research_id, lang_key)
             if actual_repo != expected_repo:
@@ -567,12 +577,12 @@ for lang_key, label, page_text in (("en", "en/ratings/", en_ratings), ("cn", "cn
             page_text,
             re.I,
         )
-        if ids != catalog_ids:
+        if ids != expected_localized_catalog_ids(lang_key):
             errors.append(
-                f"{label}: localized catalog must match canonical RU catalog order/count "
-                f"({len(catalog_ids)}); found {len(ids)}."
+                f"{label}: localized catalog must match published language release order/count "
+                f"({len(expected_localized_catalog_ids(lang_key))}); found {len(ids)}."
             )
-        for research_id in catalog_ids:
+        for research_id in expected_localized_catalog_ids(lang_key):
             actual_repo = github_repo_for_research_card(page_text, research_id)
             expected_repo = expected_presentation_github_repo(research_id, lang_key)
             if actual_repo != expected_repo:
