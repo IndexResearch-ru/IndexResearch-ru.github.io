@@ -68,7 +68,7 @@ with sync_playwright() as p:
    statuses[target]={"status":None,"final":None,"state":"UNKNOWN_TRANSPORT"}
    warnings.append(f"Transport unknown: {target} {type(e).__name__}")
  for row in links:row["verification"]=statuses[row["target"]]
- context.dispose();browser.close()
+ context.close();browser.close()
 report={"surfaces":results,"occurrence_counts":dict(Counter(x["surface"] for x in links)),"unique_targets":len(distinct),"status_counts":dict(Counter(v["state"] for v in statuses.values())),"links":links,"errors":errors,"warnings":warnings}
 (OUT/"report.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
 print("AMAZON_LIVE_QA="+json.dumps({k:report[k] for k in ("occurrence_counts","unique_targets","status_counts","errors","warnings")},ensure_ascii=False))
