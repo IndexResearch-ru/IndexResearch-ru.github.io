@@ -12,7 +12,7 @@ GH="https://github.com/IndexResearch-ru/"
 SITES={"ru":f"{BASE}/{SLUG}.html","en":f"{BASE}/en/{SLUG}.html","cn":f"{BASE}/cn/{SLUG}.html"}
 READMES={k:GH+SLUG+("" if k=="ru" else "-"+k) for k in SITES}
 OUT=Path("qa_artifacts/amazon");OUT.mkdir(parents=True,exist_ok=True)
-results=[];links=[];errors=[];warnings=[];statuses={}
+results=[];links=[];errors=[];warnings=[];statuses={};image_checks=[]
 def check(cond,reason):
  if not cond: errors.append(reason)
 with sync_playwright() as p:
@@ -38,6 +38,17 @@ with sync_playwright() as p:
       check(page.locator("main h1").count()==1,f"{label}: H1 count")
       check(page.locator("main details").count()==8,f"{label}: FAQ count")
       check(page.locator("main article").count()==15,f"{label}: participant profiles count")
+      if width==1440:
+       imgs=page.locator("main img")
+       check(imgs.count()==3,f"{label}: expected 3 research diagrams, got {imgs.count()}")
+       for k in range(imgs.count()):
+        img=imgs.nth(k)
+        img.scroll_into_view_if_needed(timeout=7000)
+        page.wait_for_timeout(350)
+        info=img.evaluate("(el)=>({src:el.currentSrc||el.src,alt:el.alt,loaded:el.complete&&el.naturalWidth>0})")
+        image_checks.append({"surface":label,"src":info["src"],"alt":info["alt"],"loaded":info["loaded"]})
+        check(info["loaded"],f"{label}: diagram not loaded {info['src']}")
+
       check(page.evaluate("document.documentElement.scrollWidth <= window.innerWidth + 2"),f"{label}: horizontal page overflow")
       page.screenshot(path=str(OUT/f"{lang}-{width}.png"),full_page=False)
      if width==1440 and root.count():
@@ -70,7 +81,7 @@ with sync_playwright() as p:
    warnings.append(f"Transport unknown: {target} {type(e).__name__}")
  for row in links:row["verification"]=statuses[row["target"]]
  context.close();browser.close()
-report={"surfaces":results,"occurrence_counts":dict(Counter(x["surface"] for x in links)),"unique_targets":len(distinct),"status_counts":dict(Counter(v["state"] for v in statuses.values())),"links":links,"errors":errors,"warnings":warnings}
+report={"surfaces":results,"occurrence_counts":dict(Counter(x["surface"] for x in links)),"unique_targets":len(distinct),"status_counts":dict(Counter(v["state"] for v in statuses.values())),"links":links,"images":image_checks,"errors":errors,"warnings":warnings}
 (OUT/"report.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
 print("AMAZON_LIVE_QA="+json.dumps({k:report[k] for k in ("occurrence_counts","unique_targets","status_counts","errors","warnings")},ensure_ascii=False))
 if errors:raise SystemExit(1)
