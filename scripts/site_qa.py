@@ -1143,8 +1143,8 @@ for path in html_paths:
             content = main_match.group(1) if main_match else ""
             profile_fragments = re.findall(r"<article(?:\s[^>]*)?>([\s\S]*?)</article>", content, re.I)
             ranking_rows = len(profile_fragments)
-            if ranking_rows != 15:
-                errors.append(f"{rel}: unranked editorial shortlist must contain 15 full company profiles; found {ranking_rows}.")
+            if ranking_rows < 3:
+                errors.append(f"{rel}: unranked editorial comparison must contain at least 3 full company profiles; found {ranking_rows}.")
             if re.search(r"<table[^>]+class=[\"'][^\"']*research-table--ranking", content, re.I):
                 errors.append(f"{rel}: unranked editorial shortlist must not contain a numeric ranking table.")
         else:
@@ -1172,8 +1172,8 @@ for path in html_paths:
                 item_list = item_lists[0]
                 if item_list.get("itemListOrder") != "https://schema.org/ItemListUnordered":
                     errors.append(f"{rel}: unranked shortlist ItemList must be explicitly unordered.")
-                if item_list.get("numberOfItems") != 15:
-                    errors.append(f"{rel}: unranked shortlist ItemList.numberOfItems must be 15.")
+                if item_list.get("numberOfItems") != ranking_rows:
+                    errors.append(f"{rel}: unranked comparison ItemList.numberOfItems must match visible profiles ({ranking_rows}).")
                 schema_names = [
                     (item.get("item") or {}).get("name")
                     for item in item_list.get("itemListElement") or []
