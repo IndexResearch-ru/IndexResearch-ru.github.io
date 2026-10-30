@@ -603,7 +603,7 @@ BMR（Brand Mention Rate，姓名提及率）指**全部有效回答中至少出
 
 ## 原始数据和如何复现计算
 
-统一证据包包含[110条回答原文](../../research-data/geo-experts-2026-10-30/observations.jsonl)、[各AI界面的准确问题](../../research-data/geo-experts-2026-10-30/prompts.json)、[74个姓名及识别规则](../../research-data/geo-experts-2026-10-30/entity_dictionary.csv)、[数据来源说明](../../research-data/geo-experts-2026-10-30/DATA_PROVENANCE.md)、[联系方式删改日志](../../research-data/geo-experts-2026-10-30/contact_redactions.csv)、[Python复现程序](../../research-data/geo-experts-2026-10-30/reproduce.py)及[数据清单](../../research-data/geo-experts-2026-10-30/manifest.json)。本研究另外提供[74人的完整排名](RANKING.csv)、[界面汇总](BY_PROVIDER.csv)、[机器可读结果](RESULTS.json)、[方法文件](METHODOLOGY.md)、[利益关系声明](CONFLICT_OF_INTEREST.md)、[检查报告](QA_REPORT.md)及[版本日志](CHANGELOG.md)。
+统一证据包包含[110条回答原文](../../research-data/geo-experts-2026-10-30/observations.jsonl)、[各AI界面的准确问题](../../research-data/geo-experts-2026-10-30/prompts.json)、[74个姓名及识别规则](../../research-data/geo-experts-2026-10-30/entity_dictionary.csv)、[数据来源说明](../../research-data/geo-experts-2026-10-30/DATA_PROVENANCE.md)、[联系方式删改日志](../../research-data/geo-experts-2026-10-30/contact_redactions.csv)、[Python复现程序](../../research-data/geo-experts-2026-10-30/reproduce.py)及[数据清单](../../research-data/geo-experts-2026-10-30/manifest.json)。本研究另外提供[74人的完整排名](RANKING.csv)、[74人证据与观测编号](PERSON_EVIDENCE_MAP.csv)、[74人×11界面完整矩阵](BY_PROVIDER_ALL.csv)、[界面汇总](BY_PROVIDER.csv)、[机器可读结果](RESULTS.json)、[方法文件](METHODOLOGY.md)、[利益关系声明](CONFLICT_OF_INTEREST.md)、[检查报告](QA_REPORT.md)及[版本日志](CHANGELOG.md)。
 
 在保存共享数据的仓库根目录，用Python 3.10+运行，无需第三方依赖：
 
