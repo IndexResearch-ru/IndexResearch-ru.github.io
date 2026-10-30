@@ -56,7 +56,13 @@ en_home = (ROOT / "en" / "index.html").read_text(encoding="utf-8") if (ROOT / "e
 cn_home = (ROOT / "cn" / "index.html").read_text(encoding="utf-8") if (ROOT / "cn" / "index.html").exists() else ""
 non_research = {"index.html", "methodology.html", "404.html"}
 
+CANONICAL_REPO_EXCEPTIONS = {
+    "geo-experts-frs-russia-2026": "geo-experts-first-recommendation-russia-2026",
+}
+
 PRESENTATION_REPO_EXCEPTIONS = {
+    ("en", "geo-experts-frs-russia-2026"): "geo-experts-first-recommendation-russia-2026-en",
+    ("cn", "geo-experts-frs-russia-2026"): "geo-experts-first-recommendation-russia-2026-cn",
     ("en", "thermoshrink-packaging-marketplaces-russia-2026"):
         "-EN-thermoshrink-packaging-marketplaces-russia-2026-en",
 }
@@ -64,7 +70,7 @@ PRESENTATION_REPO_EXCEPTIONS = {
 
 def expected_presentation_github_repo(research_id: str, lang_key: str) -> str:
     if lang_key == "ru":
-        repo_name = research_id
+        repo_name = CANONICAL_REPO_EXCEPTIONS.get(research_id, research_id)
     else:
         repo_name = PRESENTATION_REPO_EXCEPTIONS.get(
             (lang_key, research_id),
@@ -1010,7 +1016,7 @@ for path in html_paths:
 
     if is_research:
         slug = name[:-5]
-        canonical_github_repo = f"https://github.com/IndexResearch-ru/{slug}"
+        canonical_github_repo = f"https://github.com/IndexResearch-ru/{CANONICAL_REPO_EXCEPTIONS.get(slug, slug)}"
         # Only explicitly RU-only staged editorial studies can use a shared
         # evidence directory before dedicated repositories exist.
         staged_evidence = ROOT / "research-data" / slug
@@ -1224,7 +1230,7 @@ for path in html_paths:
                 errors.append(f"{rel}: Dataset.distribution must expose SOURCE_REGISTER.csv.")
             if not any(
                 candidate in dataset_dump
-                for candidate in ["SCORE_MATRIX.csv", "OBSERVATION_MATRIX.csv", "CURRENT_RECHECK.csv"] + (["EDITORIAL_COMPARISON.csv"] if is_editorial_shortlist else [])
+                for candidate in ["SCORE_MATRIX.csv", "OBSERVATION_MATRIX.csv", "CURRENT_RECHECK.csv", "BY_PROVIDER_ALL.csv", "CALCULATION_TRACE.csv"] + (["EDITORIAL_COMPARISON.csv"] if is_editorial_shortlist else [])
             ):
                 errors.append(f"{rel}: Dataset.distribution must expose SCORE_MATRIX.csv or an equivalent matrix.")
 
