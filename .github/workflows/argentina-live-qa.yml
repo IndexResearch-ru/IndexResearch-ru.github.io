@@ -1,0 +1,33 @@
+name: Argentina DMC six-surface live QA
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/argentina-live-qa.yml'
+      - 'scripts/qa_argentina_live.py'
+permissions:
+  contents: read
+jobs:
+  browser-live-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Chromium for public live verification
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Verify six published pages, mobile widths, images, links and sitemap
+        run: python scripts/qa_argentina_live.py
+      - name: Store reproducible browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: argentina-ada-t016-live-qa
+          path: qa_artifacts/argentina/
+          if-no-files-found: warn
+          retention-days: 14
