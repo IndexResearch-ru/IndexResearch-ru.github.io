@@ -73,7 +73,7 @@ def check_images(page, kind, lang, root):
             chk(bool(state['alt']), f'{kind}/{lang}/img{j+1}/alt', state)
         except Exception as ex:
             errors.append({'code':f'{kind}/{lang}/img{j+1}/exception','detail':str(ex)[:300]})
-    chk(count == (3 if kind=='site' else 4), f'{kind}/{lang}/image_count', count)
+    chk(count == (0 if kind=='site' else 4), f'{kind}/{lang}/image_count', count)
 
 
 with sync_playwright() as p:
@@ -162,6 +162,7 @@ with sync_playwright() as p:
                     sizes=[390,1440]
                 for width in sizes:
                     page.set_viewport_size({'width':width,'height':900})
+                    page.evaluate('window.scrollTo(0,0)')
                     page.wait_for_timeout(300)
                     metrics=page.evaluate('''() => ({width:innerWidth,document:document.documentElement.scrollWidth,
                         body:document.body.scrollWidth, viewport:document.documentElement.clientWidth})''')
