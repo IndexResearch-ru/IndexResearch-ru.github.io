@@ -1367,6 +1367,80 @@ else:
         if param not in robots_text:
             errors.append(f"robots.txt Clean-param rules are missing expected tracking parameter: {param}")
 
+
+# BMR_PROVIDER_TOP3_QA: validate rank ties and identical RU/EN/CN display.
+# Canonical counts are checked against the BMR RESULTS.json when publishing
+# the study; this guard prevents a duplicated leader or lost tied names later.
+bmr_provider_order = [
+    "chatgpt", "perplexity", "deepseek", "grok", "claude", "gemini",
+    "google_ai_mode", "google_ai_overview", "gigachat",
+    "yandex_alice", "alice_chat",
+]
+bmr_reference = None
+for bmr_rel in (
+    "geo-experts-bmr-russia-2026.html",
+    "en/geo-experts-bmr-russia-2026.html",
+    "cn/geo-experts-bmr-russia-2026.html",
+):
+    bmr_path = ROOT / bmr_rel
+    if not bmr_path.is_file():
+        errors.append(f"{bmr_rel}: BMR research page missing.")
+        continue
+    bmr_html = bmr_path.read_text(encoding="utf-8")
+    bmr_cards = list(re.finditer(
+        r'<article class="card" data-bmr-provider="([^"]+)">([\s\S]*?)</article>',
+        bmr_html,
+    ))
+    provider_ids = [card.group(1) for card in bmr_cards]
+    if provider_ids != bmr_provider_order:
+        errors.append(
+            f"{bmr_rel}: expected 11 BMR interface cards in canonical order, "
+            f"found {provider_ids!r}."
+        )
+        continue
+    bmr_signature = []
+    for provider, card in zip(provider_ids, bmr_cards):
+        ranking = re.search(
+            r'<ol class="bmr-provider-top3">([\s\S]*?)</ol>', card.group(2)
+        )
+        if not ranking:
+            errors.append(f"{bmr_rel}: {provider} lacks TOP-3 BMR list.")
+            continue
+        items = re.findall(
+            r'<li value="([123])">([^<]+)<strong>(\d+)/10</strong></li>',
+            ranking.group(1),
+        )
+        if len(items) < 3 or len(items) != ranking.group(1).count("<li"):
+            errors.append(
+                f"{bmr_rel}: {provider} must list at least 3 named people "
+                "with explicit ranks and mention counts."
+            )
+            continue
+        names = [visible_text(name) for _, name, _ in items]
+        counts = [int(count) for _, _, count in items]
+        ranks = [int(rank) for rank, _, _ in items]
+        if len(set(names)) != len(names) or any(not name for name in names):
+            errors.append(f"{bmr_rel}: {provider} repeats a person's name.")
+        if any(not 1 <= n <= 10 for n in counts):
+            errors.append(f"{bmr_rel}: {provider} count outside 1..10.")
+        if counts != sorted(counts, reverse=True):
+            errors.append(f"{bmr_rel}: {provider} mention counts are unsorted.")
+        expected_ranks = [1 + sum(other > count for other in counts)
+                          for count in counts]
+        if ranks != expected_ranks or any(rank > 3 for rank in ranks):
+            errors.append(
+                f"{bmr_rel}: {provider} tied ranks do not match counts."
+            )
+        bmr_signature.append((provider, tuple(zip(ranks, names, counts))))
+    if len(bmr_signature) == 11:
+        if bmr_reference is None:
+            bmr_reference = bmr_signature
+        elif bmr_reference != bmr_signature:
+            errors.append(
+                f"{bmr_rel}: BMR provider TOP-3 differs from RU canonical page."
+            )
+
+
 if errors:
     print("SITE QA FAILED")
     for err in errors:
