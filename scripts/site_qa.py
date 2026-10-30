@@ -1312,6 +1312,7 @@ else:
         ".research-table-wrap{overflow:visible",
         ".research-table--ranking tr",
         ".research-table--criteria tr",
+        '.research-table--ranking[data-bmr-ranking="true"] tr',
     ]
     for token in required_style_tokens:
         if token not in style_text:
@@ -1368,15 +1369,16 @@ else:
             errors.append(f"robots.txt Clean-param rules are missing expected tracking parameter: {param}")
 
 
-# BMR_PROVIDER_TOP3_QA: 11 interface tables, grouped ties and RU/EN/CN parity.
-# The canonical study is frozen as BMR 1.0.0. The HTML ranking table
-# shows a place once per group, even if several people share the rank.
+# BMR_PROVIDER_TOP3_QA: 11 interface tables, positional spans and language parity.
+# Raw machine-readable rank positions remain numeric; visible tied results use
+# inclusive ordinal ranges, e.g. 12-13 and 34-74 rather than repeated rank 12 or 34.
 bmr_provider_order = [
     "chatgpt", "perplexity", "deepseek", "grok", "claude", "gemini",
     "google_ai_mode", "google_ai_overview", "gigachat",
     "yandex_alice", "alice_chat",
 ]
 bmr_reference = None
+bmr_overall_reference = None
 for bmr_rel in (
     "geo-experts-bmr-russia-2026.html",
     "en/geo-experts-bmr-russia-2026.html",
@@ -1387,6 +1389,48 @@ for bmr_rel in (
         errors.append(f"{bmr_rel}: BMR research page missing.")
         continue
     bmr_html = bmr_path.read_text(encoding="utf-8")
+
+    # Complete 74-person ranking: each tied name must display its group's span.
+    overall_table = re.search(
+        r'<table class="research-table research-table--ranking"'
+        r' data-bmr-ranking="true">([\s\S]*?)</table>', bmr_html,
+    )
+    if not overall_table:
+        errors.append(f"{bmr_rel}: complete BMR ranking table missing.")
+    else:
+        rows = re.findall(
+            r'<tr><td data-label="[^"]+">(\d+(?:-\d+)?)</td>'
+            r'<td data-label="[^"]+">([^<]+)</td>'
+            r'<td data-label="BMR">[^<]+</td>'
+            r'<td data-label="[^"]+">(\d+)/110</td></tr>',
+            overall_table.group(1),
+        )
+        if len(rows) != 74 or len({name for _, name, _ in rows}) != 74:
+            errors.append(f"{bmr_rel}: expected 74 unique BMR people in overall table.")
+        else:
+            counts = [int(n) for _, _, n in rows]
+            if counts != sorted(counts, reverse=True):
+                errors.append(f"{bmr_rel}: overall BMR counts not sorted descending.")
+            for shown, name, n in rows:
+                count = int(n)
+                start = 1 + sum(value > count for value in counts)
+                end_rank = sum(value >= count for value in counts)
+                expected_span = str(start) if start == end_rank else f"{start}-{end_rank}"
+                if shown != expected_span:
+                    errors.append(
+                        f"{bmr_rel}: {name} has displayed rank {shown}; "
+                        f"expected interval {expected_span}."
+                    )
+            signature = tuple((shown, name, int(n)) for shown, name, n in rows)
+            if bmr_overall_reference is None:
+                bmr_overall_reference = signature
+            elif signature != bmr_overall_reference:
+                errors.append(
+                    f"{bmr_rel}: full BMR ranking differs from canonical RU page."
+                )
+
+    # Each provider card displays 1–3 ranked *groups*, preserving all people
+    # inside a group but showing a single positional range, without a 'tie' caption.
     bmr_cards = list(re.finditer(
         r'<article class="card" data-bmr-provider="([^"]+)">([\s\S]*?)</article>',
         bmr_html,
@@ -1404,7 +1448,7 @@ for bmr_rel in (
             card.group(2),
         )
         if not table:
-            errors.append(f"{bmr_rel}: {provider} missing BMR grouped rank table.")
+            errors.append(f"{bmr_rel}: {provider} missing grouped BMR table.")
             continue
         groups = re.findall(
             r'<tbody data-bmr-rank="([123])">([\s\S]*?)</tbody>',
@@ -1414,13 +1458,14 @@ for bmr_rel in (
         all_names = []
         all_counts = []
         if not groups:
-            errors.append(f"{bmr_rel}: {provider} has no ranked groups.")
+            errors.append(f"{bmr_rel}: {provider} missing ranked groups.")
             continue
         for raw_rank, html_group in groups:
             rank = int(raw_rank)
-            rank_header = re.search(
+            header = re.search(
                 r'<th scope="rowgroup" rowspan="(\d+)" class="bmr-provider-place"'
-                r'[^>]*><span class="bmr-provider-place-number">([123])</span>',
+                r' aria-label="([^"]+)"><span class="bmr-provider-place-number">'
+                r'(\d+(?:-\d+)?)</span></th>',
                 html_group,
             )
             entries = re.findall(
@@ -1428,47 +1473,47 @@ for bmr_rel in (
                 r'<td class="bmr-provider-count"><strong>(\d+)/10</strong></td>',
                 html_group,
             )
-            if not rank_header or not entries:
+            if not header or not entries:
                 errors.append(
                     f"{bmr_rel}: {provider}, rank {rank} has invalid grouped rows."
                 )
                 continue
             names = [visible_text(name) for name, _ in entries]
             counts = [int(count) for _, count in entries]
-            if (int(rank_header.group(1)) != len(entries)
-                    or int(rank_header.group(2)) != rank
+            finish = rank + len(entries) - 1
+            expected_span = str(rank) if rank == finish else f"{rank}-{finish}"
+            if (int(header.group(1)) != len(entries)
+                    or header.group(3) != expected_span
+                    or expected_span not in header.group(2)
                     or len(entries) != html_group.count('class="bmr-provider-name"')):
                 errors.append(
-                    f"{bmr_rel}: {provider}, rank {rank} has an invalid rowspan."
+                    f"{bmr_rel}: {provider}, rank {rank} has incorrect rowspan/range."
                 )
-            has_tie_label = 'class="bmr-provider-tie"' in html_group
-            if has_tie_label != (len(entries) > 1):
-                errors.append(
-                    f"{bmr_rel}: {provider}, rank {rank} missing/misplaced tie label."
-                )
+            if 'bmr-provider-tie' in html_group:
+                errors.append(f"{bmr_rel}: {provider} has obsolete tie caption.")
             if len(set(counts)) != 1:
                 errors.append(
-                    f"{bmr_rel}: {provider}, rank {rank} contains unequal counts."
+                    f"{bmr_rel}: {provider}, rank {rank} has unequal counts."
                 )
-            group_signatures.append((rank, tuple(zip(names, counts))))
+            group_signatures.append((rank, expected_span, tuple(zip(names, counts))))
             all_names.extend(names)
             all_counts.extend(counts)
 
         if len(all_names) < 3 or len(set(all_names)) != len(all_names):
             errors.append(f"{bmr_rel}: {provider} has missing/duplicate people.")
         if any(not name for name in all_names):
-            errors.append(f"{bmr_rel}: {provider} has an empty name.")
+            errors.append(f"{bmr_rel}: {provider} has empty name.")
         if any(not 1 <= count <= 10 for count in all_counts):
             errors.append(f"{bmr_rel}: {provider} count outside 1..10.")
         if all_counts != sorted(all_counts, reverse=True):
             errors.append(f"{bmr_rel}: {provider} counts not sorted descending.")
-        for rank, people in group_signatures:
+        for rank, span, people in group_signatures:
             if not people:
                 continue
-            expected = 1 + sum(c > people[0][1] for c in all_counts)
+            expected = 1 + sum(value > people[0][1] for value in all_counts)
             if rank != expected or rank > 3:
                 errors.append(
-                    f"{bmr_rel}: {provider} rank {rank} differs from competition rank {expected}."
+                    f"{bmr_rel}: {provider}, group {span} differs from rank {expected}."
                 )
         page_signature.append((provider, tuple(group_signatures)))
     if len(page_signature) == 11:
@@ -1476,7 +1521,7 @@ for bmr_rel in (
             bmr_reference = page_signature
         elif bmr_reference != page_signature:
             errors.append(
-                f"{bmr_rel}: BMR rank tables differ from RU canonical page."
+                f"{bmr_rel}: BMR provider rank groups differ from RU page."
             )
 
 # BMR_METHOD_TABLE_ALIGNMENT_GUARD:
