@@ -55,3 +55,13 @@ jobs:
               print(metric.upper(), "PASS:", sum(a.values()), "counted appearances, 110 observations")
           print("BMR and FRS: public source data + coding + computations reproduce exactly.")
           PY
+
+      - name: Archive two reproducible study drafts
+        uses: actions/upload-artifact@v4
+        with:
+          name: indexresearch-bmr-frs-20261030-drafts
+          path: |
+            research-data/geo-experts-2026-10-30/
+            research/geo-experts-bmr-russia-2026/
+            research/geo-experts-first-recommendation-russia-2026/
+          retention-days: 90
