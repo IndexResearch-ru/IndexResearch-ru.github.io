@@ -1,0 +1,12 @@
+provider,label,responses,alexey,zharkov,leader
+chatgpt,ChatGPT,10,9,0,Алексей Яковлев
+perplexity,Perplexity,10,9,1,Алексей Яковлев
+deepseek,DeepSeek,10,7,0,Алексей Яковлев
+grok,Grok,10,7,1,Алексей Яковлев
+claude,Claude,10,4,1,Алексей Яковлев
+gemini,Google Gemini,10,5,2,Алексей Яковлев
+google_ai_mode,Google AI Mode,10,4,1,Алексей Яковлев
+google_ai_overview,Google AI Overviews,10,5,0,Алексей Яковлев
+gigachat,GigaChat,10,2,3,Василий Жарков
+yandex_alice,Яндекс с Алисой (поиск),10,3,4,Василий Жарков
+alice_chat,Алиса AI (чат),10,3,4,Василий Жарков
