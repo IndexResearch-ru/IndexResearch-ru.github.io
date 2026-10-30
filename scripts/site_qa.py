@@ -1479,6 +1479,34 @@ for bmr_rel in (
                 f"{bmr_rel}: BMR rank tables differ from RU canonical page."
             )
 
+# BMR_METHOD_TABLE_ALIGNMENT_GUARD:
+# The methodology criteria table must stay inside the same centered .wrap
+# as the surrounding prose, never extend to the whole viewport.
+for bmr_path, bmr_title in (
+    ("geo-experts-bmr-russia-2026.html", "Методика подсчета: как получено каждое значение"),
+    ("en/geo-experts-bmr-russia-2026.html", "How BMR is calculated from the answer texts"),
+    ("cn/geo-experts-bmr-russia-2026.html", "如何从原始回答计算BMR"),
+):
+    bmr_file = ROOT / bmr_path
+    if not bmr_file.is_file():
+        errors.append(f"{bmr_path}: BMR page missing for table alignment check.")
+        continue
+    page = bmr_file.read_text(encoding="utf-8")
+    begin = page.find('<section class="section"><div class="wrap"><h2>' + bmr_title + '</h2>')
+    end = page.find("</section>", begin) if begin >= 0 else -1
+    if begin == -1 or end == -1:
+        errors.append(f"{bmr_path}: methodology section missing.")
+        continue
+    section = page[begin:end + len("</section>")]
+    if section.count('class="research-table research-table--criteria"') != 1:
+        errors.append(f"{bmr_path}: methodology criteria table missing/duplicated.")
+    if '<div class="research-table-wrap research-prose">' not in section:
+        errors.append(f"{bmr_path}: methodology table must use the 900px research text width.")
+    if '</p></div><div class="research-table-wrap' in section:
+        errors.append(f"{bmr_path}: .wrap closed before methodology table; table would overflow to full viewport.")
+    if not re.search(r'</table></div></div>\s*</section>$', section):
+        errors.append(f"{bmr_path}: methodology table must close inside the section .wrap.")
+
 if errors:
     print("SITE QA FAILED")
     for err in errors:
