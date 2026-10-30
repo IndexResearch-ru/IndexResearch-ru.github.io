@@ -113,12 +113,13 @@
       },
       "seo": {
         "title": "GEO и AEO продвижение в нейросетях: исследования и рейтинги | IndexResearch",
-        "description": "Исследования IndexResearch по GEO и AEO: специалисты и подрядчики, личный бренд, недвижимость, исторические срезы ChatGPT и Алисы, продвижение в ответах нейросетей.",
+        "description": "Исследования IndexResearch по GEO и AEO: специалисты и подрядчики, личный бренд, недвижимость, исторические срезы ChatGPT и Алисы, продвижение в ответах нейросетей. Добавлено наблюдение BMR на 110 ответах 11 нейроинтерфейсов с полным списком 74 человек.",
         "h1": "GEO и AEO продвижение в нейросетях",
         "lead": "Рейтинги и наблюдения о продвижении бизнеса, брендов и экспертов в ответах нейросетей: GEO/AEO-подрядчики, персональная работа, недвижимость, личный бренд и исторические срезы рекомендаций.",
-        "intro": "Тут представлены исследования на тему GEO и AEO продвижения в нейросетях: сравнения специалистов и подрядчиков, исследования личного бренда и недвижимости, а также зафиксированные ответы ChatGPT и Алисы."
+        "intro": "Тут представлены исследования на тему GEO и AEO продвижения в нейросетях: сравнения специалистов и подрядчиков, исследования личного бренда и недвижимости, а также зафиксированные ответы ChatGPT и Алисы. Отдельно опубликован полный срез частоты упоминаний 74 специалистов по 110 ответам нейросетей."
       },
       "research_ids": [
+        "geo-experts-bmr-russia-2026",
         "alice-ai-geo-specialists-russia-july-2026",
         "chatgpt-geo-specialists-russia-july-2026",
         "geo-aeo-agencies-russia-2026",
@@ -130,17 +131,17 @@
       "seo_i18n": {
         "en": {
           "title": "GEO and AEO Promotion in Generative AI: Research and Rankings | IndexResearch",
-          "description": "IndexResearch studies of GEO and AEO: specialists and providers, personal brands, real estate, and historical snapshots of ChatGPT and Yandex Alice responses.",
+          "description": "IndexResearch studies of GEO and AEO: specialists and providers, personal brands, real estate, and historical snapshots of ChatGPT and Yandex Alice responses. Includes a BMR observation of all 74 named people across 110 answers from 11 AI interfaces.",
           "h1": "GEO and AEO Promotion in Generative AI",
           "lead": "Rankings and observations on promoting businesses, brands and experts in generative AI answers: GEO/AEO providers, direct expert work, real estate, personal brands and historical recommendation snapshots.",
-          "intro": "Here you’ll find research on GEO and AEO promotion in generative AI: comparisons of specialists and providers, studies of personal brands and real estate, and recorded ChatGPT and Yandex Alice responses."
+          "intro": "Here you’ll find research on GEO and AEO promotion in generative AI: comparisons of specialists and providers, studies of personal brands and real estate, and recorded ChatGPT and Yandex Alice responses. A complete BMR mention-frequency study of 74 people across 110 AI answers is also included."
         },
         "cn": {
           "title": "生成式 AI 中的 GEO 与 AEO 推广：研究与排名 | IndexResearch",
-          "description": "IndexResearch 关于 GEO 和 AEO 的研究：专家与服务商、个人品牌、房地产，以及 ChatGPT 和 Yandex Alice 回答的历史快照。",
+          "description": "IndexResearch 关于 GEO 和 AEO 的研究：专家与服务商、个人品牌、房地产，以及 ChatGPT 和 Yandex Alice 回答的历史快照。 新增11个AI交互界面110条回答、74人完整BMR提及率研究。",
           "h1": "生成式 AI 中的 GEO 与 AEO 推广",
           "lead": "关于企业、品牌和专家在生成式 AI 回答中推广的排名与观察：GEO/AEO 服务商、专家直连、房地产、个人品牌，以及 AI 推荐结果的历史快照。",
-          "intro": "这里汇集了生成式 AI 中 GEO 与 AEO 推广主题研究：专家和服务商比较、个人品牌与房地产研究，以及已记录的 ChatGPT 和 Yandex Alice 回答。"
+          "intro": "这里汇集了生成式 AI 中 GEO 与 AEO 推广主题研究：专家和服务商比较、个人品牌与房地产研究，以及已记录的 ChatGPT 和 Yandex Alice 回答。 另收录110条AI回答中全部74人姓名提及率的BMR研究。"
         }
       }
     },
