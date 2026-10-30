@@ -63,7 +63,7 @@
 .bmr-provider-table tbody th,.bmr-provider-table tbody td{padding:8px;vertical-align:middle}
 .bmr-provider-table .bmr-provider-place{padding-left:2px;padding-right:10px;text-align:center;vertical-align:middle}
 .bmr-provider-place-number{display:inline-block;min-width:32px;padding:4px 7px;background:#eef2f6;border-radius:6px;color:var(--brand);font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
-.bmr-provider-tie{display:block;margin-top:4px;color:var(--muted);font-size:11px;line-height:1.15;font-weight:500}
+
 .bmr-provider-table .bmr-provider-name{min-width:0;overflow-wrap:break-word;font-weight:500}
 .bmr-provider-table .bmr-provider-count{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .bmr-provider-table .bmr-provider-count strong{font-size:15px;font-weight:700;color:var(--ink)}
@@ -338,4 +338,10 @@ html[lang="zh-CN"] body{font-family:Inter,"Noto Sans CJK SC","Noto Sans SC","Mic
   html[lang="en"] .research-table--comparison-pantanal td:nth-child(4)::before{content:"Private format";}
   html[lang="zh-CN"] .research-table--comparison-pantanal td:nth-child(3)::before{content:"河上天数";}
   html[lang="zh-CN"] .research-table--comparison-pantanal td:nth-child(4)::before{content:"私人船只安排";}
+}
+
+/* BMR display ranges (e.g. 12-13, 34-74) need a wider rank cell on phones. */
+@media(max-width:720px){
+  .research-table--ranking[data-bmr-ranking="true"] tr{grid-template-columns:60px minmax(0,1fr) auto}
+  .research-table--ranking[data-bmr-ranking="true"] td:first-child{white-space:nowrap;font-variant-numeric:tabular-nums;font-size:13px}
 }
