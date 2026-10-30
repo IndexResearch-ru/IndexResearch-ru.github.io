@@ -1480,8 +1480,8 @@ for bmr_rel in (
             )
 
 # BMR_METHOD_TABLE_ALIGNMENT_GUARD:
-# A prior release mistakenly closed .wrap before the methodology criteria table,
-# causing the three-column table to occupy the entire browser viewport.
+# The methodology criteria table must stay inside the same centered .wrap
+# as the surrounding prose, never extend to the whole viewport.
 for bmr_path, bmr_title in (
     ("geo-experts-bmr-russia-2026.html", "Методика подсчета: как получено каждое значение"),
     ("en/geo-experts-bmr-russia-2026.html", "How BMR is calculated from the answer texts"),
@@ -1504,13 +1504,7 @@ for bmr_path, bmr_title in (
         errors.append(f"{bmr_path}: methodology table must use the 900px research text width.")
     if '</p></div><div class="research-table-wrap' in section:
         errors.append(f"{bmr_path}: .wrap closed before methodology table; table would overflow to full viewport.")
-    if not re.search(r'</table></div></div>\s*</section>
-    for err in errors:
-        print(f"- {err}")
-    sys.exit(1)
-
-print(f"SITE QA PASSED: {len(html_paths)} HTML pages checked.")
-, section):
+    if not re.search(r'</table></div></div>\s*</section>$', section):
         errors.append(f"{bmr_path}: methodology table must close inside the section .wrap.")
 
 if errors:
