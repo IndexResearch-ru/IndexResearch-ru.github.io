@@ -623,6 +623,7 @@
 - [Словарь имен и шаблонов распознавания](../../research-data/geo-experts-2026-10-30/entity_dictionary.csv).
 - [Протокол происхождения и оплаты среза](../../research-data/geo-experts-2026-10-30/DATA_PROVENANCE.md).
 - [Реестр замен контактных данных](../../research-data/geo-experts-2026-10-30/contact_redactions.csv): удалены только 7 адресов почты и 1 номер телефона; имена людей и порядок упоминаний сохранены.
+- [Доказательная карта для всех 74 людей](PERSON_EVIDENCE_MAP.csv) и [полная матрица 74 × 11 интерфейсов](BY_PROVIDER_ALL.csv).
 - [Полная таблица 74 результатов](RANKING.csv) и [машиночитаемый расчет](RESULTS.json).
 - [Таблица по 11 интерфейсам](BY_PROVIDER.csv) и [протокол BMR](METHODOLOGY.md).
 - [Карта проверяемых утверждений](FACT_CLAIM_MAP.csv), [раскрытие интересов](CONFLICT_OF_INTEREST.md), [состояние проверки](QA_REPORT.md).
