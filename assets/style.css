@@ -53,6 +53,22 @@
 .research-prose ul,.research-prose ol{padding-left:24px}
 .research-prose li+li{margin-top:8px}
 .research-top3 article p{margin-bottom:0}
+/* Compact BMR tables: one visible rank per tied group, aligned names and counts. */
+.grid article[data-bmr-provider] h3{margin:0 0 12px;font-size:21px;line-height:1.3}
+.bmr-provider-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:15px;line-height:1.4}
+.bmr-provider-table thead th{padding:6px 8px 10px;text-align:left;color:var(--muted);font-size:12px;font-weight:600;border-bottom:1px solid var(--line)}
+.bmr-provider-table thead th:first-child{width:56px;text-align:center}
+.bmr-provider-table thead th:last-child{width:70px;text-align:right}
+.bmr-provider-table tbody+tbody tr:first-child>th,.bmr-provider-table tbody+tbody tr:first-child>td{border-top:1px solid var(--line)}
+.bmr-provider-table tbody th,.bmr-provider-table tbody td{padding:8px;vertical-align:middle}
+.bmr-provider-table .bmr-provider-place{padding-left:2px;padding-right:10px;text-align:center;vertical-align:middle}
+.bmr-provider-place-number{display:inline-block;min-width:32px;padding:4px 7px;background:#eef2f6;border-radius:6px;color:var(--brand);font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+.bmr-provider-tie{display:block;margin-top:4px;color:var(--muted);font-size:11px;line-height:1.15;font-weight:500}
+.bmr-provider-table .bmr-provider-name{min-width:0;overflow-wrap:break-word;font-weight:500}
+.bmr-provider-table .bmr-provider-count{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bmr-provider-table .bmr-provider-count strong{font-size:15px;font-weight:700;color:var(--ink)}
+@media(max-width:720px){.grid article[data-bmr-provider]{padding:18px}.bmr-provider-table{font-size:14px}.bmr-provider-table thead th{font-size:11px;padding:6px 5px 9px}.bmr-provider-table thead th:first-child{width:50px}.bmr-provider-table thead th:last-child{width:60px}.bmr-provider-table tbody th,.bmr-provider-table tbody td{padding:7px 5px}.bmr-provider-table .bmr-provider-place{padding-left:1px;padding-right:7px}.bmr-provider-table .bmr-provider-count strong{font-size:14px}}
+
 .research-source-list li+li{margin-top:10px}
 .research-citation{padding:20px 22px;border-left:4px solid var(--brand);background:var(--soft);font-size:17px}
 @media(max-width:900px){.research-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
