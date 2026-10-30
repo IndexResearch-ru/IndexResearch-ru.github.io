@@ -19,8 +19,8 @@ jobs:
           python-version: '3.11'
       - name: Install Chromium for public live verification
         run: |
-          python -m pip install --disable-pip-version-check playwright==1.56.0
-          python -m playwright install --with-deps chromium
+          python -m pip install --disable-pip-version-check --upgrade playwright
+          python -m playwright install chromium
       - name: Verify six published pages, mobile widths, images, links and sitemap
         run: python scripts/qa_argentina_live.py
       - name: Store reproducible browser evidence
