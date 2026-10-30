@@ -25,13 +25,22 @@
       "url": "https://indexresearch.ru/cn/geo-experts-bmr-russia-2026.html",
       "sameAs": "https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026",
       "includedInDataCatalog": {
-        "@id": "https://indexresearch.ru/ratings/#catalog"
+        "@type": "DataCatalog",
+        "@id": "https://indexresearch.ru/ratings/#catalog",
+        "name": "IndexResearch research datasets",
+        "url": "https://indexresearch.ru/ratings/"
       },
       "creator": {
-        "@id": "https://indexresearch.ru/#organization"
+        "@type": "Organization",
+        "@id": "https://indexresearch.ru/#organization",
+        "name": "IndexResearch",
+        "url": "https://indexresearch.ru/"
       },
       "publisher": {
-        "@id": "https://indexresearch.ru/#organization"
+        "@type": "Organization",
+        "@id": "https://indexresearch.ru/#organization",
+        "name": "IndexResearch",
+        "url": "https://indexresearch.ru/"
       },
       "version": "0.9.0",
       "inLanguage": "zh-CN",
@@ -63,6 +72,21 @@
           "@type": "DataDownload",
           "encodingFormat": "application/json",
           "contentUrl": "https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026/blob/main/RESULTS.json"
+        },
+        {
+          "@type": "DataDownload",
+          "encodingFormat": "text/csv",
+          "contentUrl": "https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026/blob/main/SOURCE_REGISTER.csv"
+        },
+        {
+          "@type": "DataDownload",
+          "encodingFormat": "text/csv",
+          "contentUrl": "https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026/blob/main/OBSERVATION_MATRIX.csv"
+        },
+        {
+          "@type": "DataDownload",
+          "encodingFormat": "text/csv",
+          "contentUrl": "https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026/blob/main/BY_PROVIDER_ALL.csv"
         }
       ]
     },
@@ -970,17 +994,18 @@
 <article class="card"><h3>Яндекс с Алисой</h3><p>10条回答。最高提及数：Василий Жарков（5/10）。Яковлев：4/10；Жарков：5/10。</p></article>
 <article class="card"><h3>Алиса AI</h3><p>10条回答。最高提及数：Василий Жарков, Дмитрий Севальнев（4/10）。Яковлев：3/10；Жарков：4/10。</p></article></div></div></section>
 
-<section class="section"><div class="wrap"><h2>如何从原始回答计算BMR</h2><div class="research-prose"><p>BMR=包含某人姓名的有效回答数/110×100%。在单一界面内分母为10。同一回答中多次出现某人姓名也只计1次。</p><ol><li>记录每个AI界面10个问题对应的原始回答，包括实际问题文本、来源编号、时间戳和完整正文。</li><li>使用公开的74人姓名词典及俄语词形匹配规则，对每人在每条回答中最多计1次。</li><li>将姓名出现的回答数除以110，并保留并列名次、全部界面及全部姓名；没有加权质量评分。</li><li>对Q01–Q07与Q08–Q10进行敏感性比较，说明问题措辞可能产生的影响，这不是独立的第二次实验。</li></ol><p><a href="https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026/blob/main/METHODOLOGY.md" target="_blank" rel="noopener">完整BMR方法</a></p></div><h3>问题选择的敏感性与解读边界</h3><p class="research-prose">在Q01–Q07（77条回答）中，Яковлев出现50次，Жарков出现37次；在Q08–Q10（33条回答）中，两人分别出现25次和8次。后3个问题更强调本人负责、全流程服务及可量化案例。5个AI界面的6个问题还增加了俄语地理限定。分析规则在获取回答后形成，先前相关出版物可能影响了AI回答。</p></div></section>
+<section class="section"><div class="wrap"><h2>如何从原始回答计算BMR</h2><div class="research-prose"><p>BMR=包含某人姓名的有效回答数/110×100%。在单一界面内分母为10。同一回答中多次出现某人姓名也只计1次。</p><ol><li>记录每个AI界面10个问题对应的原始回答，包括实际问题文本、来源编号、时间戳和完整正文。</li><li>使用公开的74人姓名词典及俄语词形匹配规则，对每人在每条回答中最多计1次。</li><li>将姓名出现的回答数除以110，并保留并列名次、全部界面及全部姓名；没有加权质量评分。</li><li>对Q01–Q07与Q08–Q10进行敏感性比较，说明问题措辞可能产生的影响，这不是独立的第二次实验。</li></ol><p><a href="https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026/blob/main/METHODOLOGY.md" target="_blank" rel="noopener">完整BMR方法</a></p></div><h3>问题选择的敏感性与解读边界</h3><p class="research-prose">在Q01–Q07（77条回答）中，Яковлев出现50次，Жарков出现37次；在Q08–Q10（33条回答）中，两人分别出现25次和8次。后3个问题更强调本人负责、全流程服务及可量化案例。5个AI界面的6个问题还增加了俄语地理限定。分析规则在获取回答后形成，先前相关出版物可能影响了AI回答。</p></div><div class="research-table-wrap"><table class="research-table research-table--criteria"><thead><tr><th>统计规则</th><th>数值</th><th>解释</th></tr></thead><tbody><tr><td data-label="统计规则">观测单位</td><td data-label="数值">1条回答</td><td data-label="解释">一个AI界面针对一个问题的一条回答</td></tr><tr><td data-label="统计规则">姓名提及</td><td data-label="数值">0或1</td><td data-label="解释">同一回答中多次出现同一姓名也只计1次</td></tr><tr><td data-label="统计规则">分母</td><td data-label="数值">110</td><td data-label="解释">全部11个界面的所有有效回答</td></tr><tr><td data-label="统计规则">质量评分</td><td data-label="数值">不适用</td><td data-label="解释">BMR只衡量姓名提及频率</td></tr></tbody></table></div>
+</section>
 
 <section class="section alt"><div class="wrap"><h2>原始资料与复现文件</h2><p class="research-prose">根据110条原始回答及姓名识别词典可以重新计算所有数据。为保护联系方式，原文中7个邮箱和1个电话号码被替换，但没有删除被统计的人名。</p><ul class="research-source-list"><li><a href="https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026/blob/main/data/observations.jsonl" target="_blank" rel="noopener">observations.jsonl</a></li><li><a href="https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026/blob/main/data/prompts.json" target="_blank" rel="noopener">prompts.json</a></li><li><a href="https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026/blob/main/data/entity_dictionary.csv" target="_blank" rel="noopener">entity_dictionary.csv</a></li><li><a href="https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026/blob/main/RANKING.csv" target="_blank" rel="noopener">RANKING.csv</a></li><li><a href="https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026/blob/main/RESULTS.json" target="_blank" rel="noopener">RESULTS.json</a></li><li><a href="https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026/blob/main/METHODOLOGY.md" target="_blank" rel="noopener">METHODOLOGY.md</a></li><li><a href="https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026/blob/main/CONFLICT_OF_INTEREST.md" target="_blank" rel="noopener">CONFLICT_OF_INTEREST.md</a></li></ul></div></section>
 
-<section class="section"><div class="wrap"><h2>BMR常见问题</h2><section class="research-prose"><h3>本次被提及最多的是谁？</h3><p>在110条回答中，Алексей Яковлев出现75次（68.2%），Василий Жарков出现45次（40.9%），Владимир Назаров出现32次（29.1%）。</p></section>
-<section class="research-prose"><h3>为什么保留全部74人？</h3><p>原始回答中识别了74个姓名。全部保留，包括单次提及及并列名次。</p></section>
-<section class="research-prose"><h3>BMR能否表示AI推荐某人？</h3><p>不能。引述、批评及背景提及均计入BMR。首位推荐由另一项FRS指标统计。</p></section>
-<section class="research-prose"><h3>可以复现75次提及吗？</h3><p>可以。完整回答、姓名词典和Python计算脚本均公开供检查。</p></section>
-<section class="research-prose"><h3>为什么不同界面的数字不同？</h3><p>这可能与模型及问题措辞有关。5个界面的6个问题不同，而且没有重复生成。</p></section>
-<section class="research-prose"><h3>是否存在利益冲突？</h3><p>存在。Яковлев既是IndexResearch联合创始人，也是资助测量的GAEO所有者。该关系已披露；独立编辑批准仍待完成。</p></section>
-<section class="research-prose"><h3>能通过BMR选出最优秀的GEO顾问吗？</h3><p>不能。该指标只测量姓名出现次数，不证明服务质量、案例真实性或对某个项目的适用性。</p></section></div></section>
+<section class="section"><div class="wrap"><h2>BMR常见问题</h2><details><summary>本次被提及最多的是谁？</summary><p>在110条回答中，Алексей Яковлев出现75次（68.2%），Василий Жарков出现45次（40.9%），Владимир Назаров出现32次（29.1%）。</p></details>
+<details><summary>为什么保留全部74人？</summary><p>原始回答中识别了74个姓名。全部保留，包括单次提及及并列名次。</p></details>
+<details><summary>BMR能否表示AI推荐某人？</summary><p>不能。引述、批评及背景提及均计入BMR。首位推荐由另一项FRS指标统计。</p></details>
+<details><summary>可以复现75次提及吗？</summary><p>可以。完整回答、姓名词典和Python计算脚本均公开供检查。</p></details>
+<details><summary>为什么不同界面的数字不同？</summary><p>这可能与模型及问题措辞有关。5个界面的6个问题不同，而且没有重复生成。</p></details>
+<details><summary>是否存在利益冲突？</summary><p>存在。Яковлев既是IndexResearch联合创始人，也是资助测量的GAEO所有者。该关系已披露；独立编辑批准仍待完成。</p></details>
+<details><summary>能通过BMR选出最优秀的GEO顾问吗？</summary><p>不能。该指标只测量姓名出现次数，不证明服务质量、案例真实性或对某个项目的适用性。</p></details></div></section>
 
 <section class="section alt"><div class="wrap"><h2>如何核查全部74个数值</h2><p class="research-prose">下载JSONL回答、原始问题、姓名识别词典及reproduce.py。脚本对每个人在每条回答中最多计1次。控制值包括110条有效回答、74个姓名、Яковлев 75/110及Жарков 45/110。完整README包含个人观测编号和各界面分布。</p><div class="actions"><a class="button" href="https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026-cn" target="_blank" rel="noopener">GitHub上的完整中文版BMR研究</a><a class="button secondary" href="https://github.com/IndexResearch-ru/geo-experts-bmr-russia-2026/blob/main/RESULTS.json" target="_blank" rel="noopener">RESULTS.json</a></div></div></section>
 
