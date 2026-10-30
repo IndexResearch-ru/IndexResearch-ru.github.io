@@ -1,0 +1,57 @@
+name: Verify GEO specialists BMR and FRS research
+on:
+  push:
+    paths:
+      - 'research-data/geo-experts-2026-10-30/**'
+      - 'research/geo-experts-bmr-russia-2026/**'
+      - 'research/geo-experts-first-recommendation-russia-2026/**'
+      - '.github/workflows/geo-bmr-frs-reproducibility.yml'
+  pull_request:
+    paths:
+      - 'research-data/geo-experts-2026-10-30/**'
+      - 'research/geo-experts-bmr-russia-2026/**'
+      - 'research/geo-experts-first-recommendation-russia-2026/**'
+      - '.github/workflows/geo-bmr-frs-reproducibility.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recompute and compare with both published-result drafts
+        run: |
+          python3 - <<'PY'
+          import importlib.util, json
+          from pathlib import Path
+          root = Path("research-data/geo-experts-2026-10-30")
+          spec = importlib.util.spec_from_file_location("verifygeo", root / "reproduce.py")
+          mod = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(mod)
+          computed = mod.calculate()
+          studies = {
+              "bmr": "research/geo-experts-bmr-russia-2026/RESULTS.json",
+              "frs": "research/geo-experts-first-recommendation-russia-2026/RESULTS.json",
+          }
+          for metric, filename in studies.items():
+              published = json.loads(Path(filename).read_text(encoding="utf-8"))
+              a = {row["person"]: row["count"] for row in computed[metric]["ranking"]}
+              b = {row["name"]: row["count"] for row in published["ranking"]}
+              assert a == b, (metric, "ranking discrepancy")
+              for provider in mod.PROVIDERS:
+                  av = {row["person"]: row["count"] for row in computed[metric]["by_provider"][provider]}
+                  actual = next(item for item in published["per_engine"] if item["provider"] == provider)
+                  bv = {row["name"]: row["count"] for row in actual["ranking"]}
+                  assert av == bv, (metric, provider, "provider discrepancy")
+              for cohort, group in computed[metric]["sensitivity"].items():
+                  av = {row["person"]: row["count"] for row in group["ranking"]}
+                  bv = {row["name"]: row["count"] for row in published["sensitivity"][cohort]["ranking"]}
+                  assert av == bv and group["n"] == published["sensitivity"][cohort]["responses"]
+              print(metric.upper(), "PASS:", sum(a.values()), "counted appearances, 110 observations")
+          print("BMR and FRS: public source data + coding + computations reproduce exactly.")
+          PY
