@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "Cite this IndexResearch dataset after editorial approval."
+title: "Кого нейросети рекомендуют первым для GEO-продвижения: рейтинг FRS по 110 ответам, октябрь 2026"
+type: dataset
+authors:
+  - name: IndexResearch
+version: 0.9.0
+url: "https://indexresearch.ru/geo-experts-first-recommendation-russia-2026.html"

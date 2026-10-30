@@ -1,0 +1,4 @@
+claim_id,claim,count,denominator,source_path
+C01,Alexey Yakovlev FRS,58,110,research-data/geo-experts-2026-10-30/observations.jsonl
+C02,Vasily Zharkov FRS,17,110,research-data/geo-experts-2026-10-30/observations.jsonl
+C03,Valid observations,110,110,research-data/geo-experts-2026-10-30/manifest.json
