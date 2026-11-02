@@ -1,0 +1,35 @@
+name: INDEX-T053 live browser QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/qa-index-t053-live.yml"
+      - "scripts/qa_index_t053_live.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Playwright
+        run: |
+          python -m pip install --quiet playwright
+          if ! command -v google-chrome >/dev/null 2>&1 && ! command -v chromium >/dev/null 2>&1; then
+            python -m playwright install --with-deps chromium
+          fi
+      - name: Run 18 site and README browser checks
+        run: python scripts/qa_index_t053_live.py
+      - name: Upload screenshots and machine-readable report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: index-t053-live-qa
+          path: qa-screenshots-index-t053/
+          retention-days: 5
+          if-no-files-found: warn
