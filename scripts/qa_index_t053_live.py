@@ -56,10 +56,27 @@ def inspect(page, lang, kind, viewport):
         elif kind == "site":
             ERRORS.append("SITE_HTTP_" + lang + "_" + str(result["http_status"]))
         elif kind == "github" and result["http_status"] == 200:
-            result["readme_exists"] = page.locator("#readme").count() > 0
-            result["readme_tables"] = page.locator("#readme table").count()
-            result["readme_images"] = page.locator("#readme img").count()
-            result["readme_source"] = page.locator("#readme").inner_text(timeout=15000)[:300]
+            selectors = ["#readme", "article.markdown-body", ".markdown-body", '[data-testid="readme"]']
+            selected = next((s for s in selectors if page.locator(s).count() > 0), None)
+            if not selected:
+                page.screenshot(path=str(SCREENSHOTS / (lang + "-github-root-" + str(width) + ".png")),
+                                full_page=False, timeout=15000)
+                response = page.goto(url + "/blob/main/README.md", wait_until="domcontentloaded", timeout=40000)
+                page.wait_for_timeout(1300)
+                result["fallback_status"] = response.status if response else None
+                selected = next((s for s in selectors if page.locator(s).count() > 0), None)
+            result["readme_selector"] = selected
+            result["readme_exists"] = bool(selected)
+            if selected:
+                loc = page.locator(selected).first
+                result["readme_tables"] = loc.locator("table").count()
+                result["readme_images"] = loc.locator("img").count()
+                result["readme_h3"] = loc.locator("h3").count()
+                result["readme_source"] = loc.inner_text(timeout=5000)[:300]
+            else:
+                result["readme_tables"] = 0
+                result["readme_images"] = 0
+                result["readme_source"] = page.locator("body").inner_text(timeout=5000)[-700:]
             if not result["readme_exists"] or result["readme_tables"] < 2 or result["readme_images"] < 4:
                 ERRORS.append("GITHUB_README_" + lang + "_" + str(width) + ":" + str(result))
         else:
