@@ -1230,7 +1230,7 @@ for path in html_paths:
                 errors.append(f"{rel}: Dataset.distribution must expose SOURCE_REGISTER.csv.")
             if not any(
                 candidate in dataset_dump
-                for candidate in ["SCORE_MATRIX.csv", "OBSERVATION_MATRIX.csv", "CURRENT_RECHECK.csv", "BY_PROVIDER_ALL.csv", "CALCULATION_TRACE.csv"] + (["EDITORIAL_COMPARISON.csv"] if is_editorial_shortlist else [])
+                for candidate in ["SCORE_MATRIX.csv", "OBSERVATION_MATRIX.csv", "EVIDENCE_MATRIX.csv", "CURRENT_RECHECK.csv", "BY_PROVIDER_ALL.csv", "CALCULATION_TRACE.csv"] + (["EDITORIAL_COMPARISON.csv"] if is_editorial_shortlist else [])
             ):
                 errors.append(f"{rel}: Dataset.distribution must expose SCORE_MATRIX.csv or an equivalent matrix.")
 
