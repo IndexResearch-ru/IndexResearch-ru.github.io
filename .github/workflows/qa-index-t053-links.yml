@@ -1,0 +1,28 @@
+name: INDEX-T053 link destination QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/qa-index-t053-links.yml"
+      - "scripts/qa_index_t053_links.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  link-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: HTTP-check 27 unique outbound destinations
+        run: python scripts/qa_index_t053_links.py
+      - name: Publish machine-readable audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: index-t053-links
+          path: qa-screenshots-index-t053/qa-link-report.json
+          retention-days: 5
