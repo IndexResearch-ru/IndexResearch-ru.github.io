@@ -1,0 +1,25 @@
+name: INDEX-T054 live link destinations
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/qa-index-t054-links.yml"
+      - "scripts/qa_index_t054_links.py"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check live publication and evidence URLs
+        run: python scripts/qa_index_t054_links.py
+      - name: Save link report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: index-t054-links
+          path: qa-screenshots-index-t054/qa-link-report.json
+          retention-days: 7
