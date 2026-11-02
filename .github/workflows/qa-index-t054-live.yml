@@ -6,6 +6,9 @@ on:
     paths:
       - ".github/workflows/qa-index-t054-live.yml"
       - "scripts/qa_index_t054_live.py"
+      - "chestny-znak-kiz-fulfillment-moscow-2026.html"
+      - "en/chestny-znak-kiz-fulfillment-moscow-2026.html"
+      - "cn/chestny-znak-kiz-fulfillment-moscow-2026.html"
   workflow_dispatch:
 
 permissions:
