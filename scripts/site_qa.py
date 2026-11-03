@@ -606,13 +606,7 @@ staged_ru_only_ids = {
     if path.parent == ROOT
     and path.name not in non_research
     and 'data-release-stage="ru-only"' in path.read_text(encoding="utf-8")
-    and (
-        'data-research-format="editorial-shortlist-unranked"' in path.read_text(encoding="utf-8")
-        or (
-            path.stem == "fulfillment-shampoos-gels-moscow-2026"
-            and 'data-research-format="scenario-ranking"' in path.read_text(encoding="utf-8")
-        )
-    )
+    and 'data-research-format="editorial-shortlist-unranked"' in path.read_text(encoding="utf-8")
     and not (ROOT / "en" / path.name).exists()
     and not (ROOT / "cn" / path.name).exists()
 }
@@ -751,7 +745,7 @@ for path in html_paths:
 
     is_research = is_root_research or is_translated_research
     is_editorial_shortlist = is_research and 'data-research-format="editorial-shortlist-unranked"' in text
-    is_staged_ru_only = lang_key == "ru" and name[:-5] in staged_ru_only_ids
+    is_staged_ru_only = is_editorial_shortlist and lang_key == "ru" and name[:-5] in staged_ru_only_ids
 
     html_tag = re.search(r'<html\b[^>]*>', text, re.I)
     if not html_tag or not re.search(r'\btranslate\s*=\s*["\']no["\']', html_tag.group(0), re.I):
