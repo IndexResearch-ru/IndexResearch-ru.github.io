@@ -415,6 +415,8 @@ def collect_catalog_datasets(ratings_text: str) -> list[dict]:
     for research_id in catalog_research_ids(ratings_text):
         path = ROOT / f"{research_id}.html"
         if not path.exists():
+            path = ROOT / "reports" / research_id / "index.html"
+        if not path.exists():
             raise RuntimeError(f"ratings/ references missing research page: {path.name}")
         page_text = path.read_text(encoding="utf-8")
         page_data = load_jsonld(page_text)
@@ -431,8 +433,9 @@ def collect_catalog_datasets(ratings_text: str) -> list[dict]:
             if field in dataset
         }
         summary["@type"] = "Dataset"
-        summary.setdefault("@id", f"{BASE}/{path.name}#dataset")
-        summary.setdefault("url", f"{BASE}/{path.name}")
+        public_url = f"{BASE}/reports/{research_id}/" if path.name == "index.html" else f"{BASE}/{path.name}"
+        summary.setdefault("@id", public_url + "#dataset")
+        summary.setdefault("url", public_url)
         summary["includedInDataCatalog"] = dict(DATA_CATALOG_REF)
         datasets.append(summary)
     return datasets

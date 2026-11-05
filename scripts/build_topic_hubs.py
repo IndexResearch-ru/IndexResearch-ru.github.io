@@ -81,6 +81,9 @@ def topic_url(slug: str, lang: str) -> str:
 
 def research_url(research_id: str, lang: str) -> str:
     directory = LANGS[lang]["dir"]
+    base = ROOT / directory if directory else ROOT
+    if (base / "reports" / research_id / "index.html").exists():
+        return f"{BASE}/{directory}/reports/{research_id}/" if directory else f"{BASE}/reports/{research_id}/"
     return f"{BASE}/{directory}/{research_id}.html" if directory else f"{BASE}/{research_id}.html"
 
 

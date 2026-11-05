@@ -97,6 +97,14 @@ def github_repo_for_research_card(page_text: str, research_id: str) -> str | Non
     return repos[-1] if repos else None
 
 
+def topic_research_url(research_id: str, lang_key: str) -> str:
+    prefix = "" if lang_key == "ru" else f"/{lang_key}"
+    base = ROOT if lang_key == "ru" else ROOT / lang_key
+    if (base / "reports" / research_id / "index.html").exists():
+        return f"{BASE}{prefix}/reports/{research_id}/"
+    return f"{BASE}{prefix}/{research_id}.html"
+
+
 # THEMATIC HUB QA
 topic_by_research_id = {}
 try:
@@ -228,11 +236,7 @@ try:
                             f"{rel_label}: CollectionPage.inLanguage must be {cfg['schema_lang']!r}."
                         )
                     expected_part_ids = [
-                        (
-                            f"{BASE}/{cfg['dir']}/{research_id}.html#article"
-                            if cfg["dir"]
-                            else f"{BASE}/{research_id}.html#article"
-                        )
+                        topic_research_url(research_id, lang) + "#article"
                         for research_id in expected_ids_lang
                     ]
                     actual_part_ids = [
@@ -254,11 +258,7 @@ try:
                         if isinstance(item, dict)
                     ]
                     expected_urls = [
-                        (
-                            f"{BASE}/{cfg['dir']}/{research_id}.html"
-                            if cfg["dir"]
-                            else f"{BASE}/{research_id}.html"
-                        )
+                        topic_research_url(research_id, lang)
                         for research_id in expected_ids_lang
                     ]
                     actual_urls = [item.get("url") for item in elements]
@@ -611,8 +611,10 @@ staged_ru_only_ids = {
     and not (ROOT / "cn" / path.name).exists()
 }
 research_page_ids = sorted(
-    path.stem for path in html_paths
-    if path.parent == ROOT and path.name not in non_research and path.stem not in staged_ru_only_ids
+    [path.stem for path in html_paths
+     if path.parent == ROOT and path.name not in non_research and path.stem not in staged_ru_only_ids]
+    + [path.parent.name for path in (ROOT / "reports").glob("*/index.html")
+       if path.parent.name in catalog_ids]
 )
 if sorted(catalog_ids) != research_page_ids:
     missing_cards = sorted(set(research_page_ids) - set(catalog_ids))
@@ -625,6 +627,8 @@ if sorted(catalog_ids) != research_page_ids:
 catalog_dates = []
 for research_id in catalog_ids:
     research_path = ROOT / f"{research_id}.html"
+    if not research_path.exists():
+        research_path = ROOT / "reports" / research_id / "index.html"
     if not research_path.exists():
         continue
     research_text = research_path.read_text(encoding="utf-8")

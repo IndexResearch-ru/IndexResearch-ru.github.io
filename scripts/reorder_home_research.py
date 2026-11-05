@@ -31,7 +31,7 @@ CATALOG_CARD_RE = re.compile(
 
 P_RE = re.compile(r'<p(?:\s+class="([^"]*)")?>([\s\S]*?)</p>', re.IGNORECASE)
 TITLE_RE = re.compile(r'<h2>([\s\S]*?)</h2>', re.IGNORECASE)
-SUMMARY_LINK_RE = re.compile(r'<a class="button" href="(/[^"]+\.html)"', re.IGNORECASE)
+SUMMARY_LINK_RE = re.compile(r'<a class="button" href="(/[^"]+(?:\.html|/))"', re.IGNORECASE)
 GITHUB_LINK_RE = re.compile(
     r'<a class="button secondary" href="(https://github\.com/IndexResearch-ru/[^"]+)"',
     re.IGNORECASE,
@@ -80,7 +80,7 @@ def normalize_catalog_card(card: str) -> str:
         count=1,
     )
     card = re.sub(
-        r'(<a class="button" href="/[^"]+\.html">)[\s\S]*?(</a>)',
+        r'(<a class="button" href="/[^"]+(?:\.html|/)">)[\s\S]*?(</a>)',
         r'\1Читать\2',
         card,
         count=1,

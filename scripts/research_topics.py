@@ -132,7 +132,7 @@ def render_topic_navigation(lang: str) -> tuple[str, str]:
             if research_id not in cards and research_id in set(config.get("pending_localizations") or []):
                 continue
             card = cards[research_id]
-            href = f"{prefix}/{research_id}.html" if prefix else f"/{research_id}.html"
+            href = card["href"]
             research_links.append(f'<a href="{href}">{html_module.escape(card["title"])}</a>')
         research_html = "".join(research_links)
         open_label = html_module.escape(
