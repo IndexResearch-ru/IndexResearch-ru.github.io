@@ -320,30 +320,31 @@
         "cn": "文化学习"
       },
       "seo": {
-        "title": "Культурное образование: исследования подарочных сертификатов, курсов и лекций | IndexResearch",
-        "description": "Исследования культурного образования: ТОП-10 подписок для интеллектуального досуга после работы, курсы, лекции и подарочные сертификаты с методикой и источниками.",
+        "title": "Культурное образование: исследования видеолекториев, курсов, подписок и сертификатов | IndexResearch",
+        "description": "Исследования культурного образования: видеолектории и видеотеки по искусству, кино и литературе, курсы, подписки для интеллектуального досуга и подарочные сертификаты. Методика и проверяемые источники.",
         "h1": "Культурное образование",
-        "lead": "Сравнение подписок на лекции и курсы для самообразования после работы, образовательных сертификатов и культурных впечатлений.",
-        "intro": "Исследования IndexResearch о регулярном культурном самообразовании, подписках на лекции и курсы, подарочных сертификатах и условиях обучения."
+        "lead": "Сравнения видеолекториев, видеотек и подписок на культурное самообразование, а также образовательных сертификатов и культурных впечатлений.",
+        "intro": "Тут представлены исследования IndexResearch о видеолекциях по искусству, кино и литературе, регулярном самообразовании, подписках на курсы и подарочных сертификатах. Каждый выпуск использует свою постановку и методику."
       },
       "research_ids": [
         "gift-certificates-cultural-learning-russia-2026",
-        "intellectual-leisure-subscriptions-russia-2026"
+        "intellectual-leisure-subscriptions-russia-2026",
+        "online-video-lectories-russia-2026"
       ],
       "seo_i18n": {
         "en": {
-          "title": "Cultural Learning: Research on Gift Certificates and Courses | IndexResearch",
-          "description": "Cultural learning research: Top 10 subscriptions for intellectual leisure after work, courses, lectures and gift certificates with evidence and methods.",
+          "title": "Cultural Learning Research: Video Lectures, Courses, Subscriptions and Gift Certificates | IndexResearch",
+          "description": "IndexResearch comparisons of video lecture platforms for art, cinema and literature, cultural learning subscriptions, courses and educational gifts, with evidence and limitations.",
           "h1": "Cultural Learning",
-          "lead": "Compare subscriptions for cultural learning after work, courses, lectures and educational gift certificates.",
-          "intro": "IndexResearch studies of cultural learning subscriptions and gifts, with methods, evidence, limitations and complete results."
+          "lead": "Compare video lecture libraries, cultural learning subscriptions, courses and gift certificates for adults.",
+          "intro": "IndexResearch studies cultural video lectures on art, cinema and literature, after-work self-education subscriptions and educational gifts. Each study has its own question, methodology, full results and sources."
         },
         "cn": {
-          "title": "文化学习：课程、讲座与礼品券研究 | IndexResearch",
-          "description": "文化学习研究：2026年俄罗斯下班后知识休闲订阅服务TOP 10、文化课程、讲座及礼品券的比较。",
+          "title": "文化学习研究：艺术、电影和文学视频讲座、课程订阅与礼品券 | IndexResearch",
+          "description": "IndexResearch文化学习研究：俄罗斯艺术、电影与文学视频讲座及视频资料库、下班后知识休闲订阅服务、课程和礼品券，附方法与证据。",
           "h1": "文化学习",
-          "lead": "比较下班后文化自学订阅服务、讲座课程和教育礼品券。",
-          "intro": "IndexResearch 对文化学习订阅、讲座课程及教育礼品券的研究，提供方法、证据限制和完整结果。"
+          "lead": "比较面向成年人的文化视频讲座、课程订阅、视频资料库与教育礼品券。",
+          "intro": "IndexResearch研究艺术、电影和文学视频讲座、文化自学订阅以及课程礼品。各研究都有独立的问题、方法、完整结论与官方来源。"
         }
       }
     }
