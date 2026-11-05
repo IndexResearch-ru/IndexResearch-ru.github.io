@@ -97,6 +97,13 @@ def github_repo_for_research_card(page_text: str, research_id: str) -> str | Non
     return repos[-1] if repos else None
 
 
+def catalog_id_from_url(url: str) -> str:
+    relative = url.removeprefix(BASE + "/")
+    if relative.startswith("reports/") and relative.endswith("/"):
+        return relative.split("/")[1]
+    return relative.removesuffix(".html")
+
+
 def topic_research_url(research_id: str, lang_key: str) -> str:
     prefix = "" if lang_key == "ru" else f"/{lang_key}"
     base = ROOT if lang_key == "ru" else ROOT / lang_key
@@ -659,7 +666,7 @@ if ratings_collections:
     collection = ratings_collections[0]
     has_part = [item for item in (collection.get("hasPart") or []) if isinstance(item, dict)]
     has_part_ids = [
-        str(item.get("url", "")).removeprefix(BASE + "/").removesuffix(".html")
+        catalog_id_from_url(str(item.get("url", "")))
         for item in has_part
         if item.get("url")
     ]
@@ -689,7 +696,7 @@ if ratings_catalogs:
         for item in (catalog.get("dataset") or [])
         if isinstance(item, dict)
     ]
-    expected_refs = [f"{BASE}/{research_id}.html#dataset" for research_id in catalog_ids]
+    expected_refs = [topic_research_url(research_id, "ru") + "#dataset" for research_id in catalog_ids]
     if refs != expected_refs:
         errors.append(
             f"ratings/: DataCatalog.dataset must match visible catalog order/count ({len(expected_refs)}); found {len(refs)}."
@@ -703,7 +710,7 @@ index_text_for_schema = (ROOT / "index.html").read_text(encoding="utf-8") if (RO
 index_types = schema_objects_by_type(index_text_for_schema, "index.html")
 home_datasets = index_types.get("Dataset", [])
 home_dataset_ids = [
-    str(item.get("url", "")).removeprefix(BASE + "/").removesuffix(".html")
+    catalog_id_from_url(str(item.get("url", "")))
     for item in home_datasets
     if isinstance(item, dict) and item.get("url")
 ]
