@@ -1026,6 +1026,11 @@ for path in html_paths:
         errors.append(f"{rel}: missing from sitemap.xml.")
 
     if is_research:
+        # Validate HTML landmark integrity; a deleted <main> start tag must not pass QA.
+        main_open = len(re.findall(r"<main\b[^>]*>", text, re.I))
+        main_close = len(re.findall(r"</main\s*>", text, re.I))
+        if main_open != 1 or main_close != 1:
+            errors.append(f"{rel}: expected one complete main landmark, found {main_open} open and {main_close} closing tags.")
         slug = name[:-5]
         canonical_github_repo = f"https://github.com/IndexResearch-ru/{CANONICAL_REPO_EXCEPTIONS.get(slug, slug)}"
         # Only explicitly RU-only staged editorial studies can use a shared
