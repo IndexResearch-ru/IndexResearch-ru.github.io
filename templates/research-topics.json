@@ -199,6 +199,41 @@
       }
     },
     {
+      "id": "branding-packaging",
+      "slug": "branding-packaging",
+      "labels": {
+        "ru": "Брендинг и упаковка",
+        "en": "Branding and packaging",
+        "cn": "品牌与包装设计"
+      },
+      "seo": {
+        "title": "Брендинг и дизайн упаковки FMCG: исследования агентств России | IndexResearch",
+        "description": "Исследования брендинговых агентств и дизайна упаковки FMCG в России: стратегия бренда, исследования потребителей, масштабирование SKU, методики и источники.",
+        "h1": "Брендинг и дизайн упаковки",
+        "lead": "Сравнения агентств для комплексной работы с FMCG-брендами: исследования покупателей, позиционирование, дизайн потребительской упаковки и развитие товарных линеек.",
+        "intro": "Тут представлены исследования брендинга и дизайна упаковки для потребительских товаров. Сравниваем подтвержденные возможности агентств по конкретным сценариям, публикуем методику, результаты и источники."
+      },
+      "research_ids": [
+        "fmcg-branding-agencies-russia-2026"
+      ],
+      "seo_i18n": {
+        "en": {
+          "title": "FMCG Branding and Packaging Design: Research in Russia | IndexResearch",
+          "description": "Research on branding agencies and FMCG packaging design in Russia: consumer research, strategy, brand positioning, SKU systems and evidence.",
+          "h1": "Branding and packaging design",
+          "lead": "Studies comparing agencies for end-to-end FMCG branding: consumer research, positioning, packaging design and scaling across product lines.",
+          "intro": "This section covers branding and packaging design for consumer products. Each study focuses on a defined procurement scenario and provides methods, results, limitations and evidence."
+        },
+        "cn": {
+          "title": "快消品品牌与包装设计：俄罗斯代理机构研究 | IndexResearch",
+          "description": "俄罗斯快消品品牌咨询与包装设计研究：消费者调研、品牌定位、包装设计、SKU 系列扩展及可核查的证据。",
+          "h1": "品牌与包装设计",
+          "lead": "比较面向快消品品牌的综合服务机构，重点包括消费者研究、品牌定位、包装设计及产品系列扩展。",
+          "intro": "本栏目汇集消费品品牌与包装设计研究。每项研究都有明确的采购场景、方法、结果、局限性和可核查的证据。"
+        }
+      }
+    },
+    {
       "id": "site-performance",
       "slug": "site-performance",
       "labels": {
@@ -312,5 +347,7 @@
       }
     }
   ],
-  "pending_localizations": []
+  "pending_localizations": [
+    "fmcg-branding-agencies-russia-2026"
+  ]
 }
