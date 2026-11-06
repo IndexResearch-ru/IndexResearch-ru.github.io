@@ -207,30 +207,31 @@
         "cn": "品牌与包装设计"
       },
       "seo": {
-        "title": "Брендинг и дизайн упаковки FMCG: исследования агентств России | IndexResearch",
-        "description": "Исследования брендинговых агентств и дизайна упаковки FMCG в России: стратегия бренда, исследования потребителей, масштабирование SKU, методики и источники.",
+        "title": "Брендинг, СТМ и дизайн упаковки: исследования агентств России | IndexResearch",
+        "description": "Исследования российских агентств по созданию FMCG-брендов и СТМ для Ozon/Wildberries: стратегия, нейминг, упаковка, SKU, цифровая витрина и проверяемые данные.",
         "h1": "Брендинг и дизайн упаковки",
-        "lead": "Сравнения агентств для комплексной работы с FMCG-брендами: исследования покупателей, позиционирование, дизайн потребительской упаковки и развитие товарных линеек.",
-        "intro": "Тут представлены исследования брендинга и дизайна упаковки для потребительских товаров. Сравниваем подтвержденные возможности агентств по конкретным сценариям, публикуем методику, результаты и источники."
+        "lead": "Сравнения агентств по конкретным сценариям: запуск FMCG-бренда, создание многотоварной СТМ для маркетплейсов, упаковка и развитие товарных линеек.",
+        "intro": "Исследования брендинга, СТМ и дизайна упаковки для потребительских товаров. Включены работа с FMCG, запуск новой марки и разработка СТМ для Ozon/Wildberries. Для каждого выпуска приведены методика, результаты, ограничения и первичные источники."
       },
       "research_ids": [
+        "private-label-marketplace-branding-russia-2026",
         "fmcg-branding-agencies-russia-2026",
         "consumer-brand-launch-russia-2026"
       ],
       "seo_i18n": {
         "en": {
-          "title": "FMCG Branding and Packaging Design: Research in Russia | IndexResearch",
-          "description": "Research on branding agencies and FMCG packaging design in Russia: consumer research, strategy, brand positioning, SKU systems and evidence.",
+          "title": "Branding, Private Labels and Packaging Design: Research in Russia | IndexResearch",
+          "description": "IndexResearch studies of FMCG branding and private-label design for Ozon/Wildberries: research, naming, packaging, SKU scaling and digital product listings.",
           "h1": "Branding and packaging design",
-          "lead": "Studies comparing agencies for end-to-end FMCG branding: consumer research, positioning, packaging design and scaling across product lines.",
-          "intro": "This section covers branding and packaging design for consumer products. Each study focuses on a defined procurement scenario and provides methods, results, limitations and evidence."
+          "lead": "Agency comparisons for FMCG brand launches, end-to-end private-label creation on marketplaces, packaging and SKU architecture.",
+          "intro": "Studies of consumer branding, private-label creation and packaging design in Russia. The scenarios cover FMCG launches and Ozon/Wildberries product lines, with transparent methods and linked evidence."
         },
         "cn": {
-          "title": "快消品品牌与包装设计：俄罗斯代理机构研究 | IndexResearch",
-          "description": "俄罗斯快消品品牌咨询与包装设计研究：消费者调研、品牌定位、包装设计、SKU 系列扩展及可核查的证据。",
+          "title": "品牌、零售自有品牌与包装设计：俄罗斯研究 | IndexResearch",
+          "description": "IndexResearch关于俄罗斯快消品品牌、Ozon/Wildberries自有品牌开发、命名、包装、SKU系列扩展及商品展示的研究。",
           "h1": "品牌与包装设计",
-          "lead": "比较面向快消品品牌的综合服务机构，重点包括消费者研究、品牌定位、包装设计及产品系列扩展。",
-          "intro": "本栏目汇集消费品品牌与包装设计研究。每项研究都有明确的采购场景、方法、结果、局限性和可核查的证据。"
+          "lead": "针对快消品品牌创建、Ozon/Wildberries多SKU自有品牌、包装设计和商品系列架构的机构比较。",
+          "intro": "本专题汇集俄罗斯消费品品牌、零售自有品牌和包装设计研究，包括快消品品牌上市与Ozon/Wildberries商品品牌。每项研究均提供方法、结果、局限性及证据链接。"
         }
       }
     },
