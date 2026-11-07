@@ -1,0 +1,26 @@
+name: INDEX-T063 author links HTTP audit
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/qa-index-t063-links.yml"
+      - "scripts/qa_index_t063_author_links.py"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify remaining 25 distinct public link destinations
+        run: python scripts/qa_index_t063_author_links.py
+      - name: Upload machine-readable link results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: index-t063-author-links
+          path: qa-index-t063-link-results.json
+          retention-days: 5
+          if-no-files-found: warn
