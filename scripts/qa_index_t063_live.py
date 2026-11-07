@@ -46,7 +46,7 @@ def check_site(page, lang, width):
     h1:document.querySelectorAll('main h1').length,
     ranks:document.querySelectorAll('main table.research-table--ranking tbody tr').length,
     faq:document.querySelectorAll('main details').length,
-    criteria:document.querySelectorAll('main table.research-table--criteria tbody tr').length,
+    criteria:[...document.querySelectorAll('main table.research-table--criteria')].at(-1)?.querySelectorAll('tbody tr').length||0,
     images:[...document.querySelectorAll('main img')].map(x=>({src:x.currentSrc||x.src,complete:x.complete,ok:x.naturalWidth>0})),
     header:document.querySelectorAll('header.top').length,
     footer:document.querySelectorAll('footer').length,
