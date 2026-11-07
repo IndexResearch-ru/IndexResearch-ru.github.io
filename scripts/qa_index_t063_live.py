@@ -67,6 +67,8 @@ def check_site(page, lang, width):
     disclosure:document.querySelector('main')?.innerText.includes('Admitad')
   })""")
   report.update(details)
+  if details["scroll"]>details["viewport"]+2:
+   report["overflow_nodes"]=page.evaluate("""() => [...document.querySelectorAll('main *')].map(el=>({tag:el.tagName,cls:String(el.className||'').slice(0,70),right:Math.round(el.getBoundingClientRect().right),text:(el.textContent||'').trim().slice(0,60)})).filter(x=>x.right>window.innerWidth+2).slice(0,12)""")
   expected_lang={"ru":"ru","en":"en","cn":"zh-CN"}[lang]
   for k,condition in {
    "status":report["http"]==200,"overflow":details["scroll"]<=details["viewport"]+2,
@@ -79,7 +81,7 @@ def check_site(page, lang, width):
    "disclosure":bool(details["disclosure"])
   }.items():
    if not condition:record_error(f"SITE_{lang}_{width}_{k}")
-  if width in [390,1440] and report["http"]==200:
+  if width in [360,390,1440] and report["http"]==200:
    page.screenshot(path=str(OUT/f"{lang}-site-{width}.png"),full_page=True,animations="disabled",timeout=35000)
  except Exception as e:
   report["error"]=str(e)[:450];record_error(f"SITE_{lang}_{width}_EXCEPTION:{str(e)[:160]}")
