@@ -1,0 +1,34 @@
+name: INDEX-T063 cinema trilingual live browser QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/qa-index-t063-live.yml"
+      - "scripts/qa_index_t063_live.py"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Playwright and CJK fonts
+        run: |
+          python -m pip install --quiet playwright
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq fonts-noto-cjk >/dev/null
+          if ! command -v google-chrome >/dev/null 2>&1 && ! command -v chromium >/dev/null 2>&1; then
+            python -m playwright install --with-deps chromium
+          fi
+      - name: Verify live RU EN CN, responsive views, GitHub README and sitemap
+        run: python scripts/qa_index_t063_live.py
+      - name: Upload screenshots and machine-readable report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: index-t063-live-qa
+          path: qa-screenshots-index-t063/
+          retention-days: 5
+          if-no-files-found: warn
