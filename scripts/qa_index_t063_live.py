@@ -19,7 +19,7 @@ CHECKS, ERRORS, LINK_CHECKS = [], [], []
 def record_error(s):
  ERRORS.append(s); print("QA_ERROR "+s, flush=True)
 
-def url_probe(url, label, max_size=150000):
+def url_probe(url, label, max_size=400000):
  req = urllib.request.Request(url, headers={"User-Agent":"IndexResearch-publication-QA/1.0"})
  try:
   with urllib.request.urlopen(req, timeout=22) as resp:
@@ -41,6 +41,15 @@ def check_site(page, lang, width):
   resp=page.goto(url,wait_until="domcontentloaded",timeout=55000)
   page.wait_for_timeout(850)
   report["http"]=resp.status if resp else None
+  for img in page.locator("main img").all():
+   try:
+    img.scroll_into_view_if_needed(timeout=10000)
+    img.evaluate("(x) => x.loading='eager'")
+    img.evaluate("(x) => x.decode().catch(() => {})")
+    page.wait_for_function("(el)=>el.complete",arg=img.element_handle(),timeout=18000)
+   except Exception as exc:
+    print("IMAGE_WAIT_WARNING "+lang+" "+str(width)+" "+str(exc)[:120],flush=True)
+  page.evaluate("window.scrollTo(0,0)")
   details=page.evaluate("""() => ({
     viewport:window.innerWidth,scroll:document.documentElement.scrollWidth,
     h1:document.querySelectorAll('main h1').length,
