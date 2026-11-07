@@ -116,7 +116,7 @@ def main():
   prefix="" if lang=="ru" else "/"+lang
   for kind,part in [("home","/"),("catalog","/ratings/"),("hub","/ratings/culture-education/")]:
    body=url_probe(ROOT+prefix+part,lang+"_"+kind)
-   hits=len(re.findall(r'<article\\b[^>]*data-research-id="'+SLUG+r'"',body))
+   hits=len(re.findall(r'<article\b[^>]*data-research-id="'+SLUG+r'"',body))
    if body and hits!=1:record_error(f"CATALOG_{lang}_{kind}_COUNT_{hits}")
  chrome_path=shutil.which("google-chrome") or shutil.which("chromium")
  with sync_playwright() as p:
