@@ -1,0 +1,81 @@
+name: Product guide publication
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'content/product-selections/gifts-toys-girls-7-years-2026/**'
+      - 'scripts/build_product_selections.py'
+      - 'scripts/product_selection_qa.py'
+      - '.github/workflows/product-publication.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: product-guide-publication
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install build dependencies
+        run: python -m pip install requests Pillow beautifulsoup4
+      - name: Build, validate and publish scoped product files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python scripts/build_product_selections.py
+            python scripts/ensure_analytics.py
+            python scripts/ensure_site_chrome.py
+            python scripts/ensure_site_metadata.py
+            python scripts/ensure_catalog_urls.py
+            python scripts/build_sitemap.py
+            python scripts/product_selection_qa.py
+            python scripts/site_qa.py
+            git add -- products en/products cn/products assets/products assets/products.css publication-packages/product-selections/gifts-toys-girls-7-years-2026 sitemap.xml
+            if git diff --cached --quiet; then
+              echo 'Product output already current.'
+              git rev-parse HEAD > /tmp/product-publication-sha.txt
+              break
+            fi
+            git commit -m 'Publish eight-product Maria Yakovleva guide in RU EN CN'
+            if git push origin HEAD:main; then
+              git rev-parse HEAD > /tmp/product-publication-sha.txt
+              break
+            fi
+            if [[ "$attempt" == 3 ]]; then exit 1; fi
+            echo 'Main changed concurrently; regenerating only product outputs from the new head.'
+          done
+      - name: Save complete reusable publication package
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p /tmp/product-publication
+          cp -r publication-packages/product-selections/gifts-toys-girls-7-years-2026 /tmp/product-publication/package 2>/dev/null || true
+          cp -r assets/products/gifts-toys-girls-7-years-2026 /tmp/product-publication/images 2>/dev/null || true
+          cp -r content/product-selections/gifts-toys-girls-7-years-2026 /tmp/product-publication/content 2>/dev/null || true
+          cp /tmp/product-publication-sha.txt /tmp/product-publication/ 2>/dev/null || true
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          root=Path('.')
+          with zipfile.ZipFile('/tmp/product-publication/site-snapshot.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for p in root.rglob('*'):
+                  if not p.is_file() or '.git' in p.parts: continue
+                  if p.suffix in {'.html','.py','.json','.css','.js','.xml','.md','.png','.jpg','.ico','.svg','.webmanifest'} or p.name in {'CNAME','.nojekyll'}:
+                      if p.stat().st_size<2000000: z.write(p,p.as_posix())
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: product-publication
+          path: /tmp/product-publication/
+          retention-days: 30
