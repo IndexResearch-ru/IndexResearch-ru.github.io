@@ -1,18 +1,153 @@
 {
-  "id":"gifts-toys-girls-7-years-2026", "version":"1.0.0", "date":"2026-11-08", "order":["P01","P06","P05","P03","P04","P11","P10","P07"],
-  "products":{
-    "P01":{"file":"p01-junion-villa-alba.jpg","image_source":"https://avatars.mds.yandex.net/get-mpic/20908084/2a000001a025be3dd7cbcf5bc499bf244189/orig","source":"https://junion.yandex.ru/product/derevyannyy-kukolnyy-domik-junion-villa-alba-82kh33kh118-sm-s-liftom-mebel-v-komplekte-4815547965","source_name":"Junion","source_type":"brand","brand":"Junion","source_id":"S01","drive_id":"1B-9oRnEY68DXbBtFYl7mx4z99wafDHEN"},
-    "P06":{"file":"p06-sluban-villa-m38-b0868.jpg","image_source":"https://catalog-cdn.detmir.st/media/WlHhwFUjOalLzExBt8d0ukeTKJqhniCo6KMAry7iSxM=.jpeg","source":"https://www.detmir.ru/product/index/id/3335853/","source_name":"Детский мир / Detsky Mir","source_type":"retailer","brand":"SLUBAN","sku":"M38-B0868","source_id":"S06","drive_id":"13vYzWbDNXKMqkcln-ve0NOtOtztxKab5"},
-    "P05":{"file":"p05-junion-beauty-box.jpg","image_source":"https://avatars.mds.yandex.net/get-mpic/18710172/2a000001a0333ae5c9da46ab4bd408d4ebc7/orig","source":"https://junion.yandex.ru/product/igrovoy-nabor-salon-krasoty-4636410270","source_name":"Junion","source_type":"brand","brand":"Junion","source_id":"S05","drive_id":"1O0yCAtCv1Dr8S7FnGSWj2_-yz47-2Qp2"},
-    "P03":{"file":"p03-barbie-fvj42.jpg","image_source":"https://catalog-cdn.detmir.st/media/My6ad0ITuN22q0yYxgp_eaG_M7K75N5Q75MmFDZkLV4=.jpeg","source":"https://m.service.mattel.com/us/Technical/productDetail?prodno=FVJ42","secondary_source":"https://www.detmir.ru/product/index/id/4923229/","source_name":"Mattel; Детский мир / Detsky Mir","source_type":"manufacturer_and_retailer","brand":"Barbie","sku":"FVJ42","source_id":"S03","identity_note":"Photo and manufacturer facts concern FVJ42. Supplied offer title spells FJV42; buyer must match actual offer contents.","drive_id":"1u2JjHUjb2eaGCQpbj3L_zv_H7l_dB6Nf"},
-    "P04":{"file":"p04-lol-tweens-freshest-542582.jpg","image_source":"https://shop.mgae.com/cdn/shop/files/542582-Tweens-Core-Doll---Freshest.jpg?v=1748519970&width=1500","source":"https://shop.mgae.com/products/lol-surprise-tweens-core-doll-freshest","secondary_source":"https://www.detmir.ru/product/index/id/6682237/","source_name":"MGA; Детский мир / Detsky Mir","source_type":"manufacturer_indexed_and_retailer","brand":"L.O.L. Surprise!","sku":"542582","source_id":"S04","identity_note":"Core 542582 photo; current referral edition not fully readable. Manufacturer page was indexed but returned 404 in a direct check. Height not asserted.","drive_id":"1fZt47Wxgcd5KBweMKfAb1oi5top4Qex1"},
-    "P11":{"file":"p11-lol-hello-kitty-ball-523840.jpg","image_source":"https://shop.mgae.com/cdn/shop/files/523840--Hello-Kitty-And-Friends4.jpg?v=1732294249&width=1500","source":"https://shop.mgae.com/products/lol-surprise-loves-hello-kitty-friends-tots","source_name":"MGA","source_type":"manufacturer","brand":"L.O.L. Surprise!","sku":"523840","source_id":"S11","drive_id":"1Ye7WoIU7Kqd5qEGo8-qzsk3Z4pYDdYvD"},
-    "P10":{"file":"p10-brauberg-fit-274383.jpg","image_source":"https://s3.ibta.ru/goods/274383/7b5ba5b5ac7c360f3ac678732b9f7606_xl.jpg","source":"https://brauberg.com/catalog/products/274383/","source_name":"BRAUBERG","source_type":"brand","brand":"BRAUBERG","sku":"274383","source_id":"S10","drive_id":"1_ZSUyfqQMfSV93o9_Zh26ZyYzvcRpmiD"},
-    "P07":{"file":"p07-gaga-bolshaya-brodilka.jpg","image_source":"https://gaga.ru/gaga/files/images/fullsize/3037/1.jpg","source":"https://gaga.ru/game/bolshaya-brodilka/","source_name":"GaGa Games","source_type":"publisher","brand":"GaGa Games","source_id":"S07","age_note":"8+: later-age option, not unrestricted use at age seven.","drive_id":"1rbHa5mBIzMZcf6Hm9JbbAvonXJxA29xZ"}
+  "id": "gifts-toys-girls-7-years-2026",
+  "version": "1.1.0",
+  "date": "2026-11-08",
+  "order": [
+    "P01",
+    "P06",
+    "P05",
+    "P02",
+    "P03",
+    "P04",
+    "P11",
+    "P08",
+    "P10",
+    "P07",
+    "P09"
+  ],
+  "products": {
+    "P01": {
+      "file": "p01-junion-villa-alba.jpg",
+      "image_source": "https://avatars.mds.yandex.net/get-mpic/20908084/2a000001a025be3dd7cbcf5bc499bf244189/orig",
+      "source": "https://junion.yandex.ru/product/derevyannyy-kukolnyy-domik-junion-villa-alba-82kh33kh118-sm-s-liftom-mebel-v-komplekte-4815547965",
+      "source_name": "Junion",
+      "source_type": "brand",
+      "brand": "Junion",
+      "source_id": "S01",
+      "drive_id": "1B-9oRnEY68DXbBtFYl7mx4z99wafDHEN"
+    },
+    "P06": {
+      "file": "p06-sluban-villa-m38-b0868.jpg",
+      "image_source": "https://catalog-cdn.detmir.st/media/WlHhwFUjOalLzExBt8d0ukeTKJqhniCo6KMAry7iSxM=.jpeg",
+      "source": "https://www.detmir.ru/product/index/id/3335853/",
+      "source_name": "Детский мир / Detsky Mir",
+      "source_type": "retailer",
+      "brand": "SLUBAN",
+      "sku": "M38-B0868",
+      "source_id": "S06",
+      "drive_id": "13vYzWbDNXKMqkcln-ve0NOtOtztxKab5"
+    },
+    "P05": {
+      "file": "p05-junion-beauty-box.jpg",
+      "image_source": "https://avatars.mds.yandex.net/get-mpic/18710172/2a000001a0333ae5c9da46ab4bd408d4ebc7/orig",
+      "source": "https://junion.yandex.ru/product/igrovoy-nabor-salon-krasoty-4636410270",
+      "source_name": "Junion",
+      "source_type": "brand",
+      "brand": "Junion",
+      "source_id": "S05",
+      "drive_id": "1O0yCAtCv1Dr8S7FnGSWj2_-yz47-2Qp2"
+    },
+    "P03": {
+      "file": "p03-barbie-fvj42.jpg",
+      "image_source": "https://catalog-cdn.detmir.st/media/My6ad0ITuN22q0yYxgp_eaG_M7K75N5Q75MmFDZkLV4=.jpeg",
+      "source": "https://m.service.mattel.com/us/Technical/productDetail?prodno=FVJ42",
+      "secondary_source": "https://www.detmir.ru/product/index/id/4923229/",
+      "source_name": "Mattel; Детский мир / Detsky Mir",
+      "source_type": "manufacturer_and_retailer",
+      "brand": "Barbie",
+      "sku": "FVJ42",
+      "source_id": "S03",
+      "identity_note": "Photo and manufacturer facts concern FVJ42. Supplied offer title spells FJV42; buyer must match actual offer contents.",
+      "drive_id": "1u2JjHUjb2eaGCQpbj3L_zv_H7l_dB6Nf"
+    },
+    "P04": {
+      "file": "p04-lol-tweens-freshest-542582.jpg",
+      "image_source": "https://shop.mgae.com/cdn/shop/files/542582-Tweens-Core-Doll---Freshest.jpg?v=1748519970&width=1500",
+      "source": "https://shop.mgae.com/products/lol-surprise-tweens-core-doll-freshest",
+      "secondary_source": "https://www.detmir.ru/product/index/id/6682237/",
+      "source_name": "MGA; Детский мир / Detsky Mir",
+      "source_type": "manufacturer_indexed_and_retailer",
+      "brand": "L.O.L. Surprise!",
+      "sku": "542582",
+      "source_id": "S04",
+      "identity_note": "Core 542582 photo; current referral edition not fully readable. Manufacturer page was indexed but returned 404 in a direct check. Height not asserted.",
+      "drive_id": "1fZt47Wxgcd5KBweMKfAb1oi5top4Qex1"
+    },
+    "P11": {
+      "file": "p11-lol-hello-kitty-ball-523840.jpg",
+      "image_source": "https://shop.mgae.com/cdn/shop/files/523840--Hello-Kitty-And-Friends4.jpg?v=1732294249&width=1500",
+      "source": "https://shop.mgae.com/products/lol-surprise-loves-hello-kitty-friends-tots",
+      "source_name": "MGA",
+      "source_type": "manufacturer",
+      "brand": "L.O.L. Surprise!",
+      "sku": "523840",
+      "source_id": "S11",
+      "drive_id": "1Ye7WoIU7Kqd5qEGo8-qzsk3Z4pYDdYvD"
+    },
+    "P10": {
+      "file": "p10-brauberg-fit-274383.jpg",
+      "image_source": "https://s3.ibta.ru/goods/274383/7b5ba5b5ac7c360f3ac678732b9f7606_xl.jpg",
+      "source": "https://brauberg.com/catalog/products/274383/",
+      "source_name": "BRAUBERG",
+      "source_type": "brand",
+      "brand": "BRAUBERG",
+      "sku": "274383",
+      "source_id": "S10",
+      "drive_id": "1_ZSUyfqQMfSV93o9_Zh26ZyYzvcRpmiD"
+    },
+    "P07": {
+      "file": "p07-gaga-bolshaya-brodilka.jpg",
+      "image_source": "https://gaga.ru/gaga/files/images/fullsize/3037/1.jpg",
+      "source": "https://gaga.ru/game/bolshaya-brodilka/",
+      "source_name": "GaGa Games",
+      "source_type": "publisher",
+      "brand": "GaGa Games",
+      "source_id": "S07",
+      "age_note": "8+: later-age option, not unrestricted use at age seven.",
+      "drive_id": "1rbHa5mBIzMZcf6Hm9JbbAvonXJxA29xZ"
+    },
+    "P02": {
+      "file": "p02-little-wood-home-villa.jpg",
+      "image_source": "https://avatars.mds.yandex.net/get-mpic/20761202/pic575095e195753469c780970b9d04f671/orig",
+      "source": "https://tystore.yandex.ru/card/kukolnyy-domik-villa/4835923444",
+      "secondary_source": "https://tystore.yandex.ru/journal/podarki-detyam-na-novyy-god-2026-vybiraem-s-umom-i-serdcem",
+      "source_name": "Little Wood Home / Team Yandex Store",
+      "source_type": "brand_and_identified_retailer",
+      "brand": "Little Wood Home",
+      "sku": "4835923444",
+      "source_id": "S02",
+      "drive_id": "1dUyqpQqaRYn636zVDMpyX-bCvVPS9oNC",
+      "identity_note": "Exact Villa name and seller listing; exact-model image recovered from seller editorial journal. Do not substitute Villa Scandi BIG."
+    },
+    "P08": {
+      "file": "p08-avel-art-208-pink.jpg",
+      "image_source": "https://www.zaffary.com/cdn/shop/files/IMG-8408.png?v=1774540726&width=1024",
+      "source": "https://tystore.yandex.ru/card/nabor-dlya-risovaniya--208sht-rozovyy/4331309113",
+      "secondary_source": "https://www.zaffary.com/products/set-kit-arte-ninos-maleta-crayon-acuarela-plumon-208-piezas",
+      "source_name": "Авель Art / Team Yandex Store; Zaffary comparative photo",
+      "source_type": "identified_retailer_and_similar_OEM_photo",
+      "brand": "Авель",
+      "sku": "4331309113",
+      "source_id": "S08",
+      "drive_id": "1EOG_cHW6e33Ti0YcuIX4nfrgpI_bh0UK",
+      "identity_note": "Seller identifies pink 208-piece Art case, included easel. Photo from separate merchant is a representative arrangement of a comparable 208-piece folding case; exact identical retail packaging cannot be asserted."
+    },
+    "P09": {
+      "file": "p09-lampstory-magic-keychains.jpg",
+      "image_source": "https://static.tildacdn.com/stor3530-6361-4538-a666-303438323638/25003518.jpg",
+      "source": "https://lampstory.ru/tproduct/503101630-117568643872-nabor-iz-epoksidnoi-smoli-3d-breloki",
+      "source_name": "LampStory (manufacturer)",
+      "source_type": "manufacturer",
+      "brand": "LampStory",
+      "sku": "2033",
+      "source_id": "S09",
+      "drive_id": "1-149LixFpq1N4zwEfpjfvSAQGl1Ojuky",
+      "identity_note": "Brand photo of UV-curing resin kit; contents advertised include uncured UV resin and UV lamp. Child aged seven must not handle uncured resin or UV-curing equipment; adults must check exact kit safety directions."
+    }
   },
-  "deferred":[{"id":"P02","reason":"Exact-model photograph unavailable; do not substitute Villa Scandi BIG."},{"id":"P08","reason":"Exact pink Avel Art 208-piece photograph unavailable; do not substitute a generic set."}],
-  "excluded":[{"id":"P09","reason":"Exact instructions and conditions sufficient for recommending the epoxy-resin kit to a seven-year-old could not be confirmed."}],
-  "media_policy":"Third-party product photographs retain original rights and visible marks. No open-content licence is asserted. Sources are attributed; no synthetic product photographs or substituted variants.",
-  "offer_verification":"Referral redirects checked; current offer pages partly blocked by access challenges. No fixed price, stock or full current-offer verification asserted.",
-  "publication_authorization":"User explicitly instructed publication on 8 November 2026. Preserve supplied referral URLs and advertiser disclosures; this does not constitute verification of private programme eligibility or token portability."
+  "deferred": [],
+  "excluded": [],
+  "media_policy": "One photo per each of all 11 items. Source photo can be from an independent supplier when the marketplace blocks access. Original rights remain with their holders. P08 is an example of the same-type 208-piece pink case, not proof of identical packaging. No synthetic product photography or new affiliate redirects.",
+  "offer_verification": "Referral redirects checked; current offer pages partly blocked by access challenges. No fixed price, stock or full current-offer verification asserted.",
+  "publication_authorization": "User explicitly instructed publication on 8 November 2026. Preserve supplied referral URLs and advertiser disclosures; this does not constitute verification of private programme eligibility or token portability."
 }

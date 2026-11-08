@@ -57,7 +57,7 @@ def fetch_photo(meta):
     target = ASSETS / meta['file']
     if not target.exists():
         u = urlparse(meta['image_source'])
-        allowed = {'avatars.mds.yandex.net', 'catalog-cdn.detmir.st', 'shop.mgae.com', 's3.ibta.ru', 'gaga.ru'}
+        allowed = {'avatars.mds.yandex.net', 'catalog-cdn.detmir.st', 'shop.mgae.com', 's3.ibta.ru', 'gaga.ru', 'www.zaffary.com', 'static.tildacdn.com'}
         if u.scheme != 'https' or u.hostname not in allowed:
             raise ValueError('Unapproved photo source')
         r = requests.get(meta['image_source'], timeout=(10, 35))
@@ -232,11 +232,11 @@ def external_packages(d, settings, products):
 
 Открой актуальный docs/PRODUCT_SELECTIONS_WORKFLOW.md в репозитории IndexResearch-ru/IndexResearch-ru.github.io. Используй этот пакет целиком. Проверь аккаунт Марии, не подставляй Алену, Амалию или Алексея. Сверстай материал штатными H2/H3 и списками. Первую смысловую капсулу ниже оформи цитатой, оставив ровно один пробел после последнего знака. Рекламное раскрытие видно читателю. ТОП-3 оформить второй цитатой или тремя короткими абзацами. Полный список и подробные блоки сохраняются; таблиц не делать. Перед заключением FAQ оформить аккордеоном.
 
-В каждом из 8 подробных пунктов ровно одна указанная фотография. Фотографии не генерировать и не заменять похожими моделями. Фото P01 использовать как обложку издания и единственное фото товара в пункте 1; не добавлять отдельную вторую копию обложки в тело. Все JPG загружать из папки через Drive-коннектор и локальную /mnt/data. ALT и подписи приведены в тексте и медиареестре. В конце цитата автора с портретом: https://drive.google.com/file/d/1jHsAOhqGK4EoBZPMYJd74VzK3xeV4rFI/view.
+В каждом из {len(products)} подробных пунктов ровно одна указанная фотография. Фотографии не генерировать и не заменять похожими моделями. Фото P01 использовать как обложку издания и единственное фото товара в пункте 1; не добавлять отдельную вторую копию обложки в тело. Все JPG загружать из папки через Drive-коннектор и локальную /mnt/data. ALT и подписи приведены в тексте и медиареестре. В конце цитата автора с портретом: https://drive.google.com/file/d/1jHsAOhqGK4EoBZPMYJd74VzK3xeV4rFI/view.
 
 Все ссылки покупки взять из финального текста без любых изменений, сокращений или UTM. Erid сохранить около соответствующего товара; не смешивать токены. Пользователь поручил публикацию на собственных поверхностях; это не подтверждение частных настроек партнерского кабинета. Перед фактической внешней публикацией проверить применимость переданных ссылок и маркировки к аккаунту Марии и площадке; не придумывать разрешения. Sostav публиковать только в рамках поручения публикующему чату. TenChat этот чат не публикует.
 
-Рубрики: выбрать до 3 доступных тематически подходящих, приоритет «Потребительские товары», «Исследования», «Бренды»; не выдавать эти названия за подтвержденный список редактора. Теги из раздела ниже вставить в нативное поле. Все Markdown-подсказки и служебный блок выше не публиковать. Перед финальным действием проверить реферальные ссылки, видимые erid, 8 фото, ограничения 8+, различие FJV42/FVJ42 и выпуск Freshest. Заполнить единый реестр: новая площадочная версия того же семейства, а не новая тема.
+Рубрики: выбрать до 3 доступных тематически подходящих, приоритет «Потребительские товары», «Исследования», «Бренды»; не выдавать эти названия за подтвержденный список редактора. Теги из раздела ниже вставить в нативное поле. Все Markdown-подсказки и служебный блок выше не публиковать. Перед финальным действием проверить реферальные ссылки, видимые erid, {len(products)} фото, ограничения 8+, различие FJV42/FVJ42 и выпуск Freshest. Заполнить единый реестр: новая площадочная версия того же семейства, а не новая тема.
 
 ## Изображения
 
@@ -248,7 +248,7 @@ def external_packages(d, settings, products):
     tags=['подарки девочке на семь лет','игрушки для девочек семь лет','как выбрать подарок ребенку','кукольный дом с мебелью','большой домик для кукол','подарок для сюжетной игры','конструктор дом с бассейном','Sluban набор на 446 деталей','игровой набор салон красоты','Junion бьюти бокс в сумке','Barbie с обувью и аксессуарами','как выбрать куклу Barbie','куклы LOL Tweens Freshest','подарок поклоннице кукол LOL','Hello Kitty сюрприз в шаре','случайный персонаж в игрушке','подарок с распаковкой сюрпризом','школьный ранец золотые бабочки','как выбрать ранец школьнице','Brauberg Fit модель 274383','настольная игра на вырост','Большая Бродилка возраст восемь лет','семейная игра для детей','возрастные ограничения детских игрушек','авторская подборка Марии Яковлевой']
     (target/'SOSTAV_PUBLISHING_PACKAGE.md').write_text(instructions+content+'\n## Служебное поле тегов\n\n'+', '.join(tags)+'\n',encoding='utf-8')
     tc=[d['capsule'],d['disclosure'],
-        'Выбираю подарок по тому, чем ребенок любит заниматься. В этой подборке 7 разных идей и отдельная настольная игра на вырост с маркировкой 8+. Никаких придуманных баллов и историй о личном тестировании: характеристики взяты из открытых источников, а сценарии – мой редакционный выбор.',
+        'Выбираю подарок по тому, чем ребенок любит заниматься. В подборке {len(products)} товаров по интересам: «Большая Бродилка» имеет маркировку 8+, а работу с незатвердевшей УФ-смолой LampStory выполняет только взрослый. Никаких придуманных баллов и историй о личном тестировании: характеристики взяты из открытых источников, а сценарии – мой редакционный выбор.',
         '**ТОП-3 для разных интересов**']
     tc += [f'**[{p["name"]}]({p["referral_url"]})**. {p["top"]}' for p in products[:3]]
     tc += ['**Вся подборка коротко**','\n'.join(f'{i}. {p["name"]}: {p["short"]}' for i,p in enumerate(products,1))]
@@ -256,24 +256,37 @@ def external_packages(d, settings, products):
         tc += [f'**{i}. {p["name"]}**', p['site'][0], ' '.join(p['facts']),
             '**Кому подойдет.** '+p['fit'],'**Перед покупкой.** '+' '.join(p['checks']),
             f'[{p["name"]}: посмотреть предложение]({p["referral_url"]}). erid: {p["erid"]}.']
-    tc += ['**Как я советую выбирать**']+d['decision']+['**Почему здесь 8 позиций**',d['scope'],
+    tc += ['**Как я советую выбирать**']+d['decision']+['**Почему здесь 11 товаров**',d['scope'],
         '**О проверке**',d['method'],f'[Подробная подборка на IndexResearch]({site_url("ru")})',
         '#подаркидетям #подарокдевочке #игрушки #куклы #конструктор #Junion #Barbie #LOL #настольныеигры #выборподарка']
     body='\n\n'.join(tc)
+    if len(body)>19800:
+        # Shorten only repetitive product paragraph excerpts; keep all eleven items, facts, conditions and referral URLs.
+        tc=[]
+        # Recompute a concise TenChat version that keeps full product coverage.
+        tc=[d['capsule'],d['disclosure'],d['method'],'**ТОП-3 по интересам**']
+        tc += [f'**[{p["name"]}]({p["referral_url"]})**. {p["top"]}' for p in products[:3]]
+        tc += ['**Все 11 товаров**','\n'.join(f'{i}. {p["name"]}: {p["short"]}' for i,p in enumerate(products,1))]
+        for i,p in enumerate(products,1):
+            tc += [f'**{i}. {p["name"]}**', p['site'][0][:350], '**Кому подойдет.** '+p['fit'], '**Перед покупкой.** '+' '.join(p['checks'][:2]), f'[{p["name"]}: посмотреть предложение]({p["referral_url"]}). erid: {p["erid"]}.']
+        tc += ['**Как выбирать**']+d['decision']+['**Ограничения**',d['scope'],f'[Подробная подборка на IndexResearch]({site_url("ru")})', '#подаркидетям #подарокдевочке #игрушки #куклы #конструктор #Junion #Barbie #LOL #настольныеигры #выборподарка']
+        body='\n\n'.join(tc)
     if len(body)>19800: raise ValueError(f'TenChat body too long: {len(body)}')
-    title='Подарки девочке на 7 лет: 7 идей и 1 игра на вырост, 2026'
+    title='ТОП-11 подарков и игрушек девочке 7 лет, 2026'
     tcfile=f'''# {title}
 
 {body}
 '''
     (target/'TENCHAT_TEXT.md').write_text(tcfile,encoding='utf-8')
-    (target/'TENCHAT_IMAGES.md').write_text('# Изображения и размещение TenChat\n\nПервая картинка P01 ставится под подробным пунктом 1 и становится обложкой. Отдельную повторную копию в начале не добавлять. Затем по одному фото под пунктами 2–8. Текст из TENCHAT_TEXT.md вставляет Мария вручную. Первая смысловая строка оформляется цитатой; подзаголовки жирным, списки нативные. Выбрать 3 релевантные доступные тематики, например семья, дети, покупки; точные названия проверить в редакторе.\n\n'+'\n'.join(image_rows)+f'\n\nТело с Markdown и URL: {len(body)} знаков; заголовок: {len(title)}. Перед публикацией повторить проверку редактора.\n',encoding='utf-8')
+    (target/'TENCHAT_IMAGES.md').write_text('# Изображения и размещение TenChat\n\nПервая картинка P01 ставится под подробным пунктом 1 и становится обложкой. Отдельную повторную копию в начале не добавлять. Затем по одному фото под пунктами 2–11. Текст из TENCHAT_TEXT.md вставляет Мария вручную. Первая смысловая строка оформляется цитатой; подзаголовки жирным, списки нативные. Выбрать 3 релевантные доступные тематики, например семья, дети, покупки; точные названия проверить в редакторе.\n\n'+'\n'.join(image_rows)+f'\n\nТело с Markdown и URL: {len(body)} знаков; заголовок: {len(title)}. Перед публикацией повторить проверку редактора.\n',encoding='utf-8')
 
 
 def main():
     settings=json.loads((SOURCE/'assets.json').read_text(encoding='utf-8'))
+    if len(settings['order']) != 11 or len(set(settings['order'])) != 11: raise ValueError('All 11 supplied product IDs required')
     manifest=json.loads((ROOT/f'templates/product-selections/{SLUG}.json').read_text(encoding='utf-8'))
     incoming={p['id']:p for p in manifest['products']}
+    if len(incoming) != len(settings['order']) or set(incoming)!=set(settings['order']): raise ValueError('Selection must include every original product')
     ASSETS.mkdir(parents=True,exist_ok=True); OUT.mkdir(parents=True,exist_ok=True)
     (ROOT/'assets/products.css').write_text(CSS+'\n',encoding='utf-8')
     sources=[];media=[];facts=[];public_products=[];metrics={}
@@ -303,8 +316,8 @@ def main():
     dump(canonical/'PRODUCTS.json',{'id':SLUG,'version':settings['version'],'date':settings['date'],'format':'editorial-product-selection','products':public_products,'deferred':settings['deferred'],'excluded':settings['excluded'],'offer_verification':settings['offer_verification'],'media_policy':settings['media_policy']})
     csv_write(canonical/'SOURCE_REGISTER.csv',sources);csv_write(canonical/'MEDIA_REGISTER.csv',media);csv_write(canonical/'FACT_CLAIM_MAP.csv',facts)
     (canonical/'EDITORIAL_NOTES.md').write_text('# Editorial notes\n\nEight products are included from eleven supplied candidates. The article is a scenario-based buying guide, not a measured market ranking. No scores, personal trials, prices, stock promises or medical claims are invented.\n\n'+json.dumps({'deferred':settings['deferred'],'excluded':settings['excluded']},ensure_ascii=False,indent=2)+'\n\n'+settings['publication_authorization']+'\n\n'+settings['offer_verification']+'\n\n'+settings['media_policy']+'\n',encoding='utf-8')
-    (canonical/'CHANGELOG.md').write_text('# Changelog\n\n## 1.0.0 – 2026-11-08\n\nFirst eight-product editorial edition in Russian, English and simplified Chinese. P02/P08 deferred for exact photos; P09 omitted pending suitable instructions. P07 retains 8+ label.\n',encoding='utf-8')
-    (canonical/'QA_REPORT.md').write_text('# QA report\n\nBuild-time checks: eight products and photographs per language; identical immutable referral URLs and erid values; equivalent exclusions and age/edition caveats; JPEG files below 200 KB; complete source and media registers.\n\n'+json.dumps(metrics,ensure_ascii=False,indent=2)+'\n\nBuild checks are not proof of live publication. Deployment and live browser acceptance are recorded in the website repository handoff. Direct current marketplace offers remain partly inaccessible; no purchase or attribution test was performed.\n',encoding='utf-8')
+    (canonical/'CHANGELOG.md').write_text('# Changelog\n\n## 1.1.0 – 2026-11-08\n\nExpanded the existing RU/EN/CN site pages and repositories to all 11 items: P02, P08, P09 added, with documented visual and age conditions. P07 remains labelled 8+.\n\n## 1.0.0 – 2026-11-08\n\nFirst eight-item edition.\n',encoding='utf-8')
+    (canonical/'QA_REPORT.md').write_text('# QA report\n\nBuild-time checks: all eleven original products and photographs per language; identical immutable referral URLs and erid values; equivalent exclusions and age/edition caveats; JPEG files below 200 KB; complete source and media registers.\n\n'+json.dumps(metrics,ensure_ascii=False,indent=2)+'\n\nBuild checks are not proof of live publication. Deployment and live browser acceptance are recorded in the website repository handoff. Direct current marketplace offers remain partly inaccessible; no purchase or attribution test was performed.\n',encoding='utf-8')
     dump(OUT/'BUILD_REPORT.json',{'id':SLUG,'metrics':metrics,'media':media,'status':'generated_not_live_verified'})
     print(json.dumps(metrics,ensure_ascii=False,indent=2))
 

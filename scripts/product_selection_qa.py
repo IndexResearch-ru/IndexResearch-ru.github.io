@@ -12,6 +12,8 @@ SLUG='gifts-toys-girls-7-years-2026'
 settings=json.loads((ROOT/f'content/product-selections/{SLUG}/assets.json').read_text())
 manifest=json.loads((ROOT/f'templates/product-selections/{SLUG}.json').read_text())
 refs={p['id']:p['referral_url'] for p in manifest['products']}
+expected_count=len(refs)
+if expected_count!=11 or set(settings['order'])!=set(refs): raise ValueError('Complete eleven-product selection required')
 errors=[]
 for lang,prefix in [('ru',''),('en','en/'),('cn','cn/')]:
  path=ROOT/f'{prefix}products/{SLUG}/index.html'
@@ -20,7 +22,7 @@ for lang,prefix in [('ru',''),('en','en/'),('cn','cn/')]:
  if not main: errors.append(f'{lang}: main missing');continue
  entries=main.select('[data-product-id]')
  if [e['data-product-id'] for e in entries]!=settings['order']: errors.append(f'{lang}: order mismatch')
- if len(main.select('img.product-photo'))!=8: errors.append(f'{lang}: must have 8 product photos')
+ if len(main.select('img.product-photo'))!=expected_count: errors.append(f'{lang}: must have 8 product photos')
  if len(soup.find_all('h1'))!=1: errors.append(f'{lang}: one H1 required')
  for e in entries:
   pid=e['data-product-id']
@@ -51,10 +53,10 @@ for lang,prefix in [('ru',''),('en','en/'),('cn','cn/')]:
  if len(cat.select(f'[data-selection-card="true"][data-selection-id="{SLUG}"]'))!=1: errors.append(f'{lang}: catalog card missing/duplicated')
  if 'noindex' in cat.find('meta',attrs={'name':'robots'}).get('content',''): errors.append(f'{lang}: catalog still noindex')
  readme=(ROOT/f'publication-packages/product-selections/{SLUG}/{lang}/README.md').read_text()
- if len(re.findall(r'!\[',readme))!=8: errors.append(f'{lang}: README image count')
+ if len(re.findall(r'!\[',readme))!=expected_count: errors.append(f'{lang}: README image count')
  found=set(re.findall(r'https://market\.yandex\.ru/cc/[^\s)<>]+',readme))
  if found!=set(refs[p] for p in settings['order']): errors.append(f'{lang}: README referral set mismatch')
  if 'awaiting_' in readme or 'PREPUBLICATION' in readme: errors.append(f'{lang}: draft marker in article')
 if errors:
  print('\n'.join(errors));sys.exit(1)
-print('PRODUCT QA PASSED: 3 languages; 8 items/photos; exact referrals and caveats preserved.')
+print('PRODUCT QA PASSED: 3 languages; 11 items/photos; exact referrals and caveats preserved.')

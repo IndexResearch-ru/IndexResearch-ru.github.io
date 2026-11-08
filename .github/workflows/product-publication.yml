@@ -46,7 +46,7 @@ jobs:
               git rev-parse HEAD > /tmp/product-publication-sha.txt
               break
             fi
-            git commit -m 'Publish eight-product Maria Yakovleva guide in RU EN CN'
+            git commit -m 'Publish eleven-product Maria Yakovleva guide in RU EN CN'
             if git push origin HEAD:main; then
               git rev-parse HEAD > /tmp/product-publication-sha.txt
               break
