@@ -5,6 +5,7 @@ on:
     paths:
       - 'templates/product-source-audit.json'
       - 'scripts/product_source_audit.py'
+      - 'scripts/product_browser_media.py'
       - '.github/workflows/product-source-audit.yml'
   workflow_dispatch:
 permissions:
@@ -16,10 +17,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install parsing and image-inspection dependencies
-        run: python -m pip install requests beautifulsoup4 Pillow
+        run: python -m pip install requests beautifulsoup4 Pillow playwright
+      - name: Install browser
+        run: python -m playwright install --with-deps chromium
       - name: Inspect configured public sources and photograph candidates
         run: python scripts/product_source_audit.py
+      - name: Read remaining product pages in an ordinary browser
+        run: python scripts/product_browser_media.py
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: product-source-audit
           path: /tmp/product-source-audit/
