@@ -1,0 +1,133 @@
+{
+  "id": "gifts-toys-girls-7-years-2026",
+  "metrics": {
+    "ru": {
+      "readme_characters": 24453,
+      "readme_words": 3172,
+      "products": 8,
+      "photos": 8,
+      "unique_referrals": 8
+    },
+    "en": {
+      "readme_characters": 24805,
+      "readme_words": 3704,
+      "products": 8,
+      "photos": 8,
+      "unique_referrals": 8
+    },
+    "cn": {
+      "readme_characters": 10964,
+      "readme_words": 1034,
+      "products": 8,
+      "photos": 8,
+      "unique_referrals": 8
+    }
+  },
+  "media": [
+    {
+      "product_id": "P01",
+      "file": "p01-junion-villa-alba.jpg",
+      "public_url": "https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p01-junion-villa-alba.jpg",
+      "source_url": "https://avatars.mds.yandex.net/get-mpic/20908084/2a000001a025be3dd7cbcf5bc499bf244189/orig",
+      "attribution": "Junion",
+      "width": 900,
+      "height": 1200,
+      "bytes": 176896,
+      "sha256": "9dcb212a03b999ecddb144eb1e02770a8770393aaec56c5779ac25df19f00833",
+      "rights": "Original rights retained; not relicensed",
+      "review": "Visually reviewed; exact referenced model; edition caveats remain visible"
+    },
+    {
+      "product_id": "P06",
+      "file": "p06-sluban-villa-m38-b0868.jpg",
+      "public_url": "https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p06-sluban-villa-m38-b0868.jpg",
+      "source_url": "https://catalog-cdn.detmir.st/media/WlHhwFUjOalLzExBt8d0ukeTKJqhniCo6KMAry7iSxM=.jpeg",
+      "attribution": "Детский мир / Detsky Mir",
+      "width": 1200,
+      "height": 1200,
+      "bytes": 158218,
+      "sha256": "23f39c80218fba8115344a4e3b7f373bfe27a4fc2133308d41d60fb75f583e6e",
+      "rights": "Original rights retained; not relicensed",
+      "review": "Visually reviewed; exact referenced model; edition caveats remain visible"
+    },
+    {
+      "product_id": "P05",
+      "file": "p05-junion-beauty-box.jpg",
+      "public_url": "https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p05-junion-beauty-box.jpg",
+      "source_url": "https://avatars.mds.yandex.net/get-mpic/18710172/2a000001a0333ae5c9da46ab4bd408d4ebc7/orig",
+      "attribution": "Junion",
+      "width": 900,
+      "height": 1200,
+      "bytes": 192503,
+      "sha256": "a16eab61ca37266c9482d7d14070e57f66baff5fd36529ea77c6d739245d39de",
+      "rights": "Original rights retained; not relicensed",
+      "review": "Visually reviewed; exact referenced model; edition caveats remain visible"
+    },
+    {
+      "product_id": "P03",
+      "file": "p03-barbie-fvj42.jpg",
+      "public_url": "https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p03-barbie-fvj42.jpg",
+      "source_url": "https://catalog-cdn.detmir.st/media/My6ad0ITuN22q0yYxgp_eaG_M7K75N5Q75MmFDZkLV4=.jpeg",
+      "attribution": "Mattel; Детский мир / Detsky Mir",
+      "width": 1200,
+      "height": 1200,
+      "bytes": 190459,
+      "sha256": "9d60e12b553e3d27f30141a6fde1aa974629c3b32b0a619e8d80d6b490e8b300",
+      "rights": "Original rights retained; not relicensed",
+      "review": "Visually reviewed; exact referenced model; edition caveats remain visible"
+    },
+    {
+      "product_id": "P04",
+      "file": "p04-lol-tweens-freshest-542582.jpg",
+      "public_url": "https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p04-lol-tweens-freshest-542582.jpg",
+      "source_url": "https://shop.mgae.com/cdn/shop/files/542582-Tweens-Core-Doll---Freshest.jpg?v=1748519970&width=1500",
+      "attribution": "MGA; Детский мир / Detsky Mir",
+      "width": 1200,
+      "height": 1200,
+      "bytes": 192615,
+      "sha256": "c055bf17efbb788eb1e4380e53b6698160fe8536c75c7a85c83d75279f4567d6",
+      "rights": "Original rights retained; not relicensed",
+      "review": "Visually reviewed; exact referenced model; edition caveats remain visible"
+    },
+    {
+      "product_id": "P11",
+      "file": "p11-lol-hello-kitty-ball-523840.jpg",
+      "public_url": "https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p11-lol-hello-kitty-ball-523840.jpg",
+      "source_url": "https://shop.mgae.com/cdn/shop/files/523840--Hello-Kitty-And-Friends4.jpg?v=1732294249&width=1500",
+      "attribution": "MGA",
+      "width": 1200,
+      "height": 1200,
+      "bytes": 145207,
+      "sha256": "395f2ff0999b6aa2dd80858c315d3922bf02ecd52e691a897adafd31a5c3c4d3",
+      "rights": "Original rights retained; not relicensed",
+      "review": "Visually reviewed; exact referenced model; edition caveats remain visible"
+    },
+    {
+      "product_id": "P10",
+      "file": "p10-brauberg-fit-274383.jpg",
+      "public_url": "https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p10-brauberg-fit-274383.jpg",
+      "source_url": "https://s3.ibta.ru/goods/274383/7b5ba5b5ac7c360f3ac678732b9f7606_xl.jpg",
+      "attribution": "BRAUBERG",
+      "width": 1200,
+      "height": 1200,
+      "bytes": 193653,
+      "sha256": "15ef5c8db90e235cb8118d1419620f59b3d06ab659bac5c9d0adc0ce6f6e148e",
+      "rights": "Original rights retained; not relicensed",
+      "review": "Visually reviewed; exact referenced model; edition caveats remain visible"
+    },
+    {
+      "product_id": "P07",
+      "file": "p07-gaga-bolshaya-brodilka.jpg",
+      "public_url": "https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p07-gaga-bolshaya-brodilka.jpg",
+      "source_url": "https://gaga.ru/gaga/files/images/fullsize/3037/1.jpg",
+      "attribution": "GaGa Games",
+      "width": 672,
+      "height": 374,
+      "bytes": 38927,
+      "sha256": "f9efc7b96dfbcf2c2d0c264310327824e60208d874cb2d6d0b61449e867f7928",
+      "rights": "Original rights retained; not relicensed",
+      "review": "Visually reviewed; exact referenced model; edition caveats remain visible"
+    }
+  ],
+  "status": "generated_not_live_verified"
+}
