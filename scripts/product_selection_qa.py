@@ -22,7 +22,7 @@ for lang,prefix in [('ru',''),('en','en/'),('cn','cn/')]:
  if not main: errors.append(f'{lang}: main missing');continue
  entries=main.select('[data-product-id]')
  if [e['data-product-id'] for e in entries]!=settings['order']: errors.append(f'{lang}: order mismatch')
- if len(main.select('img.product-photo'))!=expected_count: errors.append(f'{lang}: must have 8 product photos')
+ if len(main.select('img.product-photo'))!=expected_count: errors.append(f'{lang}: must have {expected_count} product photos')
  if len(soup.find_all('h1'))!=1: errors.append(f'{lang}: one H1 required')
  for e in entries:
   pid=e['data-product-id']
@@ -44,6 +44,7 @@ for lang,prefix in [('ru',''),('en','en/'),('cn','cn/')]:
  text=main.get_text(' ',strip=True)
  if any(x in text for x in ['[[AGENT','{{SITE_HEADER','{{SITE_FOOTER','БЛОКЕР']): errors.append(f'{lang}: technical placeholder')
  if '8+' not in main.select_one('[data-product-id="P07"]').get_text(): errors.append(f'{lang}: game age warning missing')
+ if lang=='ru' and any(x in text.lower() for x in ['на вырост','отверждение','незаполимеризованный']): errors.append('ru: obsolete editorial wording')
  if 'FJV42' not in main.select_one('[data-product-id="P03"]').get_text(): errors.append(f'{lang}: Barbie discrepancy hidden')
  for raw in soup.select('script[type="application/ld+json"]'):
   obj=json.loads(raw.string)

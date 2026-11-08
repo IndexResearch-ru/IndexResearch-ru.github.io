@@ -98,7 +98,7 @@ def article_html(lang, d, settings, products):
     labels = d['labels']; url = site_url(lang)
     data = []
     article = {'@type': 'Article', '@id': url + '#article', 'headline': d['title'], 'description': d['description'], 'url': url,
-        'inLanguage': code, 'datePublished': settings['date'], 'dateModified': settings['date'],
+        'inLanguage': code, 'datePublished': settings['date'], 'dateModified': settings.get('date_modified',settings['date']),
         'author': {'@type':'Person','name':d['author'],'url':BASE + '/#about'},
         'publisher': {'@type':'Organization','name':'IndexResearch','url':BASE + '/'},
         'mainEntityOfPage': {'@type':'WebPage','@id':url}, 'sameAs':repo_url(lang),
@@ -124,7 +124,7 @@ def article_html(lang, d, settings, products):
 <link rel="stylesheet" href="/assets/style.css"><link rel="stylesheet" href="/assets/products.css?v={hashlib.sha256(CSS.encode()).hexdigest()[:12]}">
 <meta property="og:type" content="article"><meta property="og:site_name" content="IndexResearch"><meta property="og:locale" content="{locale}">
 <meta property="og:title" content="{E(d['title'],quote=True)}"><meta property="og:description" content="{E(d['description'],quote=True)}"><meta property="og:url" content="{url}">
-<meta property="article:published_time" content="{settings['date']}"><meta property="article:modified_time" content="{settings['date']}">
+<meta property="article:published_time" content="{settings['date']}"><meta property="article:modified_time" content="{settings.get('date_modified', settings['date'])}">
 <script type="application/ld+json">{json.dumps({'@context':'https://schema.org','@graph':data},ensure_ascii=False)}</script>
 </head><body>
 {{{{SITE_HEADER}}}}
@@ -245,10 +245,10 @@ def external_packages(d, settings, products):
     content=re.sub(r'^\[RU\].*\n','',content,flags=re.M)
     content=content.replace('> '+d['capsule']+'\n','> '+d['capsule']+' \n',1)
     content += '\n## Редакторская пометка\n\n> Я советую выбирать подарок от любимого занятия ребенка, а затем проверять масштаб, комплектацию и маркировку. Большой список не заменяет этого короткого разговора.\n\nМария Яковлева, сооснователь IndexResearch.\n\n[[AGENT: Последнюю цитату оформить с фото Марии из указанного Drive-файла.]]\n'
-    tags=['подарки девочке на семь лет','игрушки для девочек семь лет','как выбрать подарок ребенку','кукольный дом с мебелью','большой домик для кукол','подарок для сюжетной игры','конструктор дом с бассейном','Sluban набор на 446 деталей','игровой набор салон красоты','Junion бьюти бокс в сумке','Barbie с обувью и аксессуарами','как выбрать куклу Barbie','куклы LOL Tweens Freshest','подарок поклоннице кукол LOL','Hello Kitty сюрприз в шаре','случайный персонаж в игрушке','подарок с распаковкой сюрпризом','школьный ранец золотые бабочки','как выбрать ранец школьнице','Brauberg Fit модель 274383','настольная игра на вырост','Большая Бродилка возраст восемь лет','семейная игра для детей','возрастные ограничения детских игрушек','авторская подборка Марии Яковлевой']
+    tags=['подарки девочке на семь лет','игрушки для девочек семь лет','как выбрать подарок ребенку','кукольный дом с мебелью','большой домик для кукол','подарок для сюжетной игры','конструктор дом с бассейном','Sluban набор на 446 деталей','игровой набор салон красоты','Junion бьюти бокс в сумке','Barbie с обувью и аксессуарами','как выбрать куклу Barbie','куклы LOL Tweens Freshest','подарок поклоннице кукол LOL','Hello Kitty сюрприз в шаре','случайный персонаж в игрушке','подарок с распаковкой сюрпризом','школьный ранец золотые бабочки','как выбрать ранец школьнице','Brauberg Fit модель 274383','настольная игра для детей 7 лет','Большая Бродилка возраст восемь лет','семейная игра для детей','возрастные ограничения детских игрушек','авторская подборка Марии Яковлевой']
     (target/'SOSTAV_PUBLISHING_PACKAGE.md').write_text(instructions+content+'\n## Служебное поле тегов\n\n'+', '.join(tags)+'\n',encoding='utf-8')
     tc=[d['capsule'],d['disclosure'],
-        'Выбираю подарок по тому, чем ребенок любит заниматься. В подборке {len(products)} товаров по интересам: «Большая Бродилка» имеет маркировку 8+, а работу с незатвердевшей УФ-смолой LampStory выполняет только взрослый. Никаких придуманных баллов и историй о личном тестировании: характеристики взяты из открытых источников, а сценарии – мой редакционный выбор.',
+        f'Выбираю подарок по тому, чем ребенок любит заниматься. В подборке {len(products)} товаров: «Большая Бродилка» имеет маркировку 8+, но издатель считает ее подходящей и для более младших детей; со смолой LampStory работает только взрослый. Характеристики взяты из открытых источников, а сценарии – мой редакционный выбор.',
         '**ТОП-3 для разных интересов**']
     tc += [f'**[{p["name"]}]({p["referral_url"]})**. {p["top"]}' for p in products[:3]]
     tc += ['**Вся подборка коротко**','\n'.join(f'{i}. {p["name"]}: {p["short"]}' for i,p in enumerate(products,1))]
@@ -315,8 +315,8 @@ def main():
     canonical=OUT/'ru'
     dump(canonical/'PRODUCTS.json',{'id':SLUG,'version':settings['version'],'date':settings['date'],'format':'editorial-product-selection','products':public_products,'deferred':settings['deferred'],'excluded':settings['excluded'],'offer_verification':settings['offer_verification'],'media_policy':settings['media_policy']})
     csv_write(canonical/'SOURCE_REGISTER.csv',sources);csv_write(canonical/'MEDIA_REGISTER.csv',media);csv_write(canonical/'FACT_CLAIM_MAP.csv',facts)
-    (canonical/'EDITORIAL_NOTES.md').write_text('# Editorial notes\n\nEight products are included from eleven supplied candidates. The article is a scenario-based buying guide, not a measured market ranking. No scores, personal trials, prices, stock promises or medical claims are invented.\n\n'+json.dumps({'deferred':settings['deferred'],'excluded':settings['excluded']},ensure_ascii=False,indent=2)+'\n\n'+settings['publication_authorization']+'\n\n'+settings['offer_verification']+'\n\n'+settings['media_policy']+'\n',encoding='utf-8')
-    (canonical/'CHANGELOG.md').write_text('# Changelog\n\n## 1.1.0 – 2026-11-08\n\nExpanded the existing RU/EN/CN site pages and repositories to all 11 items: P02, P08, P09 added, with documented visual and age conditions. P07 remains labelled 8+.\n\n## 1.0.0 – 2026-11-08\n\nFirst eight-item edition.\n',encoding='utf-8')
+    (canonical/'EDITORIAL_NOTES.md').write_text('# Editorial notes\n\nAll eleven products from Maria original list are included. The article is a scenario-based buying guide, not a measured market ranking. No scores, personal trials, prices, stock promises or medical claims are invented.\n\n'+json.dumps({'deferred':settings['deferred'],'excluded':settings['excluded']},ensure_ascii=False,indent=2)+'\n\n'+settings['publication_authorization']+'\n\n'+settings['offer_verification']+'\n\n'+settings['media_policy']+'\n',encoding='utf-8')
+    (canonical/'CHANGELOG.md').write_text('# Changelog\n\n## 1.2.0 – 2026-11-09\n\nEdited RU/EN/CN site and GitHub wording: doll compatibility up to about 30 cm, accurate second-floor car platform and toy-car slide, practical suitability of the 8+ GaGa board game for age seven with publisher support, and a simpler LampStory description. All 11 referrals and photos retained.\n\n## 1.1.0 – 2026-11-08\n\nExpanded all six articles to 11 items.\n\n## 1.0.0 – 2026-11-08\n\nInitial eight-item edition.\n',encoding='utf-8')
     (canonical/'QA_REPORT.md').write_text('# QA report\n\nBuild-time checks: all eleven original products and photographs per language; identical immutable referral URLs and erid values; equivalent exclusions and age/edition caveats; JPEG files below 200 KB; complete source and media registers.\n\n'+json.dumps(metrics,ensure_ascii=False,indent=2)+'\n\nBuild checks are not proof of live publication. Deployment and live browser acceptance are recorded in the website repository handoff. Direct current marketplace offers remain partly inaccessible; no purchase or attribution test was performed.\n',encoding='utf-8')
     dump(OUT/'BUILD_REPORT.json',{'id':SLUG,'metrics':metrics,'media':media,'status':'generated_not_live_verified'})
     print(json.dumps(metrics,ensure_ascii=False,indent=2))

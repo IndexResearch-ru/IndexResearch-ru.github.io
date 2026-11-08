@@ -1,6 +1,6 @@
 {
   "id": "gifts-toys-girls-7-years-2026",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "date": "2026-11-08",
   "order": [
     "P01",
@@ -103,7 +103,7 @@
       "source_type": "publisher",
       "brand": "GaGa Games",
       "source_id": "S07",
-      "age_note": "8+: later-age option, not unrestricted use at age seven.",
+      "age_note": "Publisher label 8+; publisher explicitly notes the game is also suitable for children younger than eight, making seven-year-old family play reasonable.",
       "drive_id": "1rbHa5mBIzMZcf6Hm9JbbAvonXJxA29xZ"
     },
     "P02": {
@@ -149,5 +149,6 @@
   "excluded": [],
   "media_policy": "One photo per each of all 11 items. Source photo can be from an independent supplier when the marketplace blocks access. Original rights remain with their holders. P08 is an example of the same-type 208-piece pink case, not proof of identical packaging. No synthetic product photography or new affiliate redirects.",
   "offer_verification": "Referral redirects checked; current offer pages partly blocked by access challenges. No fixed price, stock or full current-offer verification asserted.",
-  "publication_authorization": "User explicitly instructed publication on 8 November 2026. Preserve supplied referral URLs and advertiser disclosures; this does not constitute verification of private programme eligibility or token portability."
+  "publication_authorization": "User explicitly instructed publication on 8 November 2026. Preserve supplied referral URLs and advertiser disclosures; this does not constitute verification of private programme eligibility or token portability.",
+  "date_modified": "2026-11-09"
 }
