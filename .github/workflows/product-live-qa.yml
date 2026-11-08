@@ -1,0 +1,99 @@
+name: Product guide live browser QA
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/product-live-qa.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install playwright requests beautifulsoup4
+      - run: python -m playwright install --with-deps chromium
+      - name: Check published articles and GitHub rendering
+        shell: bash
+        run: |
+          python - <<'PY'
+          import asyncio,json,pathlib,re,time
+          import requests
+          from playwright.async_api import async_playwright
+          slug='gifts-toys-girls-7-years-2026'
+          out=pathlib.Path('/tmp/product-live-qa');out.mkdir(exist_ok=True)
+          manifest=json.loads(pathlib.Path(f'templates/product-selections/{slug}.json').read_text())
+          order=['P01','P06','P05','P03','P04','P11','P10','P07']
+          expected={p['referral_url'] for p in manifest['products'] if p['id'] in order}
+          report={'surfaces':[],'errors':[]}
+          async def main():
+              async with async_playwright() as p:
+                  browser=await p.chromium.launch()
+                  for lang,prefix in [('ru',''),('en','/en'),('cn','/cn')]:
+                      url=f'https://indexresearch.ru{prefix}/products/{slug}/'
+                      for width in [1440,390]:
+                          page=await browser.new_page(viewport={'width':width,'height':1000},device_scale_factor=1)
+                          row={'kind':'site','language':lang,'url':url,'width':width}
+                          try:
+                              for attempt in range(15):
+                                  response=await page.goto(url,wait_until='domcontentloaded',timeout=45000)
+                                  if response and response.status==200 and await page.locator('main[data-selection-id]').count():break
+                                  await page.wait_for_timeout(8000)
+                              row['http_status']=response.status if response else None
+                              assert row['http_status']==200,'site not deployed'
+                              assert await page.locator('h1').count()==1
+                              assert await page.locator('[data-product-id]').count()==8
+                              photos=page.locator('img.product-photo')
+                              assert await photos.count()==8
+                              for img in await photos.all():
+                                  await img.scroll_into_view_if_needed()
+                                  await img.wait_for(state='visible')
+                                  await page.wait_for_function('(n)=>n.complete && n.naturalWidth>0',arg=await img.element_handle(),timeout=20000)
+                              refs=await page.locator('main a[href*="market.yandex.ru/cc/"]').evaluate_all('(a)=>a.map(n=>n.href)')
+                              assert set(refs)==expected,'referral mismatch'
+                              overflow=await page.evaluate('document.documentElement.scrollWidth > innerWidth + 2')
+                              assert not overflow,'horizontal overflow'
+                              row.update(products=8,photos=8,unique_referrals=len(set(refs)),horizontal_overflow=overflow,title=await page.title(),h1=await page.locator('h1').inner_text())
+                              await page.evaluate('window.scrollTo(0,0)')
+                              await page.screenshot(path=str(out/f'{lang}-{width}.png'),full_page=True)
+                              row['passed']=True
+                          except Exception as e:
+                              row['passed']=False;row['error']=str(e);report['errors'].append(row)
+                          report['surfaces'].append(row);await page.close()
+                      repo='https://github.com/IndexResearch-ru/'+slug+('' if lang=='ru' else '-'+lang)
+                      row={'kind':'github','language':lang,'url':repo}
+                      page=await browser.new_page(viewport={'width':1440,'height':1000})
+                      try:
+                          for attempt in range(12):
+                              raw=requests.get(repo.replace('https://github.com/','https://raw.githubusercontent.com/')+'/main/README.md',timeout=30)
+                              if raw.status_code==200 and raw.text.count('![')==8:break
+                              await page.wait_for_timeout(5000)
+                          assert raw.status_code==200 and raw.text.count('![')==8
+                          assert set(re.findall(r'https://market\.yandex\.ru/cc/[^\s)<>]+',raw.text))==expected
+                          response=await page.goto(repo,wait_until='domcontentloaded',timeout=45000)
+                          await page.locator('article.markdown-body').first.wait_for(timeout=25000)
+                          article=page.locator('article.markdown-body').first
+                          imgs=article.locator('img')
+                          assert await imgs.count()==8,'GitHub rendered photo count'
+                          for img in await imgs.all():
+                              await img.scroll_into_view_if_needed()
+                              await page.wait_for_function('(n)=>n.complete && n.naturalWidth>0',arg=await img.element_handle(),timeout=20000)
+                          await page.evaluate('window.scrollTo(0,0)')
+                          await page.screenshot(path=str(out/f'github-{lang}.png'),full_page=False)
+                          row.update(passed=True,http_status=response.status,readme_characters=len(raw.text),photos=8)
+                      except Exception as e:
+                          row.update(passed=False,error=str(e));report['errors'].append(row)
+                      report['surfaces'].append(row);await page.close()
+                  await browser.close()
+              (out/'report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
+              print(json.dumps(report,ensure_ascii=False,indent=2))
+              if report['errors']:raise SystemExit(1)
+          asyncio.run(main())
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: product-live-qa
+          path: /tmp/product-live-qa/
+          retention-days: 30
