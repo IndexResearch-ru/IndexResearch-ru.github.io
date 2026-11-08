@@ -2,7 +2,10 @@ name: Product source audit
 on:
   push:
     branches: [main]
-    paths: ['templates/product-selections/*.json', '.github/workflows/product-source-audit.yml']
+    paths:
+      - 'templates/product-source-audit.json'
+      - 'scripts/product_source_audit.py'
+      - '.github/workflows/product-source-audit.yml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -12,64 +15,10 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - name: Install parsing dependencies
-        run: python -m pip install requests beautifulsoup4
-      - name: Inspect configured public product links
-        shell: bash
-        run: |
-          python - <<'PY'
-          import concurrent.futures, datetime, json, pathlib, re
-          import requests
-          from bs4 import BeautifulSoup
-          from urllib.parse import urlparse
-          out = pathlib.Path('/tmp/product-source-audit')
-          out.mkdir(parents=True, exist_ok=True)
-          tasks = []
-          for path in sorted(pathlib.Path('templates/product-selections').glob('*.json')):
-              data = json.loads(path.read_text())
-              for product in data.get('products', []):
-                  urls = [('referral', product['referral_url'])]
-                  urls += [('source', u) for u in product.get('source_candidates', [])]
-                  for kind, url in urls:
-                      parsed = urlparse(url)
-                      if parsed.scheme != 'https' or not parsed.hostname or parsed.username or parsed.password:
-                          raise ValueError('Only public HTTPS URLs without credentials are allowed')
-                      tasks.append((data['id'], product['id'], kind, url))
-          if len(tasks) > 60:
-              raise ValueError('At most 60 public URLs per audit; split the batch')
-          def inspect(task):
-              selection, product, kind, url = task
-              result = {'selection': selection, 'product': product, 'kind': kind, 'requested_url': url}
-              try:
-                  r = requests.get(url, timeout=(10, 25), headers={'User-Agent': 'Mozilla/5.0 (compatible; IndexResearchProductSourceAudit/1.0)'})
-                  result.update(status=r.status_code, final_url=r.url, redirects=[{'status': x.status_code, 'url': x.url, 'location': x.headers.get('Location', '')} for x in r.history])
-                  if 'text/html' not in r.headers.get('Content-Type', ''):
-                      result['non_html'] = True
-                      return result
-                  soup = BeautifulSoup(r.content, 'html.parser')
-                  result['title'] = soup.title.get_text(' ', strip=True) if soup.title else ''
-                  result['h1'] = [n.get_text(' ', strip=True) for n in soup.find_all('h1')][:3]
-                  result['meta'] = {n.get('property', n.get('name', '')): n.get('content', '') for n in soup.select('meta[property^="og:"],meta[name="description"]')}
-                  result['canonical'] = [n.get('href') for n in soup.select('link[rel="canonical"]')]
-                  result['images'] = [{'src': n.get('src'), 'data_src': n.get('data-src'), 'alt': n.get('alt')} for n in soup.find_all('img')][:35]
-                  result['jsonld'] = []
-                  for node in soup.select('script[type="application/ld+json"]')[:8]:
-                      try: result['jsonld'].append(json.loads(node.get_text()))
-                      except (ValueError, TypeError): pass
-                  for node in soup(['script', 'style', 'nav', 'footer']): node.decompose()
-                  result['visible_text_excerpt'] = re.sub(r'\s+', ' ', soup.get_text(' ', strip=True))[:14000]
-                  result['access_blocked'] = any(s in (result['title'] + ' ' + result['visible_text_excerpt'][:1200]).lower() for s in ['captcha', 'are you a robot', 'подтвердите, что', 'проверка браузера', 'access denied'])
-              except Exception as exc:
-                  result['error'] = type(exc).__name__ + ': ' + str(exc)[:600]
-              return result
-          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
-              results = list(pool.map(inspect, tasks))
-          report = {'checked_at_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'results': results}
-          (out / 'source-audit.json').write_text(json.dumps(report, ensure_ascii=False, indent=2))
-          for r in results:
-              print(json.dumps({k: v for k, v in r.items() if k not in ('images', 'jsonld', 'visible_text_excerpt')}, ensure_ascii=False))
-          print('AUDIT_COMPLETE', len(results))
-          PY
+      - name: Install parsing and image-inspection dependencies
+        run: python -m pip install requests beautifulsoup4 Pillow
+      - name: Inspect configured public sources and photograph candidates
+        run: python scripts/product_source_audit.py
       - uses: actions/upload-artifact@v4
         with:
           name: product-source-audit
