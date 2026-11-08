@@ -2,7 +2,11 @@ name: Product guide live browser QA
 on:
   push:
     branches: [main]
-    paths: ['.github/workflows/product-live-qa.yml']
+    paths:
+      - '.github/workflows/product-live-qa.yml'
+      - 'products/gifts-toys-girls-7-years-2026/**'
+      - 'en/products/gifts-toys-girls-7-years-2026/**'
+      - 'cn/products/gifts-toys-girls-7-years-2026/**'
   workflow_dispatch:
 permissions:
   contents: read
@@ -46,6 +50,13 @@ jobs:
                               assert await page.locator('[data-product-id]').count()==len(order)
                               photos=page.locator('img.product-photo')
                               assert await photos.count()==len(order)
+                              if lang=='ru':
+                                  article_text=await page.locator('main').inner_text()
+                                  assert 'на вырост' not in article_text
+                                  assert 'отверждение' not in article_text
+                                  assert 'около 30 см' in article_text
+                                  assert 'площадка для машинок на втором этаже' in article_text
+                                  assert 'GaGa Games «Большая Бродилка»' in article_text
                               for img in await photos.all():
                                   await img.scroll_into_view_if_needed()
                                   await img.wait_for(state='visible')
