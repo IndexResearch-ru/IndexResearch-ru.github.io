@@ -1,24 +1,17 @@
 {
   "selection_id": "gifts-toys-girls-7-years-2026",
+  "export_public_site_snapshot": true,
   "pages": [
-    {"product": "P02", "url": "https://littlewoodhome.ru/"},
-    {"product": "P02", "url": "https://tystore.yandex.ru/card/kukolnyy-domik-villa/4835923444"},
-    {"product": "P04", "url": "https://shop.mgae.com/products/lol-surprise-tweens-core-doll-freshest"},
-    {"product": "P04", "url": "https://www.detmir.ru/product/index/id/7146777/"},
-    {"product": "P05", "url": "https://junion.yandex.ru/product/igrovoy-nabor-salon-krasoty-4636410270"},
-    {"product": "P06", "url": "https://www.detmir.ru/product/index/id/3335853/"},
-    {"product": "P07", "url": "https://gaga.ru/game/bolshaya-brodilka/"},
-    {"product": "P08", "url": "https://tystore.yandex.ru/card/nabor-dlya-risovaniya--208sht-rozovyy/4331309113"},
-    {"product": "P11", "url": "https://shop.mgae.com/products/lol-surprise-loves-hello-kitty-friends-tots"}
+    {"product":"P02","url":"https://littlewoodhome.ru/catalog/","gallery_limit":0},
+    {"product":"P02","url":"https://www.livemaster.ru/item/33556394-kukly-i-igrushki-kukolnyj-igrovoj-domik-s-gorkoj-dlya-kukol-d","gallery_limit":6},
+    {"product":"P02","url":"https://tystore.yandex.ru/card/kukolnyy-domik-villa/4835923444","gallery_limit":4,"image_url_contains":"get-mpic"},
+    {"product":"P03","url":"https://www.detmir.ru/product/index/id/4923229/","gallery_limit":4,"image_url_contains":"catalog-cdn.detmir.st"},
+    {"product":"P03","url":"https://market.yandex.uz/card/kukla-barbi-s-naborom-obuvi-i-aksessuarami-barbie-doll-fjv-42/103786883050","gallery_limit":4,"image_url_contains":"get-mpic"},
+    {"product":"P04","url":"https://m.integration.vs.market.yandex.net/card/lol-syurprayz-kukla-tweens-freshest-s-aksessuarami-lol-surprise/4569085812","gallery_limit":4,"image_url_contains":"get-mpic"},
+    {"product":"P06","url":"https://www.detmir.ru/product/index/id/3335853/","gallery_limit":4,"image_url_contains":"catalog-cdn.detmir.st"},
+    {"product":"P08","url":"https://m.integration.vs.market.yandex.net/card/nabor-dlya-risovaniya--208sht-rozovyy/4331309113","gallery_limit":4,"image_url_contains":"get-mpic"},
+    {"product":"P10","url":"https://brauberg.com/catalog/products/274383/","gallery_limit":8,"image_url_contains":"274383"}
   ],
-  "images": [
-    {"product": "P01", "url": "https://avatars.mds.yandex.net/get-mpic/20908084/2a000001a025be3dd7cbcf5bc499bf244189/orig", "name": "p01-junion-villa-alba"},
-    {"product": "P03", "url": "https://service.mattel.com/us/img/prod/243/FVJ42_c_18_174.jpg", "name": "p03-barbie-fvj42"},
-    {"product": "P04", "url": "https://shop.mgae.com/cdn/shop/files/542582-Tweens-Core-Doll---Freshest.jpg?v=1748519970&width=1500", "name": "p04-lol-tweens-freshest-542582"},
-    {"product": "P07", "url": "https://gaga.ru/gaga/files/images/fullsize/3037/1.jpg", "name": "p07-gaga-bolshaya-brodilka"},
-    {"product": "P10", "url": "https://s3.ibta.ru/goods/274383/ed3837ea86403937dec9ad282b80cf0d_xl.jpg", "name": "p10-brauberg-fit-274383"},
-    {"product": "P11", "url": "https://shop.mgae.com/cdn/shop/files/523840--Hello-Kitty-And-Friends4.jpg?v=1732294249&width=1500", "name": "p11-lol-hello-kitty-ball-523840"},
-    {"product": "AUTHOR", "url": "https://indexresearch.ru/assets/maria-yakovleva-indexresearch-founder.jpg", "name": "maria-yakovleva-indexresearch"}
-  ],
-  "note": "Read-only editorial inspection. Downloaded candidates are not automatically approved, licensed or published. Original referral URLs remain in the product manifest and are not retriggered by this source-only pass."
+  "images": [],
+  "note": "Read-only review of exact product candidates; no repeated referral clicks, no CAPTCHA bypass, no automatic acceptance or publication. An inaccessible source remains blocked. The public-site snapshot supports local reproducible checks."
 }
