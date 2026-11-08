@@ -54,7 +54,7 @@ jobs:
                                   article_text=await page.locator('main').inner_text()
                                   assert 'на вырост' not in article_text
                                   assert 'отверждение' not in article_text
-                                  assert 'около 30 см' in article_text
+                                  assert 'примерно до 30 см' in article_text
                                   assert 'площадка для машинок на втором этаже' in article_text
                                   assert 'GaGa Games «Большая Бродилка»' in article_text
                               for img in await photos.all():
