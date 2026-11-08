@@ -2,16 +2,94 @@
   "selection_id": "gifts-toys-girls-7-years-2026",
   "export_public_site_snapshot": true,
   "pages": [
-    {"product":"P02","url":"https://littlewoodhome.ru/catalog/","gallery_limit":0},
-    {"product":"P02","url":"https://www.livemaster.ru/item/33556394-kukly-i-igrushki-kukolnyj-igrovoj-domik-s-gorkoj-dlya-kukol-d","gallery_limit":6},
-    {"product":"P02","url":"https://tystore.yandex.ru/card/kukolnyy-domik-villa/4835923444","gallery_limit":4,"image_url_contains":"get-mpic"},
-    {"product":"P03","url":"https://www.detmir.ru/product/index/id/4923229/","gallery_limit":4,"image_url_contains":"catalog-cdn.detmir.st"},
-    {"product":"P03","url":"https://market.yandex.uz/card/kukla-barbi-s-naborom-obuvi-i-aksessuarami-barbie-doll-fjv-42/103786883050","gallery_limit":4,"image_url_contains":"get-mpic"},
-    {"product":"P04","url":"https://m.integration.vs.market.yandex.net/card/lol-syurprayz-kukla-tweens-freshest-s-aksessuarami-lol-surprise/4569085812","gallery_limit":4,"image_url_contains":"get-mpic"},
-    {"product":"P06","url":"https://www.detmir.ru/product/index/id/3335853/","gallery_limit":4,"image_url_contains":"catalog-cdn.detmir.st"},
-    {"product":"P08","url":"https://m.integration.vs.market.yandex.net/card/nabor-dlya-risovaniya--208sht-rozovyy/4331309113","gallery_limit":4,"image_url_contains":"get-mpic"},
-    {"product":"P10","url":"https://brauberg.com/catalog/products/274383/","gallery_limit":8,"image_url_contains":"274383"}
+    {
+      "product": "P02",
+      "url": "https://littlewoodhome.ru/catalog/",
+      "gallery_limit": 0
+    },
+    {
+      "product": "P02",
+      "url": "https://www.livemaster.ru/item/33556394-kukly-i-igrushki-kukolnyj-igrovoj-domik-s-gorkoj-dlya-kukol-d",
+      "gallery_limit": 6
+    },
+    {
+      "product": "P02",
+      "url": "https://tystore.yandex.ru/card/kukolnyy-domik-villa/4835923444",
+      "gallery_limit": 4,
+      "image_url_contains": "get-mpic"
+    },
+    {
+      "product": "P03",
+      "url": "https://www.detmir.ru/product/index/id/4923229/",
+      "gallery_limit": 4,
+      "image_url_contains": "catalog-cdn.detmir.st"
+    },
+    {
+      "product": "P03",
+      "url": "https://market.yandex.uz/card/kukla-barbi-s-naborom-obuvi-i-aksessuarami-barbie-doll-fjv-42/103786883050",
+      "gallery_limit": 4,
+      "image_url_contains": "get-mpic"
+    },
+    {
+      "product": "P04",
+      "url": "https://m.integration.vs.market.yandex.net/card/lol-syurprayz-kukla-tweens-freshest-s-aksessuarami-lol-surprise/4569085812",
+      "gallery_limit": 4,
+      "image_url_contains": "get-mpic"
+    },
+    {
+      "product": "P06",
+      "url": "https://www.detmir.ru/product/index/id/3335853/",
+      "gallery_limit": 4,
+      "image_url_contains": "catalog-cdn.detmir.st"
+    },
+    {
+      "product": "P08",
+      "url": "https://m.integration.vs.market.yandex.net/card/nabor-dlya-risovaniya--208sht-rozovyy/4331309113",
+      "gallery_limit": 4,
+      "image_url_contains": "get-mpic"
+    },
+    {
+      "product": "P10",
+      "url": "https://brauberg.com/catalog/products/274383/",
+      "gallery_limit": 8,
+      "image_url_contains": "274383"
+    },
+    {
+      "product": "P02",
+      "url": "https://tystore.yandex.ru/journal/podarki-detyam-na-novyy-god-2026-vybiraem-s-umom-i-serdcem"
+    },
+    {
+      "product": "P02",
+      "url": "https://www.livemaster.ru/item/33526570-kukly-i-igrushki-kukolnyj-domik-so-svetom-s-gorkoj-derevyanny"
+    },
+    {
+      "product": "P02",
+      "url": "https://www.detmir.ru/product/index/id/6614427/"
+    },
+    {
+      "product": "P08",
+      "url": "https://www.zaffary.com/products/set-kit-arte-ninos-maleta-crayon-acuarela-plumon-208-piezas"
+    },
+    {
+      "product": "P09",
+      "url": "https://lampstory.ru/tproduct/503101630-117568643872-nabor-iz-epoksidnoi-smoli-3d-breloki"
+    },
+    {
+      "product": "P09",
+      "url": "https://www.detmir.ru/product/index/id/6610644/"
+    }
   ],
-  "images": [],
+  "images": [
+    {
+      "product": "P08",
+      "url": "https://www.zaffary.com/cdn/shop/files/IMG-8408.png?v=1774540726&width=1024",
+      "name": "p08-avel-pink-208-alternative"
+    },
+    {
+      "product": "P09",
+      "url": "https://static.tildacdn.com/stor3530-6361-4538-a666-303438323638/25003518.jpg",
+      "name": "p09-lampstory-magic-keychains"
+    }
+  ],
   "note": "Read-only review of exact product candidates; no repeated referral clicks, no CAPTCHA bypass, no automatic acceptance or publication. An inaccessible source remains blocked. The public-site snapshot supports local reproducible checks."
 }
