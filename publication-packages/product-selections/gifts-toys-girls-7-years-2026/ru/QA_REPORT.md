@@ -4,22 +4,22 @@ Build-time checks: all eleven original products and photographs per language; id
 
 {
   "ru": {
-    "readme_characters": 33416,
-    "readme_words": 4331,
+    "readme_characters": 33572,
+    "readme_words": 4398,
     "products": 11,
     "photos": 11,
     "unique_referrals": 11
   },
   "en": {
-    "readme_characters": 32748,
-    "readme_words": 4918,
+    "readme_characters": 33147,
+    "readme_words": 4961,
     "products": 11,
     "photos": 11,
     "unique_referrals": 11
   },
   "cn": {
-    "readme_characters": 14376,
-    "readme_words": 1337,
+    "readme_characters": 14355,
+    "readme_words": 1335,
     "products": 11,
     "photos": 11,
     "unique_referrals": 11

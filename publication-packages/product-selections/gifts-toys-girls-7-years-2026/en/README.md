@@ -2,7 +2,7 @@
 
 [RU](https://github.com/IndexResearch-ru/gifts-toys-girls-7-years-2026) | [EN](https://github.com/IndexResearch-ru/gifts-toys-girls-7-years-2026-en) | [CN](https://github.com/IndexResearch-ru/gifts-toys-girls-7-years-2026-cn)
 
-**Maria Yakovleva · Facts checked on 8 November 2026 · v1.1.0**
+**Maria Yakovleva · Facts checked on 8 November 2026 · v1.2.0**
 
 [IndexResearch website edition](https://indexresearch.ru/en/products/gifts-toys-girls-7-years-2026/)
 
@@ -12,7 +12,7 @@ Advertisement. Advertiser: OOO Yandex Market, Russian tax ID 9704254424. Product
 
 A gift for a seven-year-old girl is easier to choose when you start with what she already enjoys. One child wants a home for her dolls; another would rather construct that home herself. A third likes pretending to run a salon. Age helps you check restrictions, but it does not tell you which of those activities will be welcome.
 
-This guide covers all eleven products supplied by Maria, chosen for different interests rather than a claim that every present is universally suitable. The GaGa Games board game has an 8+ label and is a later-age option. LampStory uses UV resin; an adult must handle uncured materials and UV curing. The pink 208-piece art case is illustrated with a comparable product photo from another retailer.
+This guide covers all eleven products supplied by Maria, chosen for different interests rather than a claim that every present is universally suitable. The GaGa Games board game carries an 8+ label, although its publisher says it also suits younger children, making it a good family option at seven. LampStory uses UV resin; an adult must handle uncured materials and UV curing. The pink 208-piece art case is illustrated with a comparable product photo from another retailer.
 
 The opening top three highlights different purposes rather than a universal winner. No laboratory testing, personal product trials or numerical performance scores are claimed. The detailed entries focus on scale, contents, storage and expectations. Prices and stock have deliberately not been frozen: check the actual offer reached through the supplied link before paying.
 
@@ -29,13 +29,13 @@ The opening top three highlights different purposes rather than a universal winn
 1. **Junion Villa Alba dollhouse.** A large furnished dollhouse with a lift; it needs a permanent place in the room.
 2. **SLUBAN House with Pool, M38-B0868.** 446 pieces: a building activity followed by play with a small model and figures.
 3. **Junion Beauty Box pretend-play kit.** A salon in a bag: role-play accessories rather than real cosmetics.
-4. **Little Wood Home Villa dollhouse with slide and balcony.** A dollhouse with garages and a detachable toy-car slide, best for smaller dolls.
+4. **Little Wood Home Villa dollhouse with slide and balcony.** A dollhouse with two garages, a second-floor parking area and a removable slide for toy cars.
 5. **Barbie with shoes and accessories, FVJ42.** Outfit changes for one character; the model code and included accessories need careful matching.
 6. **L.O.L. Surprise! Tweens Freshest, Core 542582.** A recognisable character for a Tweens fan; Freshest reissues should not be confused.
 7. **L.O.L. Surprise! Hello Kitty & Friends, 523840.** A compact unboxing surprise; a sealed ball does not guarantee a particular character.
 8. **Avel Art 208-piece pink drawing kit with easel.** A portable drawing case with an integrated easel, pencils, pens and paints.
 9. **BRAUBERG FIT Golden Butterflies school bag, 274383.** A practical school gift best chosen together and tried on before purchase.
-10. **GaGa Games Bolshaya Brodilka: for later, 8+.** A family board game for two to five players, included as a later-age option.
+10. **GaGa Games Bolshaya Brodilka board game.** A family race-and-adventure board game with dice, cards and extra challenges for two to five players.
 11. **LampStory Magic Keychains UV-resin craft set.** A parent-led resin craft project: adults handle uncured resin and UV curing, while children can suggest designs.
 
 ## How the products were selected
@@ -56,16 +56,16 @@ Facts were checked on 8 November 2026 against Junion, Mattel, MGA, BRAUBERG GaGa
 
 Villa Alba supplies a setting in which stories can continue from one day to the next. A child can arrange rooms, invent a move, welcome visitors or play out a family's morning. Included furniture means the starting point is not an empty building. However, a lift and several floors are not reasons on their own to expect lasting interest: the child needs to enjoy doll-based storytelling.
 
-Its dimensions and weight make it part of the room's play environment. It is not a sensible choice if the plan depends on the child lifting it onto a shelf every evening. As a shared family gift it works best when adults have agreed on placement, assembly and which existing dolls will inhabit it.
+Villa Alba has room for dolls approximately up to 30 cm tall, including most standard Barbie dolls and many L.O.L. figures. It is a good way to expand a collection the child already plays with. The house weighs about 16 kg, so it is best placed in a permanent play area with easy access to the open front.
 
 An uncomplicated first activity is to decide together what each room will be, then let the child change the arrangement. Buying more furniture immediately is unnecessary; initial play can reveal which additional pieces, if any, would genuinely be useful.
 
-**Who it suits**. A child who already plays regularly with dolls and wants a home for them. It suits a substantial family gift when there is enough room and adults are ready to handle assembly.
+**Who it suits**. A child who regularly plays with dolls around 30 cm tall or smaller, such as many Barbie and L.O.L. models. Suitable as a substantial family gift when adults can assemble it and find a permanent place for it.
 
 **Check before buying**
 
 - Measure the intended space and leave access to the open front.
-- Compare existing dolls with room and furniture dimensions; not every Barbie or L.O.L. automatically fits.
+- Check the height of the dolls the child already owns. The house accommodates figures around 30 cm tall, but furniture and unusually large dolls should still be measured.
 - Follow the assembly and placement instructions rather than expecting the child to move a heavy structure alone.
 
 [View product: Junion Villa Alba dollhouse](https://market.yandex.ru/cc/BUafat?erid=5jtCeReNx12oak2tUdcHCUY). erid: 5jtCeReNx12oak2tUdcHCUY.
@@ -134,23 +134,23 @@ Fact and photo sources: Junion [S05].
 
 ## 4. Little Wood Home Villa dollhouse with slide and balcony
 
-![Pink Little Wood Home Villa dollhouse with balcony and slide for toy cars](https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p02-little-wood-home-villa.jpg)
+![Pink Little Wood Home Villa dollhouse with balcony, second-floor car platform and removable slide](https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p02-little-wood-home-villa.jpg)
 
-*Exact Little Wood Home Villa photo found in the Team Yandex Store product article. Check floor clearance and included accessories.*
+*Little Wood Home Villa: the second-floor platform leads to a removable slide for toy cars. Seller product photograph.*
 
 **Checked specifications**
 
 - Seller-listed dimensions 77 × 70 × 40 cm; the detachable slide needs additional side space.
-- Three levels: two storeys and an attic, two garages, a parking space, balcony and slide.
+- Three levels (two storeys and an attic), two garages, a second-floor toy-car parking area and a detachable slide for cars.
 - Listed floor clearance is 22 cm; materials include plywood and MDF.
 
-Villa is an interesting alternative to an ordinary dollhouse because dolls and toy cars can appear in one story. A child can park a car, send it down the slide and return to the rooms with a doll. That combination suits children who do not want every play session to be about the same kind of toy. Check the size of dolls already owned: 22 cm between storeys may be insufficient for larger figures.
+This Villa combines doll stories with toy-car play. The seller describes a parking platform on the second floor, from which small cars can travel down the removable slide. The slide is designed for cars, not as a playground slide for dolls. Two garages are listed separately, without a claim that the garages themselves are on the second floor. The 22 cm floor clearance makes smaller dolls a better fit.
 
-Unlike Junion Villa Alba, this model emphasizes garages and a car slide. Junion is bigger and contains a lift and furnished rooms; Little Wood Home is smaller and supports a second type of play. The detachable slide makes some layouts easier, but the house is still a piece of furniture-sized play equipment requiring a planned location.
+Unlike the much larger Junion Villa Alba, this model combines two interests: dollhouse scenes and miniature vehicles. The removable slide needs extra space beside the house. Choose a position where the child can reach the rooms and the car area comfortably.
 
 The seller listing describes two garages, a balcony, openable shutters and three levels. An exact-model photograph was located in an editorial product article of Team Yandex Store. It must not be confused with the separate Villa Scandi BIG model, which has different dimensions and a different layout.
 
-**Who it suits**. A child who already likes small dolls and toy cars, with space for a 77 cm house and a slide. Assembly and placement require an adult.
+**Who it suits**. A child who enjoys playing with smaller dolls and toy cars. The 77 cm-high house and its slide need a permanent area; adults should handle assembly.
 
 **Check before buying**
 
@@ -312,33 +312,33 @@ The input title referred to sequins, but the exact brand description specifies g
 
 Fact and photo sources: BRAUBERG [S10].
 
-## 10. GaGa Games Bolshaya Brodilka: for later, 8+
+## 10. GaGa Games Bolshaya Brodilka board game
 
 ![GaGa Games Bolshaya Brodilka board game](https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p07-gaga-bolshaya-brodilka.jpg)
 
-*GaGa Games publisher photograph, with its original marking and watermark retained. The game's age label is 8+.*
+*GaGa Games photograph. The box is marked 8+, while the publisher also says the game works well for children younger than eight.*
 
 **Checked specifications**
 
-- Publisher age label 8+.
+- The box is labelled 8+, but the publisher also describes it as suitable for children younger than eight.
 - Two to five players; publisher's play-time estimate is about 30 minutes.
-- The description includes a board, cards, coins, character figures and dice.
+- Game board, cards, coins, character figures and dice are included.
 
-Bolshaya Brodilka is separated from presents intended for immediate use at seven. Its publisher's label is 8+, and an adult being present does not change that label. It can be considered a gift to grow into when the family understands when and how it plans to introduce it.
+Bolshaya Brodilka is a classic move-around-the-board game with dice, character figures and added challenges. Special squares, surprise cards and shortcuts can change a player’s fortunes. The familiar core mechanic makes it accessible to children who already enjoy simple family board games.
 
-A board game needs people, time and someone willing to explain the rules, not just a box. A competitive format can appeal to a family that likes gathering around a table. Children nevertheless differ in how they respond to chance, waiting for a turn and losing.
+The box carries the publisher’s 8+ rating. However, GaGa Games also explicitly says the game is excellent with children younger than eight. It is therefore reasonable to include it as a family gift for a seven-year-old who enjoys this style of play, while retaining the official age label.
 
-The stated thirty minutes is a guide, not a fixed duration for every session. Learning the rules and the group's pace affect the experience. It is unhelpful to turn a present into a compulsory long evening if the child is not ready for that format.
+Two to five players can take part, and a round typically lasts around 30 minutes. Adults can help with the special cards during an introductory game. After that, a child can concentrate on the fun of moving, drawing cards and finding a way to the finish.
 
-**Who it suits**. A later-age gift for a family interested in board games and willing to learn the rules. This guide does not recommend it as an unconditional independent activity for a seven-year-old.
+**Who it suits**. A seven-year-old who likes board games, dice and playful challenges with family or friends. The publisher’s official age label remains 8+.
 
 **Check before buying**
 
-- Keep the 8+ guidance; do not replace it with an invented 7+ rating.
-- Consider player count, available time and the child's response to competition.
-- Allow for learning time and differences in playing pace.
+- The printed age guidance is 8+, while the publisher also recommends the game for younger children. An adult can explain the special actions in the first round.
+- It is designed for two to five players.
+- Allow around 30 minutes per session, and a little longer while everyone learns the game.
 
-[View product: GaGa Games Bolshaya Brodilka: for later, 8+](https://market.yandex.ru/cc/BUqfoK?erid=5jtCeReNx12oak2tUk6qP6E). erid: 5jtCeReNx12oak2tUk6qP6E.
+[View product: GaGa Games Bolshaya Brodilka board game](https://market.yandex.ru/cc/BUqfoK?erid=5jtCeReNx12oak2tUk6qP6E). erid: 5jtCeReNx12oak2tUk6qP6E.
 
 Fact and photo sources: GaGa Games [S07].
 
@@ -360,7 +360,7 @@ LampStory lists 100 g of resin, 21 silicone moulds, a UV lamp and decorative com
 
 This gift only fits where an adult actively wants to do the craft and can control exposure to uncured materials and UV equipment. For independent creative play, the art case or an age-appropriate construction set is the more suitable choice. The product photo is from LampStory’s own page, while current offer contents should be checked at Maria’s link.
 
-**Who it suits**. A family with an adult who is ready to perform all chemical handling and curing. The child can plan motifs; independent use by a seven-year-old is not recommended.
+**Who it suits**. A family where an adult is happy to handle the resin and UV lamp, while the child chooses the shapes, colours and decorations. Not intended as independent craft play for a seven-year-old.
 
 **Check before buying**
 
@@ -378,7 +378,7 @@ For sustained doll stories, begin with scale. The large Junion house requires de
 
 Among compact gifts, willingness to accept uncertainty separates the options. Barbie accessories and Freshest suit a particular play interest or character preference. Hello Kitty & Friends adds randomness; choose it only where an unknown character will not undermine the gift.
 
-Choose the school bag together, select the Beauty Box for pretend stylist play rather than as cosmetics, and keep Bolshaya Brodilka in its separate 8+ later-age category. Thinking through these conditions is more useful than attempting to name a single best product for every child.
+Choose the school bag together, the Beauty Box for a child who loves pretend salon play, and Bolshaya Brodilka for a lively family game with dice and special cards. The publisher’s 8+ label remains stated; the actual game mechanics may suit a seven-year-old who already enjoys board games.
 
 ## Frequently asked questions
 
@@ -388,7 +388,7 @@ Ask a parent about two or three favourite activities and toys already owned. Dol
 
 ### Is everything here suitable for every seven-year-old?
 
-No. The GaGa Games board game is marked 8+ and is an option for later. LampStory UV resin and curing equipment must be handled by adults, and it is not recommended as independent use by a seven-year-old. Check the actual package age and use instructions for each of the other products.
+Not necessarily. Children have different interests and experience. Bolshaya Brodilka carries an 8+ age label, but the publisher also recommends it for younger players. An adult can help explain the first game. LampStory resin and its UV lamp must be handled by adults; check the other products’ own packaging too.
 
 ### Can I select a character in the Hello Kitty & Friends ball?
 
@@ -410,7 +410,7 @@ Before ordering, return to a few questions: is this format genuinely wanted, is 
 
 ## Scope of the first edition
 
-All eleven supplied products are included. Bolshaya Brodilka is explicitly labelled 8+ and is an option for later. The LampStory UV-resin kit is described solely as an adult-led family project, not a safe independent activity for a seven-year-old. The illustrative photo of the 208-piece pink art case comes from another retailer; the actual Avel packaging may differ. This guide does not claim all eleven are suitable for unsupervised use at age seven.
+All eleven supplied products are included. GaGa Games labels Bolshaya Brodilka 8+, while explicitly describing it as suitable for younger children too. The LampStory UV-resin kit is an adult-led craft project, not a self-directed activity for a seven-year-old. The illustration of the 208-piece pink art case comes from another retailer and may not show the exact Avel packaging. Check each product’s own age guidance.
 
 [IndexResearch website edition](https://indexresearch.ru/en/products/gifts-toys-girls-7-years-2026/)
 

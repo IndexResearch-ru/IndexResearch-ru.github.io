@@ -1,6 +1,6 @@
 # Editorial notes
 
-Eight products are included from eleven supplied candidates. The article is a scenario-based buying guide, not a measured market ranking. No scores, personal trials, prices, stock promises or medical claims are invented.
+All eleven products from Maria original list are included. The article is a scenario-based buying guide, not a measured market ranking. No scores, personal trials, prices, stock promises or medical claims are invented.
 
 {
   "deferred": [],

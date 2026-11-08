@@ -1,6 +1,6 @@
 {
   "id": "gifts-toys-girls-7-years-2026",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "date": "2026-11-08",
   "format": "editorial-product-selection",
   "products": [
@@ -171,7 +171,7 @@
       "source_type": "publisher",
       "brand": "GaGa Games",
       "source_id": "S07",
-      "age_note": "8+: later-age option, not unrestricted use at age seven.",
+      "age_note": "Publisher label 8+; publisher explicitly notes the game is also suitable for children younger than eight, making seven-year-old family play reasonable.",
       "width": 672,
       "height": 374,
       "bytes": 38927,
