@@ -1,18 +1,18 @@
-# Gifts for a 7-year-old girl: 7 ideas now and 1 game for later, 2026
+# Top 11 gifts and toys for 7-year-old girls in 2026: a practical buying guide
 
 [RU](https://github.com/IndexResearch-ru/gifts-toys-girls-7-years-2026) | [EN](https://github.com/IndexResearch-ru/gifts-toys-girls-7-years-2026-en) | [CN](https://github.com/IndexResearch-ru/gifts-toys-girls-7-years-2026-cn)
 
-**Maria Yakovleva · Facts checked on 8 November 2026 · v1.0.0**
+**Maria Yakovleva · Facts checked on 8 November 2026 · v1.1.0**
 
 [IndexResearch website edition](https://indexresearch.ru/en/products/gifts-toys-girls-7-years-2026/)
 
-> Choose Junion for dollhouse stories, SLUBAN for building, or the Junion Beauty Box for pretend salon play.
+> Eleven gift ideas cover dolls, dollhouses, construction, creative supplies and family games; UV-resin work is an adult-led activity only.
 
 Advertisement. Advertiser: OOO Yandex Market, Russian tax ID 9704254424. Product links are affiliate links; the author may receive a commission on purchases.
 
 A gift for a seven-year-old girl is easier to choose when you start with what she already enjoys. One child wants a home for her dolls; another would rather construct that home herself. A third likes pretending to run a salon. Age helps you check restrictions, but it does not tell you which of those activities will be welcome.
 
-This editorial selection contains eight different options. The first seven are ideas to discuss against the child's experience, wishes and the instructions on the particular package. The final item, GaGa Games' Bolshaya Brodilka, is labelled 8+ and is included separately as a gift to grow into. The list does not imply that every item is suitable for every seven-year-old or for unsupervised use.
+This guide covers all eleven products supplied by Maria, chosen for different interests rather than a claim that every present is universally suitable. The GaGa Games board game has an 8+ label and is a later-age option. LampStory uses UV resin; an adult must handle uncured materials and UV curing. The pink 208-piece art case is illustrated with a comparable product photo from another retailer.
 
 The opening top three highlights different purposes rather than a universal winner. No laboratory testing, personal product trials or numerical performance scores are claimed. The detailed entries focus on scale, contents, storage and expectations. Prices and stock have deliberately not been frozen: check the actual offer reached through the supplied link before paying.
 
@@ -29,15 +29,18 @@ The opening top three highlights different purposes rather than a universal winn
 1. **Junion Villa Alba dollhouse.** A large furnished dollhouse with a lift; it needs a permanent place in the room.
 2. **SLUBAN House with Pool, M38-B0868.** 446 pieces: a building activity followed by play with a small model and figures.
 3. **Junion Beauty Box pretend-play kit.** A salon in a bag: role-play accessories rather than real cosmetics.
-4. **Barbie with shoes and accessories, FVJ42.** Outfit changes for one character; the model code and included accessories need careful matching.
-5. **L.O.L. Surprise! Tweens Freshest, Core 542582.** A recognisable character for a Tweens fan; Freshest reissues should not be confused.
-6. **L.O.L. Surprise! Hello Kitty & Friends, 523840.** A compact unboxing surprise; a sealed ball does not guarantee a particular character.
-7. **BRAUBERG FIT Golden Butterflies school bag, 274383.** A practical school gift best chosen together and tried on before purchase.
-8. **GaGa Games Bolshaya Brodilka: for later, 8+.** A family board game for two to five players, included as a later-age option.
+4. **Little Wood Home Villa dollhouse with slide and balcony.** A dollhouse with garages and a detachable toy-car slide, best for smaller dolls.
+5. **Barbie with shoes and accessories, FVJ42.** Outfit changes for one character; the model code and included accessories need careful matching.
+6. **L.O.L. Surprise! Tweens Freshest, Core 542582.** A recognisable character for a Tweens fan; Freshest reissues should not be confused.
+7. **L.O.L. Surprise! Hello Kitty & Friends, 523840.** A compact unboxing surprise; a sealed ball does not guarantee a particular character.
+8. **Avel Art 208-piece pink drawing kit with easel.** A portable drawing case with an integrated easel, pencils, pens and paints.
+9. **BRAUBERG FIT Golden Butterflies school bag, 274383.** A practical school gift best chosen together and tried on before purchase.
+10. **GaGa Games Bolshaya Brodilka: for later, 8+.** A family board game for two to five players, included as a later-age option.
+11. **LampStory Magic Keychains UV-resin craft set.** A parent-led resin craft project: adults handle uncured resin and UV curing, while children can suggest designs.
 
 ## How the products were selected
 
-Facts were checked on 8 November 2026 against Junion, Mattel, MGA, BRAUBERG and GaGa Games materials and identified retailer listings. Referral redirects were inspected, but some Yandex Market pages displayed an access challenge. Current price, stock, seller and offer contents therefore are not presented as fully verified. Barbie and Freshest require particular attention to edition matching. The canonical repository records sources and the limits of verification.
+Facts were checked on 8 November 2026 against Junion, Mattel, MGA, BRAUBERG GaGa Games, Little Wood Home and LampStory materials and identified retailer listings. Referral redirects were inspected, but some Yandex Market pages displayed an access challenge. Current price, stock, seller and offer contents therefore are not presented as fully verified. Barbie and Freshest require particular attention to edition matching. The canonical repository records sources and the limits of verification.
 
 ## 1. Junion Villa Alba dollhouse
 
@@ -129,7 +132,37 @@ Choose it for a child who already enjoys this kind of role-play. Curiosity about
 
 Fact and photo sources: Junion [S05].
 
-## 4. Barbie with shoes and accessories, FVJ42
+## 4. Little Wood Home Villa dollhouse with slide and balcony
+
+![Pink Little Wood Home Villa dollhouse with balcony and slide for toy cars](https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p02-little-wood-home-villa.jpg)
+
+*Exact Little Wood Home Villa photo found in the Team Yandex Store product article. Check floor clearance and included accessories.*
+
+**Checked specifications**
+
+- Seller-listed dimensions 77 × 70 × 40 cm; the detachable slide needs additional side space.
+- Three levels: two storeys and an attic, two garages, a parking space, balcony and slide.
+- Listed floor clearance is 22 cm; materials include plywood and MDF.
+
+Villa is an interesting alternative to an ordinary dollhouse because dolls and toy cars can appear in one story. A child can park a car, send it down the slide and return to the rooms with a doll. That combination suits children who do not want every play session to be about the same kind of toy. Check the size of dolls already owned: 22 cm between storeys may be insufficient for larger figures.
+
+Unlike Junion Villa Alba, this model emphasizes garages and a car slide. Junion is bigger and contains a lift and furnished rooms; Little Wood Home is smaller and supports a second type of play. The detachable slide makes some layouts easier, but the house is still a piece of furniture-sized play equipment requiring a planned location.
+
+The seller listing describes two garages, a balcony, openable shutters and three levels. An exact-model photograph was located in an editorial product article of Team Yandex Store. It must not be confused with the separate Villa Scandi BIG model, which has different dimensions and a different layout.
+
+**Who it suits**. A child who already likes small dolls and toy cars, with space for a 77 cm house and a slide. Assembly and placement require an adult.
+
+**Check before buying**
+
+- Measure the floor space plus the projection of the slide.
+- Check the height of current dolls against the stated 22 cm floor clearance.
+- Confirm the actual included accessories instead of assuming cars or furniture come with the offer.
+
+[View product: Little Wood Home Villa dollhouse with slide and balcony](https://market.yandex.ru/cc/BUbUGy?erid=5jtCeReNx12oak2tUddjAsD). erid: 5jtCeReNx12oak2tUddjAsD.
+
+Fact and photo sources: Little Wood Home / Team Yandex Store [S02].
+
+## 5. Barbie with shoes and accessories, FVJ42
 
 ![Barbie FVJ42 in its package with footwear and accessories](https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p03-barbie-fvj42.jpg)
 
@@ -159,7 +192,7 @@ Articulated knees, advanced posing and independent standing are not promised. Fe
 
 Fact and photo sources: Mattel; Детский мир / Detsky Mir [S03].
 
-## 5. L.O.L. Surprise! Tweens Freshest, Core 542582
+## 6. L.O.L. Surprise! Tweens Freshest, Core 542582
 
 ![L.O.L. Surprise! Tweens Freshest doll, Core edition 542582](https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p04-lol-tweens-freshest-542582.jpg)
 
@@ -189,7 +222,7 @@ Before arranging a surprise, it is worth quietly checking the character name and
 
 Fact and photo sources: MGA; Детский мир / Detsky Mir [S04].
 
-## 6. L.O.L. Surprise! Hello Kitty & Friends, 523840
+## 7. L.O.L. Surprise! Hello Kitty & Friends, 523840
 
 ![Sealed L.O.L. Surprise! Hello Kitty & Friends ball from series 523840](https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p11-lol-hello-kitty-ball-523840.jpg)
 
@@ -219,7 +252,37 @@ The small format can work as a compact gift in its own right or an addition to a
 
 Fact and photo sources: MGA [S11].
 
-## 7. BRAUBERG FIT Golden Butterflies school bag, 274383
+## 8. Avel Art 208-piece pink drawing kit with easel
+
+![Pink 208-piece folding art kit with a built-in easel and organised drawing materials](https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p08-avel-art-208-pink.jpg)
+
+*Comparable pink 208-piece art case photographed by Zaffary. Actual Avel packaging and compartment layout may differ.*
+
+**Checked specifications**
+
+- Retailer lists the pink 208-piece Art version, offer ID 4331309113.
+- Listed categories include pens, coloured pencils, crayons, pastels, paint, brush, paper, ruler and eraser.
+- A folding case and integrated easel help organise and display work.
+
+This set makes sense for a child whose interest in art is already visible. Instead of giving only another box of markers, it lets her compare the feel of pencils, pastels, paints and crayons. The headline count includes small supplies as well as drawing tools; it should not be mistaken for 208 different professional instruments.
+
+The carrying case has another benefit: individual types of materials can be put away between activities. A built-in easel gives the child a way to hold a sheet while drawing. Paintwork still needs a suitable surface, water and an adult’s help in setting up a clean space.
+
+The identified Russian seller lists a 208-piece pink Art assortment. The photograph was sourced from a separate retailer showing a visually comparable 208-piece pink folding case. It illustrates the format rather than guaranteeing identical compartment layout, printing or exact contents of the Avel offer.
+
+**Who it suits**. A seven-year-old who draws often and wants several art media in one place. An adult can help set up a practical working area.
+
+**Check before buying**
+
+- Choose the pink 208-piece variant, not another colour or a 144-piece alternative.
+- Inspect the exact included paper, brushes and paints and do not assume professional quality.
+- Allow space for the unfolded case and protect the work surface where needed.
+
+[View product: Avel Art 208-piece pink drawing kit with easel](https://market.yandex.ru/cc/BUspoW?erid=5jtCeReNx12oak2tUk9oMex). erid: 5jtCeReNx12oak2tUk9oMex.
+
+Fact and photo sources: Авель Art / Team Yandex Store; Zaffary comparative photo [S08].
+
+## 9. BRAUBERG FIT Golden Butterflies school bag, 274383
 
 ![Black BRAUBERG FIT 274383 school bag with gold butterfly pattern](https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p10-brauberg-fit-274383.jpg)
 
@@ -249,7 +312,7 @@ The input title referred to sequins, but the exact brand description specifies g
 
 Fact and photo sources: BRAUBERG [S10].
 
-## 8. GaGa Games Bolshaya Brodilka: for later, 8+
+## 10. GaGa Games Bolshaya Brodilka: for later, 8+
 
 ![GaGa Games Bolshaya Brodilka board game](https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p07-gaga-bolshaya-brodilka.jpg)
 
@@ -279,6 +342,36 @@ The stated thirty minutes is a guide, not a fixed duration for every session. Le
 
 Fact and photo sources: GaGa Games [S07].
 
+## 11. LampStory Magic Keychains UV-resin craft set
+
+![LampStory Magic Keychains kit with UV resin, curing lamp, silicone moulds and keychain examples](https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p09-lampstory-magic-keychains.jpg)
+
+*Official LampStory image. Uncured UV resin and curing equipment are for adult handling, not independent use by a seven-year-old.*
+
+**Checked specifications**
+
+- Maker describes 100 g of one-component UV resin, 21 silicone moulds and a UV lamp.
+- The set includes decorative elements, fittings, protective accessories and instructions.
+- Uncured resin and UV curing require adult handling and the exact manufacturer’s precautions.
+
+This is fundamentally different from an ordinary toy or a basic drawing set. The intended outcome is a decorated keychain cast in UV-curing resin. A seven-year-old might enjoy choosing the motif or colours, but the actual mixing, pouring and curing stages should be performed by a responsible adult familiar with the product instructions. The kit should not be offered as an unsupervised activity for a seven-year-old.
+
+LampStory lists 100 g of resin, 21 silicone moulds, a UV lamp and decorative components. The maker describes relatively rapid curing under the lamp, but exact timing and protective measures depend on the instructions and the thickness of the work. The inclusion of gloves or a mask does not on its own establish safe use by a child.
+
+This gift only fits where an adult actively wants to do the craft and can control exposure to uncured materials and UV equipment. For independent creative play, the art case or an age-appropriate construction set is the more suitable choice. The product photo is from LampStory’s own page, while current offer contents should be checked at Maria’s link.
+
+**Who it suits**. A family with an adult who is ready to perform all chemical handling and curing. The child can plan motifs; independent use by a seven-year-old is not recommended.
+
+**Check before buying**
+
+- Read the exact manufacturer instructions, intended age and warnings before ordering.
+- Keep uncured resin and UV equipment away from the child; follow skin and eye protection, ventilation and disposal guidance.
+- Do not transfer instructions or safety assurances from another resin kit.
+
+[View product: LampStory Magic Keychains UV-resin craft set](https://market.yandex.ru/cc/BUsrYb?erid=5jtCeReNx12oak2tUk9oMxV). erid: 5jtCeReNx12oak2tUk9oMxV.
+
+Fact and photo sources: LampStory (manufacturer) [S09].
+
 ## Choosing between the scenarios
 
 For sustained doll stories, begin with scale. The large Junion house requires dedicated space, while SLUBAN provides a small model after a construction activity. These are different experiences even though both depict homes. Do not infer compatibility with existing dolls from a familiar brand name alone.
@@ -295,7 +388,7 @@ Ask a parent about two or three favourite activities and toys already owned. Dol
 
 ### Is everything here suitable for every seven-year-old?
 
-No. The guide describes scenarios and does not override instructions or package labels. Bolshaya Brodilka is explicitly an 8+ option for later. For the other products, check the exact edition, age guidance and conditions of use as well.
+No. The GaGa Games board game is marked 8+ and is an option for later. LampStory UV resin and curing equipment must be handled by adults, and it is not recommended as independent use by a seven-year-old. Check the actual package age and use instructions for each of the other products.
 
 ### Can I select a character in the Hello Kitty & Friends ball?
 
@@ -313,11 +406,11 @@ No personal trials or use by the author's child are claimed. Specifications come
 
 Start with the child's interest, then check purchasing conditions. Junion is highlighted for a substantial dollhouse setting, SLUBAN for building and the Beauty Box for portable pretend salon play. The remaining options address more specific wishes: changing doll outfits, owning a named character, enjoying a surprise or choosing a new school item.
 
-Before ordering, return to a few questions: is this format genuinely wanted, is there enough space, does the edition match, and are contents and age guidance clear? Resolving uncertainty before payment is more useful than trying to explain unmet expectations after the gift is opened.
+Before ordering, return to a few questions: is this format genuinely wanted, is there enough space, does the edition match, and are contents and age guidance clear? Resolving uncertainty before payment is more useful than trying to explain unmet expectations after the gift is opened. For a girl who draws frequently, the pink 208-piece art kit may be a better match than another doll. For small dolls plus toy cars, look at Little Wood Home Villa. The resin kit is for a household where a responsible adult wants to complete every chemical-handling and UV-curing step.
 
 ## Scope of the first edition
 
-The input list contained 11 products. Eight are published in this first edition. The Little Wood Home Villa and pink Avel Art 208-piece set are deferred until exact-model photographs are available, rather than illustrated with lookalikes. The LampStory epoxy-resin kit is omitted because instructions and conditions sufficient to recommend it for a seven-year-old could not be confirmed. This is not a claim that the product itself is illegal or inherently unsafe.
+All eleven supplied products are included. Bolshaya Brodilka is explicitly labelled 8+ and is an option for later. The LampStory UV-resin kit is described solely as an adult-led family project, not a safe independent activity for a seven-year-old. The illustrative photo of the 208-piece pink art case comes from another retailer; the actual Avel packaging may differ. This guide does not claim all eleven are suitable for unsupervised use at age seven.
 
 [IndexResearch website edition](https://indexresearch.ru/en/products/gifts-toys-girls-7-years-2026/)
 

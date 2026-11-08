@@ -1,6 +1,6 @@
 {
   "id": "gifts-toys-girls-7-years-2026",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "date": "2026-11-08",
   "format": "editorial-product-selection",
   "products": [
@@ -52,6 +52,25 @@
       "id": "P05",
       "referral_url": "https://market.yandex.ru/cc/BUczMF?erid=5jtCeReNx12oak2tUddmXcs",
       "erid": "5jtCeReNx12oak2tUddmXcs"
+    },
+    {
+      "file": "p02-little-wood-home-villa.jpg",
+      "image_source": "https://avatars.mds.yandex.net/get-mpic/20761202/pic575095e195753469c780970b9d04f671/orig",
+      "source": "https://tystore.yandex.ru/card/kukolnyy-domik-villa/4835923444",
+      "secondary_source": "https://tystore.yandex.ru/journal/podarki-detyam-na-novyy-god-2026-vybiraem-s-umom-i-serdcem",
+      "source_name": "Little Wood Home / Team Yandex Store",
+      "source_type": "brand_and_identified_retailer",
+      "brand": "Little Wood Home",
+      "sku": "4835923444",
+      "source_id": "S02",
+      "identity_note": "Exact Villa name and seller listing; exact-model image recovered from seller editorial journal. Do not substitute Villa Scandi BIG.",
+      "width": 900,
+      "height": 1200,
+      "bytes": 163907,
+      "sha256": "a63faeb7c9d7f84694ab4c7b1a134a5f08988a60796d7907012d286536267f7c",
+      "id": "P02",
+      "referral_url": "https://market.yandex.ru/cc/BUbUGy?erid=5jtCeReNx12oak2tUddjAsD",
+      "erid": "5jtCeReNx12oak2tUddjAsD"
     },
     {
       "file": "p03-barbie-fvj42.jpg",
@@ -109,6 +128,25 @@
       "erid": "5jtCeReNx12oak2tUk9ohpc"
     },
     {
+      "file": "p08-avel-art-208-pink.jpg",
+      "image_source": "https://www.zaffary.com/cdn/shop/files/IMG-8408.png?v=1774540726&width=1024",
+      "source": "https://tystore.yandex.ru/card/nabor-dlya-risovaniya--208sht-rozovyy/4331309113",
+      "secondary_source": "https://www.zaffary.com/products/set-kit-arte-ninos-maleta-crayon-acuarela-plumon-208-piezas",
+      "source_name": "Авель Art / Team Yandex Store; Zaffary comparative photo",
+      "source_type": "identified_retailer_and_similar_OEM_photo",
+      "brand": "Авель",
+      "sku": "4331309113",
+      "source_id": "S08",
+      "identity_note": "Seller identifies pink 208-piece Art case, included easel. Photo from separate merchant is a representative arrangement of a comparable 208-piece folding case; exact identical retail packaging cannot be asserted.",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 168591,
+      "sha256": "380a98aa88ab73fc5d7ef8672220fae1c7412839ec6c5c116e22c298288c7d1c",
+      "id": "P08",
+      "referral_url": "https://market.yandex.ru/cc/BUspoW?erid=5jtCeReNx12oak2tUk9oMex",
+      "erid": "5jtCeReNx12oak2tUk9oMex"
+    },
+    {
       "file": "p10-brauberg-fit-274383.jpg",
       "image_source": "https://s3.ibta.ru/goods/274383/7b5ba5b5ac7c360f3ac678732b9f7606_xl.jpg",
       "source": "https://brauberg.com/catalog/products/274383/",
@@ -141,24 +179,28 @@
       "id": "P07",
       "referral_url": "https://market.yandex.ru/cc/BUqfoK?erid=5jtCeReNx12oak2tUk6qP6E",
       "erid": "5jtCeReNx12oak2tUk6qP6E"
-    }
-  ],
-  "deferred": [
-    {
-      "id": "P02",
-      "reason": "Exact-model photograph unavailable; do not substitute Villa Scandi BIG."
     },
     {
-      "id": "P08",
-      "reason": "Exact pink Avel Art 208-piece photograph unavailable; do not substitute a generic set."
-    }
-  ],
-  "excluded": [
-    {
+      "file": "p09-lampstory-magic-keychains.jpg",
+      "image_source": "https://static.tildacdn.com/stor3530-6361-4538-a666-303438323638/25003518.jpg",
+      "source": "https://lampstory.ru/tproduct/503101630-117568643872-nabor-iz-epoksidnoi-smoli-3d-breloki",
+      "source_name": "LampStory (manufacturer)",
+      "source_type": "manufacturer",
+      "brand": "LampStory",
+      "sku": "2033",
+      "source_id": "S09",
+      "identity_note": "Brand photo of UV-curing resin kit; contents advertised include uncured UV resin and UV lamp. Child aged seven must not handle uncured resin or UV-curing equipment; adults must check exact kit safety directions.",
+      "width": 1200,
+      "height": 1200,
+      "bytes": 198226,
+      "sha256": "33807bdb2e112beb0e74a01dcd4d0cfc4228674aa197770f3ba92c0bdd3f3ccc",
       "id": "P09",
-      "reason": "Exact instructions and conditions sufficient for recommending the epoxy-resin kit to a seven-year-old could not be confirmed."
+      "referral_url": "https://market.yandex.ru/cc/BUsrYb?erid=5jtCeReNx12oak2tUk9oMxV",
+      "erid": "5jtCeReNx12oak2tUk9oMxV"
     }
   ],
+  "deferred": [],
+  "excluded": [],
   "offer_verification": "Referral redirects checked; current offer pages partly blocked by access challenges. No fixed price, stock or full current-offer verification asserted.",
-  "media_policy": "Third-party product photographs retain original rights and visible marks. No open-content licence is asserted. Sources are attributed; no synthetic product photographs or substituted variants."
+  "media_policy": "One photo per each of all 11 items. Source photo can be from an independent supplier when the marketplace blocks access. Original rights remain with their holders. P08 is an example of the same-type 208-piece pink case, not proof of identical packaging. No synthetic product photography or new affiliate redirects."
 }

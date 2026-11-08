@@ -8,6 +8,9 @@ P06,ru,"Небольшая модель для фигурок, не дом дл�
 P05,ru,В описании Junion – 10 предметов.,S05
 P05,ru,"Игрушечный фен со звуком, расческа, кисточки и игровые аксессуары.",S05
 P05,ru,"Дерево, пластик и текстиль; сумка с регулируемым ремешком.",S05
+P02,ru,77 × 70 × 40 см по описанию продавца; размеры съемной горки проверяйте отдельно.,S02
+P02,ru,"3 уровня: 2 этажа и мансарда; 2 гаража, парковка, балкон и горка для машинок.",S02
+P02,ru,Высота между этажами указана 22 см; в карточке перечислены фанера и МДФ.,S02
 P03,ru,В материалах Mattel артикул FVJ42; во входном названии предложения написано FJV42.,S03
 P03,ru,"Кукла, обувь и аксессуары для разных образов; часть обуви уже надета.",S03
 P03,ru,Производитель предупреждает: кукла не стоит самостоятельно.,S03
@@ -17,12 +20,18 @@ P04,ru,Высота не приводится: доступные карточк
 P11,ru,Артикул серии 523840; маркировка производителя 4+.,S11
 P11,ru,"В серии 8 вариантов персонажей, выбор случайный.",S11
 P11,ru,Возможны повторы; один шар не содержит всех героев коллекции.,S11
+P08,ru,"По карточке продавца: 208 предметов, розовый вариант, серия Art; артикул предложения 4331309113.",S08
+P08,ru,"В составе перечислены фломастеры, цветные карандаши, мелки, пастель, краски, кисточка, бумага, линейка и ластик.",S08
+P08,ru,Чемодан с интегрированным мольбертом предназначен для хранения и работы с листом бумаги.,S08
 P10,ru,"38 × 27 × 14 см; объем 16 л; вес самого изделия 0,85 кг.",S10
 P10,ru,"2 отделения, регулируемые лямки, нагрудная стяжка и светоотражающие элементы.",S10
 P10,ru,"По описанию бренда рисунок выполнен золотой краской, не пайетками.",S10
 P07,ru,Маркировка издателя 8+.,S07
 P07,ru,2–5 игроков; ориентир издателя – около 30 минут на партию.,S07
 P07,ru,"Поле, карточки, монеты, фигурки персонажей и кубики в описании игры.",S07
+P09,ru,"У производителя описаны 100 г однокомпонентной УФ-смолы, 21 силиконовая форма и УФ-лампа.",S09
+P09,ru,"В перечень входят декоративные элементы, крепления, средства защиты и инструкция; внешний вид набора может отличаться по партии.",S09
+P09,ru,Незатвердевшая смола и УФ-оборудование требуют соблюдения указаний производителя; самостоятельную работу 7-летнего ребенка с ними рекомендовать нельзя.,S09
 P01,en,82 × 33 × 118 cm; brand-listed weight 16 kg.,S01
 P01,en,"Three floors, four rooms, a balcony and a lift.",S01
 P01,en,Brand description lists 13 furniture pieces and a cat figure; labelled 3+.,S01
@@ -32,6 +41,9 @@ P06,en,"A small figure-scale model, not a house for full-size dolls.",S06
 P05,en,Junion describes a ten-piece set.,S05
 P05,en,"Toy hair dryer with sound, comb, brushes and pretend-play accessories.",S05
 P05,en,"Wood, plastic and textile; a bag with an adjustable strap.",S05
+P02,en,Seller-listed dimensions 77 × 70 × 40 cm; the detachable slide needs additional side space.,S02
+P02,en,"Three levels: two storeys and an attic, two garages, a parking space, balcony and slide.",S02
+P02,en,Listed floor clearance is 22 cm; materials include plywood and MDF.,S02
 P03,en,Mattel identifies the set as FVJ42; the supplied offer title spells it FJV42.,S03
 P03,en,"Doll, footwear and accessories for different looks; some footwear is already worn.",S03
 P03,en,Mattel notes that the doll cannot stand on its own.,S03
@@ -41,12 +53,18 @@ P04,en,Height is omitted because available listings give conflicting measurement
 P11,en,Series code 523840; manufacturer age label 4+.,S11
 P11,en,"Eight character variants in the series, supplied at random.",S11
 P11,en,Duplicates are possible; one ball does not contain the whole collection.,S11
+P08,en,"Retailer lists the pink 208-piece Art version, offer ID 4331309113.",S08
+P08,en,"Listed categories include pens, coloured pencils, crayons, pastels, paint, brush, paper, ruler and eraser.",S08
+P08,en,A folding case and integrated easel help organise and display work.,S08
 P10,en,38 × 27 × 14 cm; 16 litres; empty product weight 0.85 kg.,S10
 P10,en,"Two compartments, adjustable shoulder straps, chest strap and reflective elements.",S10
 P10,en,"The brand describes a gold-painted pattern, not sequins.",S10
 P07,en,Publisher age label 8+.,S07
 P07,en,Two to five players; publisher's play-time estimate is about 30 minutes.,S07
 P07,en,"The description includes a board, cards, coins, character figures and dice.",S07
+P09,en,"Maker describes 100 g of one-component UV resin, 21 silicone moulds and a UV lamp.",S09
+P09,en,"The set includes decorative elements, fittings, protective accessories and instructions.",S09
+P09,en,Uncured resin and UV curing require adult handling and the exact manufacturer’s precautions.,S09
 P01,cn,尺寸82 × 33 × 118厘米；品牌标注重量16千克。,S01
 P01,cn,3层、4个房间、阳台和电梯。,S01
 P01,cn,品牌描述包含13件家具及一只猫的模型；标注3+。,S01
@@ -56,6 +74,9 @@ P06,cn,属于小人偶比例的模型，不是给常规大娃娃使用的房屋�
 P05,cn,Junion描述为10件套。,S05
 P05,cn,包含带声音的玩具吹风机、梳子、刷具及其他游戏配件。,S05
 P05,cn,材料描述为木材、塑料和织物；收纳包有可调节背带。,S05
+P02,cn,卖家标注房屋尺寸77 × 70 × 40厘米；侧面的可拆卸滑道需要额外空间。,S02
+P02,cn,共有3层，包括2层与阁楼；设有2个车库、停车区域、阳台和滑道。,S02
+P02,cn,卖家标注层间高度22厘米，主要材料包括胶合板和密度板。,S02
 P03,cn,Mattel资料中的型号为FVJ42；原始报价标题写成FJV42。,S03
 P03,cn,套装包含娃娃、鞋履及装扮配件，部分鞋履已穿在娃娃身上。,S03
 P03,cn,Mattel提示娃娃不能自行站立。,S03
@@ -65,9 +86,15 @@ P04,cn,可见页面对身高描述不一致，因此不刊登未经确认的高�
 P11,cn,系列编号523840，厂家年龄标注4+。,S11
 P11,cn,系列有8种角色，随机提供。,S11
 P11,cn,可能抽到重复角色，一个球不包含整套收藏。,S11
+P08,cn,卖家标注粉色208件Art版本，商品编号4331309113。,S08
+P08,cn,列出的材料包括马克笔、彩色铅笔、蜡笔、粉彩、颜料、画笔、纸、直尺和橡皮。,S08
+P08,cn,折叠画箱内设画架，便于整理工具与固定画纸。,S08
 P10,cn,38 × 27 × 14厘米，16升，空包重0.85千克。,S10
 P10,cn,两个主分区、可调肩带、胸扣及反光元素。,S10
 P10,cn,品牌描述为金色涂绘图案，不是亮片。,S10
 P07,cn,发行商年龄标签为8+。,S07
 P07,cn,2至5名玩家，发行商给出的每局时间约30分钟。,S07
 P07,cn,描述包括棋盘、卡牌、硬币、角色棋子和骰子。,S07
+P09,cn,品牌说明包含100克单组分UV树脂、21个硅胶模具及UV固化灯。,S09
+P09,cn,包装描述还包括装饰材料、连接配件、防护用品和说明书。,S09
+P09,cn,未固化树脂与UV设备应由成人按照具体说明操作，不能推荐给7岁孩子独立使用。,S09

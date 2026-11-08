@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0 – 2026-11-08
+
+Expanded the existing RU/EN/CN site pages and repositories to all 11 items: P02, P08, P09 added, with documented visual and age conditions. P07 remains labelled 8+.
+
 ## 1.0.0 – 2026-11-08
 
-First eight-product editorial edition in Russian, English and simplified Chinese. P02/P08 deferred for exact photos; P09 omitted pending suitable instructions. P07 retains 8+ label.
+First eight-item edition.

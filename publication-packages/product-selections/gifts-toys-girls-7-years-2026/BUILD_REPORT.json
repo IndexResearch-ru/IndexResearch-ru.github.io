@@ -2,25 +2,25 @@
   "id": "gifts-toys-girls-7-years-2026",
   "metrics": {
     "ru": {
-      "readme_characters": 24453,
-      "readme_words": 3172,
-      "products": 8,
-      "photos": 8,
-      "unique_referrals": 8
+      "readme_characters": 33416,
+      "readme_words": 4331,
+      "products": 11,
+      "photos": 11,
+      "unique_referrals": 11
     },
     "en": {
-      "readme_characters": 24805,
-      "readme_words": 3704,
-      "products": 8,
-      "photos": 8,
-      "unique_referrals": 8
+      "readme_characters": 32748,
+      "readme_words": 4918,
+      "products": 11,
+      "photos": 11,
+      "unique_referrals": 11
     },
     "cn": {
-      "readme_characters": 10964,
-      "readme_words": 1034,
-      "products": 8,
-      "photos": 8,
-      "unique_referrals": 8
+      "readme_characters": 14376,
+      "readme_words": 1337,
+      "products": 11,
+      "photos": 11,
+      "unique_referrals": 11
     }
   },
   "media": [
@@ -64,6 +64,19 @@
       "review": "Visually reviewed; exact referenced model; edition caveats remain visible"
     },
     {
+      "product_id": "P02",
+      "file": "p02-little-wood-home-villa.jpg",
+      "public_url": "https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p02-little-wood-home-villa.jpg",
+      "source_url": "https://avatars.mds.yandex.net/get-mpic/20761202/pic575095e195753469c780970b9d04f671/orig",
+      "attribution": "Little Wood Home / Team Yandex Store",
+      "width": 900,
+      "height": 1200,
+      "bytes": 163907,
+      "sha256": "a63faeb7c9d7f84694ab4c7b1a134a5f08988a60796d7907012d286536267f7c",
+      "rights": "Original rights retained; not relicensed",
+      "review": "Visually reviewed; exact referenced model; edition caveats remain visible"
+    },
+    {
       "product_id": "P03",
       "file": "p03-barbie-fvj42.jpg",
       "public_url": "https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p03-barbie-fvj42.jpg",
@@ -103,6 +116,19 @@
       "review": "Visually reviewed; exact referenced model; edition caveats remain visible"
     },
     {
+      "product_id": "P08",
+      "file": "p08-avel-art-208-pink.jpg",
+      "public_url": "https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p08-avel-art-208-pink.jpg",
+      "source_url": "https://www.zaffary.com/cdn/shop/files/IMG-8408.png?v=1774540726&width=1024",
+      "attribution": "Авель Art / Team Yandex Store; Zaffary comparative photo",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 168591,
+      "sha256": "380a98aa88ab73fc5d7ef8672220fae1c7412839ec6c5c116e22c298288c7d1c",
+      "rights": "Original rights retained; not relicensed",
+      "review": "Visually reviewed; exact referenced model; edition caveats remain visible"
+    },
+    {
       "product_id": "P10",
       "file": "p10-brauberg-fit-274383.jpg",
       "public_url": "https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p10-brauberg-fit-274383.jpg",
@@ -125,6 +151,19 @@
       "height": 374,
       "bytes": 38927,
       "sha256": "f9efc7b96dfbcf2c2d0c264310327824e60208d874cb2d6d0b61449e867f7928",
+      "rights": "Original rights retained; not relicensed",
+      "review": "Visually reviewed; exact referenced model; edition caveats remain visible"
+    },
+    {
+      "product_id": "P09",
+      "file": "p09-lampstory-magic-keychains.jpg",
+      "public_url": "https://indexresearch.ru/assets/products/gifts-toys-girls-7-years-2026/p09-lampstory-magic-keychains.jpg",
+      "source_url": "https://static.tildacdn.com/stor3530-6361-4538-a666-303438323638/25003518.jpg",
+      "attribution": "LampStory (manufacturer)",
+      "width": 1200,
+      "height": 1200,
+      "bytes": 198226,
+      "sha256": "33807bdb2e112beb0e74a01dcd4d0cfc4228674aa197770f3ba92c0bdd3f3ccc",
       "rights": "Original rights retained; not relicensed",
       "review": "Visually reviewed; exact referenced model; edition caveats remain visible"
     }
