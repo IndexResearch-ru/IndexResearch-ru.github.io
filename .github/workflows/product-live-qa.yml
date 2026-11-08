@@ -24,7 +24,7 @@ jobs:
           slug='gifts-toys-girls-7-years-2026'
           out=pathlib.Path('/tmp/product-live-qa');out.mkdir(exist_ok=True)
           manifest=json.loads(pathlib.Path(f'templates/product-selections/{slug}.json').read_text())
-          order=['P01','P06','P05','P03','P04','P11','P10','P07']
+          order=json.loads(pathlib.Path(f'content/product-selections/{slug}/assets.json').read_text())['order']
           expected={p['referral_url'] for p in manifest['products'] if p['id'] in order}
           report={'surfaces':[],'errors':[]}
           async def main():
@@ -43,9 +43,9 @@ jobs:
                               row['http_status']=response.status if response else None
                               assert row['http_status']==200,'site not deployed'
                               assert await page.locator('h1').count()==1
-                              assert await page.locator('[data-product-id]').count()==8
+                              assert await page.locator('[data-product-id]').count()==len(order)
                               photos=page.locator('img.product-photo')
-                              assert await photos.count()==8
+                              assert await photos.count()==len(order)
                               for img in await photos.all():
                                   await img.scroll_into_view_if_needed()
                                   await img.wait_for(state='visible')
@@ -54,7 +54,7 @@ jobs:
                               assert set(refs)==expected,'referral mismatch'
                               overflow=await page.evaluate('document.documentElement.scrollWidth > innerWidth + 2')
                               assert not overflow,'horizontal overflow'
-                              row.update(products=8,photos=8,unique_referrals=len(set(refs)),horizontal_overflow=overflow,title=await page.title(),h1=await page.locator('h1').inner_text())
+                              row.update(products=len(order),photos=len(order),unique_referrals=len(set(refs)),horizontal_overflow=overflow,title=await page.title(),h1=await page.locator('h1').inner_text())
                               await page.evaluate('window.scrollTo(0,0)')
                               await page.screenshot(path=str(out/f'{lang}-{width}.png'),full_page=True)
                               row['passed']=True
@@ -67,21 +67,21 @@ jobs:
                       try:
                           for attempt in range(12):
                               raw=requests.get(repo.replace('https://github.com/','https://raw.githubusercontent.com/')+'/main/README.md',timeout=30)
-                              if raw.status_code==200 and raw.text.count('![')==8:break
+                              if raw.status_code==200 and raw.text.count('![')==len(order):break
                               await page.wait_for_timeout(5000)
-                          assert raw.status_code==200 and raw.text.count('![')==8
+                          assert raw.status_code==200 and raw.text.count('![')==len(order)
                           assert set(re.findall(r'https://market\.yandex\.ru/cc/[^\s)<>]+',raw.text))==expected
                           response=await page.goto(repo,wait_until='domcontentloaded',timeout=45000)
                           await page.locator('article.markdown-body').first.wait_for(timeout=25000)
                           article=page.locator('article.markdown-body').first
                           imgs=article.locator('img')
-                          assert await imgs.count()==8,'GitHub rendered photo count'
+                          assert await imgs.count()==len(order),'GitHub rendered photo count'
                           for img in await imgs.all():
                               await img.scroll_into_view_if_needed()
                               await page.wait_for_function('(n)=>n.complete && n.naturalWidth>0',arg=await img.element_handle(),timeout=20000)
                           await page.evaluate('window.scrollTo(0,0)')
                           await page.screenshot(path=str(out/f'github-{lang}.png'),full_page=False)
-                          row.update(passed=True,http_status=response.status,readme_characters=len(raw.text),photos=8)
+                          row.update(passed=True,http_status=response.status,readme_characters=len(raw.text),photos=len(order))
                       except Exception as e:
                           row.update(passed=False,error=str(e));report['errors'].append(row)
                       report['surfaces'].append(row);await page.close()
