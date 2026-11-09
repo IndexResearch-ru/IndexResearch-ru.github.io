@@ -345,3 +345,17 @@ html[lang="zh-CN"] body{font-family:Inter,"Noto Sans CJK SC","Noto Sans SC","Mic
   .research-table--ranking[data-bmr-ranking="true"] tr{grid-template-columns:60px minmax(0,1fr) auto}
   .research-table--ranking[data-bmr-ranking="true"] td:first-child{white-space:nowrap;font-variant-numeric:tabular-nums;font-size:13px}
 }
+
+/* IndexResearch GEO/AEO documentary study: mobile offer table */
+.research-table--offers { width:100%; table-layout:fixed; }
+.research-table--offers th:nth-child(1) { width:23%; }
+.research-table--offers th:nth-child(2) { width:62%; }
+.research-table--offers th:nth-child(3) { width:15%; }
+.research-table--offers td { vertical-align:top; overflow-wrap:anywhere; }
+@media(max-width:720px) {
+ .research-table--offers thead { display:none; }
+ .research-table--offers tbody { display:block; }
+ .research-table--offers tr { display:block; padding:13px; margin:0 0 12px; border:1px solid #d4dfe8; border-radius:9px; background:#fff; }
+ .research-table--offers td { display:block!important; width:auto!important; padding:5px 0!important; border:0!important; white-space:normal; overflow-wrap:anywhere; }
+ .research-table--offers td:before { content:attr(data-label); display:block; color:#527188; font-size:11px; font-weight:700; margin-bottom:3px; }
+}
