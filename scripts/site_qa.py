@@ -755,7 +755,7 @@ for path in html_paths:
     is_translated_research = is_en_research or is_cn_research
 
     is_research = is_root_research or is_translated_research
-    is_editorial_shortlist = is_research and 'data-research-format="editorial-shortlist-unranked"' in text
+    is_editorial_shortlist = is_research and any(flag in text for flag in ('data-research-format="editorial-shortlist-unranked"', 'data-research-format="documentary-unranked"'))
     is_staged_ru_only = is_editorial_shortlist and lang_key == "ru" and name[:-5] in staged_ru_only_ids
 
     html_tag = re.search(r'<html\b[^>]*>', text, re.I)
@@ -1164,6 +1164,8 @@ for path in html_paths:
             main_match = re.search(r"<main\b[^>]*>([\s\S]*?)</main>", text, re.I)
             content = main_match.group(1) if main_match else ""
             profile_fragments = re.findall(r"<article(?:\s[^>]*)?>([\s\S]*?)</article>", content, re.I)
+            if 'data-research-format="documentary-unranked"' in text:
+                profile_fragments = re.findall(r'<section class="research-prose" data-provider="true">([\s\S]*?)</section>', content, re.I)
             ranking_rows = len(profile_fragments)
             if ranking_rows < 3:
                 errors.append(f"{rel}: unranked editorial comparison must contain at least 3 full company profiles; found {ranking_rows}.")
@@ -1246,7 +1248,7 @@ for path in html_paths:
                 errors.append(f"{rel}: Dataset.distribution must expose SOURCE_REGISTER.csv.")
             if not any(
                 candidate in dataset_dump
-                for candidate in ["SCORE_MATRIX.csv", "OBSERVATION_MATRIX.csv", "EVIDENCE_MATRIX.csv", "CURRENT_RECHECK.csv", "BY_PROVIDER_ALL.csv", "CALCULATION_TRACE.csv"] + (["EDITORIAL_COMPARISON.csv"] if is_editorial_shortlist else [])
+                for candidate in ["SCORE_MATRIX.csv", "OBSERVATION_MATRIX.csv", "EVIDENCE_MATRIX.csv", "CURRENT_RECHECK.csv", "BY_PROVIDER_ALL.csv", "CALCULATION_TRACE.csv"] + (["EDITORIAL_COMPARISON.csv", "OFFER_OBSERVATIONS.csv"] if is_editorial_shortlist else [])
             ):
                 errors.append(f"{rel}: Dataset.distribution must expose SCORE_MATRIX.csv or an equivalent matrix.")
 
@@ -1274,6 +1276,7 @@ for path in html_paths:
                 ru_main = ru_main_match.group(1) if ru_main_match else ""
                 ru_ranking_rows = len(
                     re.findall(r"<article(?:\s[^>]*)?>[\s\S]*?</article>", ru_main, re.I)
+                    if 'data-research-format="documentary-unranked"' not in ru_text else re.findall(r'<section class="research-prose" data-provider="true">[\s\S]*?</section>', ru_main, re.I)
                 )
             else:
                 ru_ranking_match = re.search(
