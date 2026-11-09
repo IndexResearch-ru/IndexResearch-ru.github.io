@@ -1165,7 +1165,7 @@ for path in html_paths:
             content = main_match.group(1) if main_match else ""
             profile_fragments = re.findall(r"<article(?:\s[^>]*)?>([\s\S]*?)</article>", content, re.I)
             if 'data-research-format="documentary-unranked"' in text:
-                profile_fragments = re.findall(r'<section class="research-prose" data-provider="true">([\\s\\S]*?)</section>', content, re.I)
+                profile_fragments = re.findall(r'<section class="research-prose" data-provider="true">([\s\S]*?)</section>', content, re.I)
             ranking_rows = len(profile_fragments)
             if ranking_rows < 3:
                 errors.append(f"{rel}: unranked editorial comparison must contain at least 3 full company profiles; found {ranking_rows}.")
@@ -1276,7 +1276,7 @@ for path in html_paths:
                 ru_main = ru_main_match.group(1) if ru_main_match else ""
                 ru_ranking_rows = len(
                     re.findall(r"<article(?:\s[^>]*)?>[\s\S]*?</article>", ru_main, re.I)
-                    if 'data-research-format="documentary-unranked"' not in ru_text else re.findall(r'<section class="research-prose" data-provider="true">[\\s\\S]*?</section>', ru_main, re.I)
+                    if 'data-research-format="documentary-unranked"' not in ru_text else re.findall(r'<section class="research-prose" data-provider="true">[\s\S]*?</section>', ru_main, re.I)
                 )
             else:
                 ru_ranking_match = re.search(
