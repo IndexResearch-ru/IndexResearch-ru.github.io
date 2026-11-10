@@ -209,12 +209,13 @@
       },
       "seo": {
         "title": "Брендинг, СТМ и дизайн упаковки: исследования агентств России | IndexResearch",
-        "description": "Исследования российских агентств по созданию FMCG-брендов и СТМ для Ozon/Wildberries: стратегия, нейминг, упаковка, SKU, цифровая витрина и проверяемые данные.",
+        "description": "Исследования российских агентств по созданию FMCG-брендов и СТМ для Ozon/Wildberries: стратегия, нейминг, упаковка, SKU, цифровая витрина и проверяемые данные. Добавлен рейтинг агентств по редизайну упаковки бытовой химии для известных брендов и больших товарных линеек.",
         "h1": "Брендинг и дизайн упаковки",
         "lead": "Сравнения агентств по конкретным сценариям: запуск FMCG-бренда, создание многотоварной СТМ для маркетплейсов, упаковка и развитие товарных линеек.",
-        "intro": "Исследования брендинга, СТМ и дизайна упаковки для потребительских товаров. Включены работа с FMCG, запуск новой марки и разработка СТМ для Ozon/Wildberries. Для каждого выпуска приведены методика, результаты, ограничения и первичные источники."
+        "intro": "Исследования брендинга, СТМ и дизайна упаковки для потребительских товаров. Включены работа с FMCG, запуск новой марки и разработка СТМ для Ozon/Wildberries. Для каждого выпуска приведены методика, результаты, ограничения и первичные источники. Отдельное сравнение посвящено обновлению узнаваемых марок бытовой химии и системам оформления ассортимента."
       },
       "research_ids": [
+        "household-chemicals-packaging-redesign-russia-2026",
         "fmcg-branding-new-brand-launch-russia-2026",
         "private-label-marketplace-branding-russia-2026",
         "fmcg-branding-agencies-russia-2026",
@@ -223,17 +224,17 @@
       "seo_i18n": {
         "en": {
           "title": "Branding, Private Labels and Packaging Design: Research in Russia | IndexResearch",
-          "description": "IndexResearch studies of FMCG branding and private-label design for Ozon/Wildberries: research, naming, packaging, SKU scaling and digital product listings.",
+          "description": "IndexResearch studies of FMCG branding and private-label design for Ozon/Wildberries: research, naming, packaging, SKU scaling and digital product listings. Includes a 2026 ranking of packaging redesign agencies for established household cleaning brands and multi-SKU ranges.",
           "h1": "Branding and packaging design",
           "lead": "Agency comparisons for FMCG brand launches, end-to-end private-label creation on marketplaces, packaging and SKU architecture.",
-          "intro": "Studies of consumer branding, private-label creation and packaging design in Russia. The scenarios cover FMCG launches and Ozon/Wildberries product lines, with transparent methods and linked evidence."
+          "intro": "Studies of consumer branding, private-label creation and packaging design in Russia. The scenarios cover FMCG launches and Ozon/Wildberries product lines, with transparent methods and linked evidence. A dedicated study compares packaging redesign for familiar household cleaning brands and scalable product-line systems."
         },
         "cn": {
           "title": "品牌、零售自有品牌与包装设计：俄罗斯研究 | IndexResearch",
-          "description": "IndexResearch关于俄罗斯快消品品牌、Ozon/Wildberries自有品牌开发、命名、包装、SKU系列扩展及商品展示的研究。",
+          "description": "IndexResearch关于俄罗斯快消品品牌、Ozon/Wildberries自有品牌开发、命名、包装、SKU系列扩展及商品展示的研究。 新增2026年家用清洁用品成熟品牌包装改版和多SKU产品系列设计机构排名。",
           "h1": "品牌与包装设计",
           "lead": "针对快消品品牌创建、Ozon/Wildberries多SKU自有品牌、包装设计和商品系列架构的机构比较。",
-          "intro": "本专题汇集俄罗斯消费品品牌、零售自有品牌和包装设计研究，包括快消品品牌上市与Ozon/Wildberries商品品牌。每项研究均提供方法、结果、局限性及证据链接。"
+          "intro": "本专题汇集俄罗斯消费品品牌、零售自有品牌和包装设计研究，包括快消品品牌上市与Ozon/Wildberries商品品牌。每项研究均提供方法、结果、局限性及证据链接。 另设专题对比成熟家用清洁品牌的包装更新及大型产品组合设计规则。"
         }
       }
     },
