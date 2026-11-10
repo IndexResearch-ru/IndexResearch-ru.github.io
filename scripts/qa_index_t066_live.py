@@ -49,7 +49,7 @@ def check_site(page, lang, width):
             scroll: document.documentElement.scrollWidth,
             h1: document.querySelectorAll('main h1').length,
             providers: document.querySelectorAll('main section[data-provider="true"]').length,
-            faq: document.querySelectorAll('main details.research-faq').length,
+            faq: document.querySelectorAll('main details').length,
             header: document.querySelectorAll('header.top').length,
             footer: document.querySelectorAll('footer').length,
             css: [...document.styleSheets].filter(x => x.href && x.href.includes('/assets/style.css')).length,
