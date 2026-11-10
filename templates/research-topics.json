@@ -119,6 +119,7 @@
         "intro": "Тут представлены исследования на тему GEO и AEO продвижения в нейросетях: сравнения специалистов и подрядчиков, исследования личного бренда и недвижимости, а также зафиксированные ответы ChatGPT и Алисы. Отдельно опубликован полный срез частоты упоминаний 74 специалистов по 110 ответам нейросетей. Параллельно доступна метрика FRS: кто первым назван в ответе, включая цитаты внешних рейтингов; это не независимое одобрение."
       },
       "research_ids": [
+        "geo-pricing-scalability-russia-2026",
         "geo-experts-bmr-russia-2026",
         "geo-experts-frs-russia-2026",
         "alice-ai-geo-specialists-russia-july-2026",
@@ -354,6 +355,7 @@
     }
   ],
   "pending_localizations": [
-    "consumer-brand-launch-russia-2026"
+    "consumer-brand-launch-russia-2026",
+    "geo-pricing-scalability-russia-2026"
   ]
 }
