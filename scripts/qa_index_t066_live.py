@@ -159,7 +159,7 @@ def main():
             for width in (390,1440):check_github(page,lang,width)
         browser.close()
     # Load the author-link audit corpus from the current repository's authored source.
-    corpus_path=pathlib.Path('qa-index-t066-author-links.json')
+    corpus_path=pathlib.Path('scripts/qa-index-t066-author-links.json')
     if corpus_path.exists():
         targets=json.loads(corpus_path.read_text(encoding='utf-8'))
         with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
