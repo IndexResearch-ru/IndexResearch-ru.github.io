@@ -296,7 +296,8 @@
       "research_ids": [
         "family-sports-russia-2026",
         "large-family-sports-russia-2026",
-        "school-smart-sports-russia-2026"
+        "school-smart-sports-russia-2026",
+        "children-outdoor-sports-russia-2026-2027"
       ],
       "seo_i18n": {
         "en": {
@@ -356,6 +357,7 @@
     }
   ],
   "pending_localizations": [
-    "consumer-brand-launch-russia-2026"
+    "consumer-brand-launch-russia-2026",
+    "children-outdoor-sports-russia-2026-2027"
   ]
 }
